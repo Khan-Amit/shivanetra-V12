@@ -104,7 +104,6 @@
         .enter-btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
-            transform: none;
         }
 
         .loading {
@@ -140,7 +139,6 @@
 
         .user-info {
             color: #e5cb7a;
-            font-size: 0.9rem;
         }
 
         .change-btn {
@@ -168,11 +166,6 @@
             border-radius: 40px;
             cursor: pointer;
             font-weight: bold;
-            transition: 0.2s;
-        }
-
-        .page-btn:hover {
-            background: #2a3a50;
         }
 
         .page-btn.active {
@@ -184,7 +177,6 @@
             background: #03060cb3;
             border-radius: 1.5rem;
             padding: 1.5rem;
-            text-align: center;
             color: white;
         }
 
@@ -192,13 +184,13 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 1rem;
-            color: #f0f2f5;
         }
 
         .planet-table th, .planet-table td {
             padding: 10px;
             border-bottom: 1px solid #2e3a48;
             text-align: left;
+            color: #f0f2f5;
         }
 
         .planet-table th {
@@ -212,14 +204,26 @@
             text-align: center;
         }
 
-        .grid-2, .grid-3, .grid-4 {
+        .grid-2 {
             display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
             margin-top: 1rem;
         }
-        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
-        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
-        .grid-4 { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
 
         .house-grid {
             display: grid;
@@ -227,6 +231,7 @@
             gap: 0.5rem;
             margin-top: 0.5rem;
         }
+
         .house-card {
             background: #1a1f2e;
             padding: 8px;
@@ -249,6 +254,14 @@
             margin-top: 1rem;
             color: #ff8888;
             display: none;
+        }
+
+        h2, h3 {
+            color: #e5cb7a;
+        }
+
+        h3 {
+            margin-top: 1.5rem;
         }
 
         @media (max-width: 700px) {
@@ -277,14 +290,20 @@
                 <select id="birthDay">
                     <option value="">Day</option>
                     <option value="27" selected>27</option>
+                    <script>for(let i=1;i<=31;i++) if(i!==27) document.write(`<option value="${i}">${i}</option>`);</script>
                 </select>
                 <select id="birthMonth">
                     <option value="">Month</option>
                     <option value="5" selected>May</option>
+                    <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option>
+                    <option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option>
+                    <option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option>
+                    <option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option>
                 </select>
                 <select id="birthYear">
                     <option value="">Year</option>
                     <option value="1960" selected>1960</option>
+                    <script>for(let i=1950;i<=2026;i++) if(i!==1960) document.write(`<option value="${i}">${i}</option>`);</script>
                 </select>
             </div>
         </div>
@@ -295,10 +314,12 @@
                 <select id="birthHour">
                     <option value="">Hour</option>
                     <option value="5" selected>05</option>
+                    <script>for(let i=0;i<=23;i++) if(i!==5) document.write(`<option value="${i}">${i.toString().padStart(2,'0')}</option>`);</script>
                 </select>
                 <select id="birthMinute">
                     <option value="">Minute</option>
                     <option value="30" selected>30</option>
+                    <script>for(let i=0;i<=59;i++) if(i!==30) document.write(`<option value="${i}">${i.toString().padStart(2,'0')}</option>`);</script>
                 </select>
             </div>
         </div>
@@ -309,7 +330,7 @@
         </div>
 
         <div class="form-group">
-            <label>🌍 Coordinates (Auto from location)</label>
+            <label>🌍 Coordinates</label>
             <div class="row-2">
                 <input type="text" id="latitude" placeholder="Latitude" value="23.8103">
                 <input type="text" id="longitude" placeholder="Longitude" value="90.4125">
@@ -332,7 +353,7 @@
     </div>
 
     <div class="nav-bar">
-        <button class="page-btn active" data-page="1">🌀 NATAL CHART</button>
+        <button class="page-btn active" data-page="1">🌀 CHART</button>
         <button class="page-btn" data-page="2">📊 PLANETS</button>
         <button class="page-btn" data-page="3">✨ NAKSHATRA</button>
         <button class="page-btn" data-page="4">🔢 NUMEROLOGY</button>
@@ -349,7 +370,7 @@
 
 <script>
     // ============================================================
-    // PLANETARY CALCULATIONS (Complete Standalone)
+    // COMPLETE STANDALONE PLANETARY CALCULATIONS
     // ============================================================
     
     function getJulianDate() {
@@ -495,21 +516,20 @@
         return { soul, karma, destiny, path, dharma };
     }
     
-    // Advice Generator
     function getAdvice(sunSign, moonNakshatra, lifePath) {
         const advices = [
-            `Based on your ${sunSign} Sun sign, focus on communication and self-expression this month.`,
-            `Your ${moonNakshatra} Nakshatra suggests spiritual practices will be especially beneficial.`,
-            `Life Path ${lifePath} indicates you are a natural leader. Trust your intuition.`,
-            `Meditate on the element associated with your chart for grounding and clarity.`,
-            `Wear colors that resonate with ${sunSign} to enhance your natural energies.`,
-            `The coming week brings opportunities for growth in your career sector.`,
-            `Your emotional intelligence is high right now. Trust your feelings.`
+            `✨ Based on your ${sunSign} Sun sign, focus on communication and self-expression this month.`,
+            `🌙 Your ${moonNakshatra} Nakshatra suggests spiritual practices will be especially beneficial.`,
+            `📖 Life Path ${lifePath} indicates you are a natural leader. Trust your intuition.`,
+            `🧘 Meditate on the element associated with your chart for grounding and clarity.`,
+            `🎨 Wear colors that resonate with ${sunSign} to enhance your natural energies.`,
+            `📈 The coming week brings opportunities for growth in your career sector.`,
+            `💖 Your emotional intelligence is high right now. Trust your feelings.`
         ];
         return advices[Math.floor(Math.random() * advices.length)];
     }
     
-    // Main calculation function
+    // Main calculation
     function calculateChart(userData) {
         const jd = getJulianDate();
         const lat = parseFloat(userData.latitude);
@@ -536,13 +556,11 @@
         const nakshatra = moonPlanet ? getNakshatra(moonPlanet.longitude) : null;
         const sunPlanet = planetData.find(p => p.name === 'Sun');
         
-        // Calculate houses
         const houses = [];
         for (let i = 0; i < 12; i++) {
             houses.push((asc + i * 30) % 360);
         }
         
-        // Numerology
         const lifePath = getLifePathNumber(userData.birthDate);
         const soulUrge = getSoulUrgeNumber(userData.name);
         const kabbalah = getKabbalahNumber(lifePath);
@@ -580,7 +598,7 @@
         };
     }
     
-    // UI Logic
+    // UI Rendering
     let currentChartData = null;
     let currentPage = 1;
     
@@ -593,38 +611,31 @@
         
         if (currentPage === 1) {
             content.innerHTML = `
-                <h2 style="color:#e5cb7a;">🌀 NATAL CHART</h2>
+                <h2>🌀 NATAL CHART</h2>
                 <div class="grid-3">
                     <div class="info-card"><strong>⭐ Ascendant</strong><br>${chart.ascendant.toFixed(2)}°<br>${chart.ascendantSign}</div>
                     <div class="info-card"><strong>☉ Sun Sign</strong><br>${chart.sunSign}</div>
                     <div class="info-card"><strong>🌙 Moon Nakshatra</strong><br>${chart.nakshatra ? chart.nakshatra.name : 'Unknown'}</div>
                 </div>
-                <h3 style="color:#e5cb7a; margin-top:1.5rem;">🏠 House Cusps</h3>
+                <h3>🏠 House Cusps</h3>
                 <div class="house-grid">
                     ${chart.houses.map((h, i) => `<div class="house-card"><strong>H${i+1}</strong><br>${h.toFixed(1)}°</div>`).join('')}
                 </div>
             `;
         } else if (currentPage === 2) {
             content.innerHTML = `
-                <h2 style="color:#e5cb7a;">📊 PLANETARY POSITIONS</h2>
+                <h2>📊 PLANETARY POSITIONS</h2>
                 <table class="planet-table">
                     <thead><tr><th>Planet</th><th>Longitude</th><th>Zodiac</th><th>House</th></tr></thead>
                     <tbody>
-                        ${chart.planets.map(p => `
-                            <tr>
-                                <td><strong>${p.name}</strong> ${p.name === 'Sun' ? '☉' : p.name === 'Moon' ? '☽' : ''}</td>
-                                <td>${p.longitude.toFixed(2)}°</td>
-                                <td>${p.zodiacSign} ${p.zodiacSymbol}</td>
-                                <td>House ${p.house}</td>
-                            </tr>
-                        `).join('')}
+                        ${chart.planets.map(p => `<tr><td><strong>${p.name}</strong></td><td>${p.longitude.toFixed(2)}°</td><td>${p.zodiacSign}</td><td>House ${p.house}</td></tr>`).join('')}
                     </tbody>
                 </table>
             `;
         } else if (currentPage === 3) {
             const nak = chart.nakshatra;
             content.innerHTML = `
-                <h2 style="color:#e5cb7a;">✨ NAKSHATRA (Lunar Mansion)</h2>
+                <h2>✨ NAKSHATRA</h2>
                 ${nak ? `
                     <div class="grid-2">
                         <div class="info-card"><strong>🌟 Nakshatra</strong><br>${nak.name}</div>
@@ -632,22 +643,17 @@
                         <div class="info-card"><strong>🙏 Deity</strong><br>${nak.deity}</div>
                         <div class="info-card"><strong>🎯 Range</strong><br>${nak.start.toFixed(1)}° - ${nak.end.toFixed(1)}°</div>
                     </div>
-                    <div class="info-card" style="margin-top:1rem;">
-                        <strong>📜 About ${nak.name}</strong><br>
-                        ${nak.name} Nakshatra is ruled by ${nak.lord} and associated with ${nak.deity}. 
-                        People born under this Nakshatra are known for their ${nak.name === 'Rohini' ? 'creativity and nurturing nature' : 'unique qualities'}.
-                    </div>
-                ` : '<p>Nakshatra data unavailable</p>'}
+                ` : '<p>Loading...</p>'}
             `;
         } else if (currentPage === 4) {
             content.innerHTML = `
-                <h2 style="color:#e5cb7a;">🔢 NUMEROLOGY REPORT</h2>
+                <h2>🔢 NUMEROLOGY</h2>
                 <div class="grid-2">
                     <div class="info-card"><strong>📖 Life Path</strong><br>${num.lifePath}</div>
                     <div class="info-card"><strong>💖 Soul Urge</strong><br>${num.soulUrge}</div>
                     <div class="info-card"><strong>🕉️ Kabbalah</strong><br>${num.kabbalah}</div>
                 </div>
-                <h3 style="color:#e5cb7a; margin-top:1.5rem;">🌌 Kundalini Five Numbers</h3>
+                <h3>🌌 Kundalini</h3>
                 <div class="grid-4">
                     <div class="info-card"><strong>Soul</strong><br>${num.kundalini.soul}</div>
                     <div class="info-card"><strong>Karma</strong><br>${num.kundalini.karma}</div>
@@ -658,31 +664,24 @@
             `;
         } else if (currentPage === 5) {
             content.innerHTML = `
-                <h2 style="color:#e5cb7a;">🐉 CHINESE ASTROLOGY</h2>
+                <h2>🐉 CHINESE ASTROLOGY</h2>
                 <div class="grid-2">
-                    <div class="info-card"><strong>🐀 Zodiac Animal</strong><br>${num.chineseZodiac}</div>
+                    <div class="info-card"><strong>🐀 Zodiac</strong><br>${num.chineseZodiac}</div>
                     <div class="info-card"><strong>🌿 Element</strong><br>${num.chineseElement}</div>
                     <div class="info-card"><strong>☯️ Yin/Yang</strong><br>${parseInt(currentChartData.user.birthDate.split('-')[0]) % 2 === 0 ? 'Yang' : 'Yin'}</div>
-                    <div class="info-card"><strong>🧘 Kua Number</strong><br>${num.kuaNumber}</div>
-                </div>
-                <div class="info-card" style="margin-top:1rem;">
-                    <strong>📜 About ${num.chineseZodiac} ${num.chineseElement}</strong><br>
-                    The ${num.chineseZodiac} is known for being ${num.chineseZodiac === 'Dragon' ? 'charismatic and powerful' : 'unique and special'}. 
-                    Combined with ${num.chineseElement} element, this year brings ${num.chineseElement === 'Fire' ? 'passion and energy' : 'balance and harmony'}.
+                    <div class="info-card"><strong>🧘 Kua</strong><br>${num.kuaNumber}</div>
                 </div>
             `;
         } else if (currentPage === 6) {
             content.innerHTML = `
-                <h2 style="color:#e5cb7a;">📖 PERSONALIZED ADVICE</h2>
-                <div class="info-card" style="margin-bottom:1rem;">
-                    <strong>✨ Today's Insight</strong><br>
-                    ${currentChartData.advice}
-                </div>
+                <h2>📖 ADVICE</h2>
+                <div class="info-card">${currentChartData.advice}</div>
+                <h3>💎 Recommendations</h3>
                 <div class="grid-2">
-                    <div class="info-card"><strong>💎 Recommended Gemstone</strong><br>${currentChartData.chart.sunSign.includes('Leo') ? 'Ruby' : currentChartData.chart.sunSign.includes('Taurus') ? 'Emerald' : 'Amethyst'}</div>
-                    <div class="info-card"><strong>🕯️ Mantra</strong><br>Om Namah Shivaya</div>
-                    <div class="info-card"><strong>🎨 Lucky Color</strong><br>${currentChartData.chart.sunSign.includes('Aries') ? 'Red' : 'Gold'}</div>
-                    <div class="info-card"><strong>🔢 Lucky Number</strong><br>${currentChartData.numerology.lifePath}</div>
+                    <div class="info-card"><strong>Gemstone</strong><br>${currentChartData.chart.sunSign.includes('Leo') ? 'Ruby' : 'Amethyst'}</div>
+                    <div class="info-card"><strong>Lucky Color</strong><br>Gold</div>
+                    <div class="info-card"><strong>Lucky Number</strong><br>${currentChartData.numerology.lifePath}</div>
+                    <div class="info-card"><strong>Mantra</strong><br>Om Namah Shivaya</div>
                 </div>
             `;
         }
@@ -715,7 +714,7 @@
         
         errorDiv.style.display = 'none';
         btn.disabled = true;
-        btn.innerHTML = '<span class="loading"></span> Calculating your chart...';
+        btn.innerHTML = '<span class="loading"></span> Calculating...';
         
         setTimeout(() => {
             const userData = {
@@ -742,11 +741,9 @@
     
     // Event Listeners
     document.getElementById('enterBtn').addEventListener('click', generateChart);
-    
     document.getElementById('changeUserBtn').addEventListener('click', () => {
         document.getElementById('landingPage').style.display = 'block';
         document.getElementById('mainApp').style.display = 'none';
-        currentChartData = null;
     });
     
     document.querySelectorAll('.page-btn').forEach(btn => {
@@ -757,36 +754,6 @@
             renderPage();
         });
     });
-    
-    // Populate dropdowns
-    function populateDropdowns() {
-        const daySelect = document.getElementById('birthDay');
-        for (let i = 1; i <= 31; i++) {
-            if (i !== 27) daySelect.innerHTML += `<option value="${i}">${i}</option>`;
-        }
-        
-        const monthSelect = document.getElementById('birthMonth');
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        months.forEach((m, idx) => {
-            if (idx + 1 !== 5) monthSelect.innerHTML += `<option value="${idx+1}">${m}</option>`;
-        });
-        
-        const yearSelect = document.getElementById('birthYear');
-        for (let i = 1950; i <= 2026; i++) {
-            if (i !== 1960) yearSelect.innerHTML += `<option value="${i}">${i}</option>`;
-        }
-        
-        const hourSelect = document.getElementById('birthHour');
-        for (let i = 0; i <= 23; i++) {
-            if (i !== 5) hourSelect.innerHTML += `<option value="${i}">${i.toString().padStart(2,'0')}</option>`;
-        }
-        
-        const minuteSelect = document.getElementById('birthMinute');
-        for (let i = 0; i <= 59; i++) {
-            if (i !== 30) minuteSelect.innerHTML += `<option value="${i}">${i.toString().padStart(2,'0')}</option>`;
-        }
-    }
-    populateDropdowns();
 </script>
 </body>
 </html>
