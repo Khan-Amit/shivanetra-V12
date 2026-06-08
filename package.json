@@ -1,0 +1,31 @@
+{
+  "name": "shivanetra-v12",
+  "version": "1.0.0",
+  "description": "MARDUKH SYSTEM™ - Data-Driven Vedic Astrology Platform",
+  "main": "backend/server.js",
+  "scripts": {
+    "dev": "nodemon backend/server.js",
+    "start": "node backend/server.js",
+    "seed": "node backend/scripts/seedData.js"
+  },
+  "keywords": ["astrology", "vedic", "natal-chart", "nakshatra", "kabbalah"],
+  "author": "Seliim Ahmed",
+  "license": "Sovereign Proprietary License",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.0.0",
+    "swisseph": "^2.0.0",
+    "luxon": "^3.4.4",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
