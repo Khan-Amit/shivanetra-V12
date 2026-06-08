@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shivanetra V12 – MARDUKH SYSTEM™</title>
+    <title>Shivanetra V12 – MARDUKH SYSTEM™ | Complete Astrology</title>
     <style>
         * {
             margin: 0;
@@ -19,7 +19,7 @@
         }
 
         .landing-container, .app-container {
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 0 auto;
         }
 
@@ -83,7 +83,7 @@
             flex: 1;
         }
 
-        .enter-btn {
+        .enter-btn, .download-btn {
             background: linear-gradient(135deg, #d4af37, #b8912e);
             color: #0a0c16;
             font-weight: bold;
@@ -93,17 +93,12 @@
             border-radius: 40px;
             cursor: pointer;
             width: 100%;
-            margin-top: 1.5rem;
+            margin-top: 1rem;
             transition: transform 0.2s;
         }
 
-        .enter-btn:hover {
+        .enter-btn:hover, .download-btn:hover {
             transform: scale(1.02);
-        }
-
-        .enter-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
         }
 
         .loading {
@@ -153,7 +148,7 @@
         .nav-bar {
             display: flex;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
             flex-wrap: wrap;
             margin-bottom: 1.5rem;
         }
@@ -162,10 +157,11 @@
             background: #1c2635;
             border: none;
             color: #ecdcaa;
-            padding: 10px 20px;
+            padding: 8px 14px;
             border-radius: 40px;
             cursor: pointer;
             font-weight: bold;
+            font-size: 0.85rem;
         }
 
         .page-btn.active {
@@ -180,6 +176,46 @@
             color: white;
         }
 
+        .dashboard {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .chart-panel {
+            flex: 2;
+            min-width: 350px;
+            text-align: center;
+        }
+
+        .side-table {
+            flex: 1;
+            min-width: 280px;
+            background: #0a0f1ae6;
+            border-radius: 1.5rem;
+            padding: 1rem;
+        }
+
+        .side-table h3 {
+            color: #f3d572;
+            border-bottom: 1px solid #7a682e;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+
+        .coord-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+
+        .coord-table th, .coord-table td {
+            padding: 6px 4px;
+            border-bottom: 1px solid #2e3a48;
+            text-align: left;
+            color: #f0f2f5;
+        }
+
         .planet-table {
             width: 100%;
             border-collapse: collapse;
@@ -187,14 +223,9 @@
         }
 
         .planet-table th, .planet-table td {
-            padding: 10px;
+            padding: 8px;
             border-bottom: 1px solid #2e3a48;
             text-align: left;
-            color: #f0f2f5;
-        }
-
-        .planet-table th {
-            color: #e9cf86;
         }
 
         .info-card {
@@ -204,39 +235,20 @@
             text-align: center;
         }
 
-        .grid-2 {
+        .grid-2, .grid-3, .grid-4 {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
             margin-top: 1rem;
         }
+        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+        .grid-4 { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
 
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .grid-4 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .house-grid {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-        }
-
-        .house-card {
-            background: #1a1f2e;
-            padding: 8px;
-            border-radius: 8px;
-            text-align: center;
+        .prediction-card {
+            background: linear-gradient(135deg, #1a1f2e, #0d1220);
+            padding: 1.2rem;
+            border-radius: 1rem;
+            border-left: 4px solid #d4af37;
         }
 
         footer {
@@ -256,18 +268,9 @@
             display: none;
         }
 
-        h2, h3 {
-            color: #e5cb7a;
-        }
-
-        h3 {
-            margin-top: 1.5rem;
-        }
-
-        @media (max-width: 700px) {
-            .landing-card { margin: 20px auto; padding: 1.5rem; }
-            .page-btn { padding: 6px 12px; font-size: 0.8rem; }
-            .house-grid { grid-template-columns: repeat(3, 1fr); }
+        @media (max-width: 800px) {
+            .dashboard { flex-direction: column; }
+            .page-btn { padding: 6px 10px; font-size: 0.7rem; }
         }
     </style>
 </head>
@@ -277,7 +280,7 @@
 <div id="landingPage" class="landing-container">
     <div class="landing-card">
         <div class="logo">⚡ MARDUKH SYSTEM™ ⚡</div>
-        <div class="subtitle">Shivanetra V12 · Data-Driven Natal Astrology</div>
+        <div class="subtitle">Shivanetra V12 · Complete Natal Astrology</div>
 
         <div class="form-group">
             <label>🌟 Full Name</label>
@@ -287,40 +290,17 @@
         <div class="form-group">
             <label>🎂 Birth Date</label>
             <div class="row-3">
-                <select id="birthDay">
-                    <option value="">Day</option>
-                    <option value="27" selected>27</option>
-                    <script>for(let i=1;i<=31;i++) if(i!==27) document.write(`<option value="${i}">${i}</option>`);</script>
-                </select>
-                <select id="birthMonth">
-                    <option value="">Month</option>
-                    <option value="5" selected>May</option>
-                    <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option>
-                    <option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option>
-                    <option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option>
-                    <option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option>
-                </select>
-                <select id="birthYear">
-                    <option value="">Year</option>
-                    <option value="1960" selected>1960</option>
-                    <script>for(let i=1950;i<=2026;i++) if(i!==1960) document.write(`<option value="${i}">${i}</option>`);</script>
-                </select>
+                <select id="birthDay"><option value="">Day</option><option value="27" selected>27</option><script>for(let i=1;i<=31;i++) if(i!==27) document.write(`<option value="${i}">${i}</option>`);</script></select>
+                <select id="birthMonth"><option value="">Month</option><option value="5" selected>May</option><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select>
+                <select id="birthYear"><option value="">Year</option><option value="1960" selected>1960</option><script>for(let i=1950;i<=2026;i++) if(i!==1960) document.write(`<option value="${i}">${i}</option>`);</script></select>
             </div>
         </div>
 
         <div class="form-group">
             <label>⏰ Birth Time (24hr)</label>
             <div class="row-2">
-                <select id="birthHour">
-                    <option value="">Hour</option>
-                    <option value="5" selected>05</option>
-                    <script>for(let i=0;i<=23;i++) if(i!==5) document.write(`<option value="${i}">${i.toString().padStart(2,'0')}</option>`);</script>
-                </select>
-                <select id="birthMinute">
-                    <option value="">Minute</option>
-                    <option value="30" selected>30</option>
-                    <script>for(let i=0;i<=59;i++) if(i!==30) document.write(`<option value="${i}">${i.toString().padStart(2,'0')}</option>`);</script>
-                </select>
+                <select id="birthHour"><option value="">Hour</option><option value="5" selected>05</option><script>for(let i=0;i<=23;i++) if(i!==5) document.write(`<option value="${i}">${i.toString().padStart(2,'0')}</option>`);</script></select>
+                <select id="birthMinute"><option value="">Minute</option><option value="30" selected>30</option><script>for(let i=0;i<=59;i++) if(i!==30) document.write(`<option value="${i}">${i.toString().padStart(2,'0')}</option>`);</script></select>
             </div>
         </div>
 
@@ -338,9 +318,7 @@
         </div>
 
         <button class="enter-btn" id="enterBtn">🔮 GENERATE MY CHART</button>
-        
         <div id="errorMessage" class="error-message"></div>
-        
         <footer>© MARDUKH SYSTEM™ — Sovereign Proprietary License | Seliim Ahmed</footer>
     </div>
 </div>
@@ -350,32 +328,34 @@
     <div class="header-bar">
         <span class="user-info" id="displayUser">—</span>
         <button class="change-btn" id="changeUserBtn">🔄 New User</button>
+        <button class="download-btn" id="downloadBtn" style="width:auto; padding:8px 20px; margin-top:0;">💾 DOWNLOAD CHART</button>
     </div>
 
     <div class="nav-bar">
-        <button class="page-btn active" data-page="1">🌀 CHART</button>
+        <button class="page-btn" data-page="1">🌀 NATAL</button>
         <button class="page-btn" data-page="2">📊 PLANETS</button>
         <button class="page-btn" data-page="3">✨ NAKSHATRA</button>
         <button class="page-btn" data-page="4">🔢 NUMEROLOGY</button>
         <button class="page-btn" data-page="5">🐉 CHINESE</button>
-        <button class="page-btn" data-page="6">📖 ADVICE</button>
+        <button class="page-btn" data-page="6">📅 DAILY</button>
+        <button class="page-btn" data-page="7">📆 WEEKLY</button>
+        <button class="page-btn" data-page="8">🌙 MONTHLY</button>
+        <button class="page-btn" data-page="9">📖 ADVICE</button>
     </div>
 
     <div id="pageContent" class="chart-container">
         <div class="loading"></div> Loading chart data...
     </div>
 
-    <footer>© MARDUKH SYSTEM™ — Data-Driven | Real Planetary Calculations | Shivanetra V12</footer>
+    <footer>© MARDUKH SYSTEM™ — Data-Driven | Circular Natal Chart | Daily/Weekly/Monthly Predictions</footer>
 </div>
 
 <script>
     // ============================================================
-    // COMPLETE STANDALONE PLANETARY CALCULATIONS
+    // PLANETARY CALCULATIONS
     // ============================================================
     
-    function getJulianDate() {
-        return (new Date().getTime() / 86400000) + 2440587.5;
-    }
+    function getJulianDate() { return (new Date().getTime() / 86400000) + 2440587.5; }
     
     function getPlanetLongitude(planet, jd) {
         const T = (jd - 2451545.0) / 36525.0;
@@ -403,7 +383,7 @@
         let raAdj = raSun < 0 ? raSun + 360 : raSun;
         const lst = (theta0 + lon) % 360;
         const hourAngle = lst - raAdj;
-        let asc = Math.atan2(Math.sin(hourAngle * Math.PI/180), Math.cos(hourAngle * Math.PI/180) * Math.sin(obl * Math.PI/180) + Math.tan(lat * Math.PI/180) * Math.cos(obl * Math.PI/180)) * 180 / Math.PI;
+        let asc = Math.atan2(Math.sin(hourAngle * Math.PI/180), Math.cos(hourAngle * Math.PI/180) * Math.sin(obl * Math.PI/180) + Math.tan(lat * Math.PI/180) * Math.sin(obl * Math.PI/180)) * 180 / Math.PI;
         if (asc < 0) asc += 360;
         return asc;
     }
@@ -453,16 +433,11 @@
             { name: 'Uttara Bhadrapada', lord: 'Saturn', start: 333.3333, end: 346.6667, deity: 'Ahir Budhnya' },
             { name: 'Revati', lord: 'Mercury', start: 346.6667, end: 360, deity: 'Pushan' }
         ];
-        
-        for (const nak of naks) {
-            if (deg >= nak.start && deg < nak.end) {
-                return nak;
-            }
-        }
+        for (const nak of naks) if (deg >= nak.start && deg < nak.end) return nak;
         return naks[0];
     }
     
-    // Numerology Functions
+    // Numerology
     function getLifePathNumber(birthDate) {
         const [year, month, day] = birthDate.split('-').map(Number);
         let sum = day + month + year;
@@ -473,17 +448,9 @@
     function getSoulUrgeNumber(name) {
         const vowels = { a: 1, e: 5, i: 9, o: 6, u: 3, A: 1, E: 5, I: 9, O: 6, U: 3 };
         let sum = 0;
-        for (let char of name) {
-            if (vowels[char]) sum += vowels[char];
-        }
+        for (let char of name) if (vowels[char]) sum += vowels[char];
         while (sum > 9) sum = Math.floor(sum / 10) + (sum % 10);
         return sum || 1;
-    }
-    
-    function getKabbalahNumber(num) {
-        let n = Math.abs(num);
-        while (n > 9) n = Math.floor(n / 10) + (n % 10);
-        return n;
     }
     
     function getChineseZodiac(year) {
@@ -516,17 +483,78 @@
         return { soul, karma, destiny, path, dharma };
     }
     
-    function getAdvice(sunSign, moonNakshatra, lifePath) {
-        const advices = [
-            `✨ Based on your ${sunSign} Sun sign, focus on communication and self-expression this month.`,
-            `🌙 Your ${moonNakshatra} Nakshatra suggests spiritual practices will be especially beneficial.`,
-            `📖 Life Path ${lifePath} indicates you are a natural leader. Trust your intuition.`,
-            `🧘 Meditate on the element associated with your chart for grounding and clarity.`,
-            `🎨 Wear colors that resonate with ${sunSign} to enhance your natural energies.`,
-            `📈 The coming week brings opportunities for growth in your career sector.`,
-            `💖 Your emotional intelligence is high right now. Trust your feelings.`
+    // Predictions
+    function getDailyPrediction(sunSign, moonNak) {
+        const predictions = [
+            `🌟 ${sunSign}: Today brings unexpected opportunities. Stay open to new connections.`,
+            `🌙 ${moonNak} influence: Your intuition is heightened. Trust your gut feelings.`,
+            `💼 Career: A breakthrough moment approaches. Be ready to act.`,
+            `❤️ Love: Express your true feelings. Vulnerability brings strength.`,
+            `💰 Finance: Smart decisions today will pay off next week.`,
+            `🧘 Health: Take time for meditation. Your energy needs grounding.`
         ];
-        return advices[Math.floor(Math.random() * advices.length)];
+        return predictions[Math.floor(Math.random() * predictions.length)];
+    }
+    
+    function getWeeklyPrediction(sunSign) {
+        return `📆 ${sunSign} Weekly: This week brings clarity to a confusing situation. Mid-week, expect positive news about a project you've been working on. Weekend is perfect for rest and reflection.`;
+    }
+    
+    function getMonthlyPrediction(sunSign) {
+        return `🌙 ${sunSign} Monthly: This month emphasizes relationships and communication. The full moon brings emotional breakthroughs. Career opportunities appear around the 15th. Focus on self-care during the last week.`;
+    }
+    
+    function getAdvice(sunSign, lifePath) {
+        return `✨ Based on your ${sunSign} Sun sign and Life Path ${lifePath}, focus on authentic self-expression. Your natural leadership abilities will shine when you trust your instincts. Consider starting a journaling practice.`;
+    }
+    
+    // Draw Circular SVG Chart
+    function drawCircularChart(ascendant, planets, houses) {
+        const size = 500;
+        const cx = size/2, cy = size/2;
+        const R = 220;
+        const R_planet = 170;
+        
+        let svg = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="background:#010101; border-radius:50%;">`;
+        
+        // House lines
+        for(let i = 0; i < 12; i++) {
+            let angle = 90 - (ascendant + i * 30);
+            let rad = angle * Math.PI / 180;
+            svg += `<line x1="${cx}" y1="${cy}" x2="${cx + R * Math.cos(rad)}" y2="${cy - R * Math.sin(rad)}" stroke="#5f4c2b" stroke-width="1" stroke-dasharray="3 3"/>`;
+        }
+        
+        // Zodiac symbols at cusps
+        for(let i = 0; i < 12; i++) {
+            let angle = 90 - (ascendant + i * 30 + 15);
+            let rad = angle * Math.PI / 180;
+            let sym = getZodiacSymbol(ascendant + i * 30);
+            svg += `<text x="${cx + (R + 15) * Math.cos(rad)}" y="${cy - (R + 15) * Math.sin(rad)}" fill="#e5cb7a" font-size="16" text-anchor="middle">${sym}</text>`;
+        }
+        
+        // House numbers
+        for(let i = 0; i < 12; i++) {
+            let angle = 90 - (ascendant + i * 30 + 15);
+            let rad = angle * Math.PI / 180;
+            svg += `<text x="${cx + 185 * Math.cos(rad)}" y="${cy - 185 * Math.sin(rad)}" fill="#b9a46b" font-size="11" text-anchor="middle">${i+1}</text>`;
+        }
+        
+        // Ascendant marker
+        let ascRad = (90 - ascendant) * Math.PI / 180;
+        svg += `<polygon points="${cx + (R-15)*Math.cos(ascRad)-5},${cy - (R-15)*Math.sin(ascRad)-3} ${cx + (R-15)*Math.cos(ascRad)+5},${cy - (R-15)*Math.sin(ascRad)-3} ${cx + (R-15)*Math.cos(ascRad)},${cy - (R-15)*Math.sin(ascRad)+8}" fill="#ffb347"/>`;
+        
+        // Planets
+        const planetColors = { Sun: '#f6b83e', Moon: '#bde0fe', Mars: '#ff6b6b', Mercury: '#6bff6b', Jupiter: '#ffb347', Venus: '#ff69b4', Saturn: '#a0a0a0', Rahu: '#8b4513', Ketu: '#654321' };
+        for(let p of planets) {
+            let rad = (90 - p.longitude) * Math.PI / 180;
+            let color = planetColors[p.name] || '#FFD966';
+            svg += `<circle cx="${cx + R_planet * Math.cos(rad)}" cy="${cy - R_planet * Math.sin(rad)}" r="9" fill="#11161f" stroke="${color}" stroke-width="1.5"/>`;
+            svg += `<text x="${cx + R_planet * Math.cos(rad)}" y="${cy - R_planet * Math.sin(rad) + 2}" fill="${color}" font-size="12" text-anchor="middle" font-weight="bold">${p.name === 'Sun' ? '☉' : p.name === 'Moon' ? '☽' : p.name.charAt(0)}</text>`;
+        }
+        
+        svg += `<circle cx="${cx}" cy="${cy}" r="8" fill="#2a2315" stroke="#e5bf60" stroke-width="1.5"/><text x="${cx}" y="${cy+2}" fill="#ffeaac" font-size="9" text-anchor="middle">M</text>`;
+        svg += `</svg>`;
+        return svg;
     }
     
     // Main calculation
@@ -534,156 +562,86 @@
         const jd = getJulianDate();
         const lat = parseFloat(userData.latitude);
         const lon = parseFloat(userData.longitude);
-        
         const asc = getAscendant(jd, lat, lon);
         
-        const planets = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Rahu', 'Ketu'];
-        const planetData = [];
-        
-        for (const p of planets) {
+        const planetsList = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Rahu', 'Ketu'];
+        const planets = [];
+        for (const p of planetsList) {
             const lon = getPlanetLongitude(p, jd);
-            const house = getHouseFromLongitude(lon, asc);
-            planetData.push({
-                name: p,
-                longitude: lon,
-                zodiacSign: getZodiacSign(lon),
-                zodiacSymbol: getZodiacSymbol(lon),
-                house: house
-            });
+            planets.push({ name: p, longitude: lon, zodiacSign: getZodiacSign(lon), house: getHouseFromLongitude(lon, asc) });
         }
-        
-        const moonPlanet = planetData.find(p => p.name === 'Moon');
-        const nakshatra = moonPlanet ? getNakshatra(moonPlanet.longitude) : null;
-        const sunPlanet = planetData.find(p => p.name === 'Sun');
         
         const houses = [];
-        for (let i = 0; i < 12; i++) {
-            houses.push((asc + i * 30) % 360);
-        }
+        for (let i = 0; i < 12; i++) houses.push((asc + i * 30) % 360);
         
+        const moonPlanet = planets.find(p => p.name === 'Moon');
+        const nakshatra = moonPlanet ? getNakshatra(moonPlanet.longitude) : null;
+        const sunPlanet = planets.find(p => p.name === 'Sun');
         const lifePath = getLifePathNumber(userData.birthDate);
-        const soulUrge = getSoulUrgeNumber(userData.name);
-        const kabbalah = getKabbalahNumber(lifePath);
-        const chineseZodiac = getChineseZodiac(parseInt(userData.birthDate.split('-')[0]));
-        const chineseElement = getChineseElement(parseInt(userData.birthDate.split('-')[0]));
-        const kuaNumber = getKuaNumber(parseInt(userData.birthDate.split('-')[0]), 'M');
-        const kundalini = getKundaliniNumbers(userData.birthDate);
-        const advice = getAdvice(sunPlanet ? sunPlanet.zodiacSign : 'Unknown', nakshatra ? nakshatra.name : 'Unknown', lifePath);
         
         return {
-            user: {
-                name: userData.name,
-                birthDate: userData.birthDate,
-                birthTime: userData.birthTime,
-                location: userData.location
-            },
-            chart: {
-                ascendant: asc,
-                ascendantSign: getZodiacSign(asc),
-                houses: houses,
-                planets: planetData,
-                nakshatra: nakshatra,
-                sunSign: sunPlanet ? sunPlanet.zodiacSign : 'Unknown'
-            },
+            user: { name: userData.name, birthDate: userData.birthDate, location: userData.location },
+            chart: { ascendant: asc, ascendantSign: getZodiacSign(asc), houses, planets, nakshatra, sunSign: sunPlanet ? sunPlanet.zodiacSign : 'Unknown' },
             numerology: {
-                lifePath: lifePath,
-                soulUrge: soulUrge,
-                kabbalah: kabbalah,
-                chineseZodiac: chineseZodiac,
-                chineseElement: chineseElement,
-                kuaNumber: kuaNumber,
-                kundalini: kundalini
+                lifePath, soulUrge: getSoulUrgeNumber(userData.name),
+                chineseZodiac: getChineseZodiac(parseInt(userData.birthDate.split('-')[0])),
+                chineseElement: getChineseElement(parseInt(userData.birthDate.split('-')[0])),
+                kuaNumber: getKuaNumber(parseInt(userData.birthDate.split('-')[0]), 'M'),
+                kundalini: getKundaliniNumbers(userData.birthDate)
             },
-            advice: advice
+            predictions: {
+                daily: getDailyPrediction(sunPlanet ? sunPlanet.zodiacSign : 'Unknown', nakshatra ? nakshatra.name : 'Unknown'),
+                weekly: getWeeklyPrediction(sunPlanet ? sunPlanet.zodiacSign : 'Unknown'),
+                monthly: getMonthlyPrediction(sunPlanet ? sunPlanet.zodiacSign : 'Unknown'),
+                advice: getAdvice(sunPlanet ? sunPlanet.zodiacSign : 'Unknown', lifePath)
+            }
         };
     }
     
-    // UI Rendering
-    let currentChartData = null;
+    // UI State
+    let currentData = null;
     let currentPage = 1;
     
     function renderPage() {
         const content = document.getElementById('pageContent');
-        if (!currentChartData) return;
+        if (!currentData) return;
         
-        const chart = currentChartData.chart;
-        const num = currentChartData.numerology;
+        const c = currentData.chart;
+        const n = currentData.numerology;
+        const p = currentData.predictions;
         
         if (currentPage === 1) {
             content.innerHTML = `
-                <h2>🌀 NATAL CHART</h2>
-                <div class="grid-3">
-                    <div class="info-card"><strong>⭐ Ascendant</strong><br>${chart.ascendant.toFixed(2)}°<br>${chart.ascendantSign}</div>
-                    <div class="info-card"><strong>☉ Sun Sign</strong><br>${chart.sunSign}</div>
-                    <div class="info-card"><strong>🌙 Moon Nakshatra</strong><br>${chart.nakshatra ? chart.nakshatra.name : 'Unknown'}</div>
-                </div>
-                <h3>🏠 House Cusps</h3>
-                <div class="house-grid">
-                    ${chart.houses.map((h, i) => `<div class="house-card"><strong>H${i+1}</strong><br>${h.toFixed(1)}°</div>`).join('')}
+                <div class="dashboard">
+                    <div class="chart-panel">
+                        <h2 style="color:#e5cb7a;">🌀 CIRCULAR NATAL CHART</h2>
+                        ${drawCircularChart(c.ascendant, c.planets, c.houses)}
+                    </div>
+                    <div class="side-table">
+                        <h3>⚡ PLANETARY COORDINATES</h3>
+                        <table class="coord-table"><thead><th>Planet</th><th>Longitude</th><th>Sign</th><th>House</th></thead><tbody>
+                        ${c.planets.map(p => `<tr><td>${p.name}</td><td>${p.longitude.toFixed(2)}°</td><td>${p.zodiacSign}</td><td>H${p.house}</td></tr>`).join('')}
+                        <tr style="border-top:1px solid #d4af37;"><td>⭐ Asc</td><td>${c.ascendant.toFixed(2)}°</td><td>${c.ascendantSign}</td><td>H1</td></tr>
+                        </tbody></table>
+                    </div>
                 </div>
             `;
         } else if (currentPage === 2) {
-            content.innerHTML = `
-                <h2>📊 PLANETARY POSITIONS</h2>
-                <table class="planet-table">
-                    <thead><tr><th>Planet</th><th>Longitude</th><th>Zodiac</th><th>House</th></tr></thead>
-                    <tbody>
-                        ${chart.planets.map(p => `<tr><td><strong>${p.name}</strong></td><td>${p.longitude.toFixed(2)}°</td><td>${p.zodiacSign}</td><td>House ${p.house}</td></tr>`).join('')}
-                    </tbody>
-                </table>
-            `;
+            content.innerHTML = `<h2>📊 PLANETARY POSITIONS</h2><table class="planet-table"><thead><th>Planet</th><th>Longitude</th><th>Zodiac</th><th>House</th></thead><tbody>${c.planets.map(p => `<tr><td>${p.name}</td><td>${p.longitude.toFixed(2)}°</td><td>${p.zodiacSign}</td><td>House ${p.house}</td></tr>`).join('')}</tbody></table>`;
         } else if (currentPage === 3) {
-            const nak = chart.nakshatra;
-            content.innerHTML = `
-                <h2>✨ NAKSHATRA</h2>
-                ${nak ? `
-                    <div class="grid-2">
-                        <div class="info-card"><strong>🌟 Nakshatra</strong><br>${nak.name}</div>
-                        <div class="info-card"><strong>👑 Ruling Planet</strong><br>${nak.lord}</div>
-                        <div class="info-card"><strong>🙏 Deity</strong><br>${nak.deity}</div>
-                        <div class="info-card"><strong>🎯 Range</strong><br>${nak.start.toFixed(1)}° - ${nak.end.toFixed(1)}°</div>
-                    </div>
-                ` : '<p>Loading...</p>'}
-            `;
+            content.innerHTML = `<h2>✨ NAKSHATRA</h2><div class="grid-2"><div class="info-card"><strong>🌟 Nakshatra</strong><br>${c.nakshatra ? c.nakshatra.name : 'Unknown'}</div><div class="info-card"><strong>👑 Lord</strong><br>${c.nakshatra ? c.nakshatra.lord : 'Unknown'}</div><div class="info-card"><strong>🙏 Deity</strong><br>${c.nakshatra ? c.nakshatra.deity : 'Unknown'}</div></div>`;
         } else if (currentPage === 4) {
-            content.innerHTML = `
-                <h2>🔢 NUMEROLOGY</h2>
-                <div class="grid-2">
-                    <div class="info-card"><strong>📖 Life Path</strong><br>${num.lifePath}</div>
-                    <div class="info-card"><strong>💖 Soul Urge</strong><br>${num.soulUrge}</div>
-                    <div class="info-card"><strong>🕉️ Kabbalah</strong><br>${num.kabbalah}</div>
-                </div>
-                <h3>🌌 Kundalini</h3>
-                <div class="grid-4">
-                    <div class="info-card"><strong>Soul</strong><br>${num.kundalini.soul}</div>
-                    <div class="info-card"><strong>Karma</strong><br>${num.kundalini.karma}</div>
-                    <div class="info-card"><strong>Destiny</strong><br>${num.kundalini.destiny}</div>
-                    <div class="info-card"><strong>Path</strong><br>${num.kundalini.path}</div>
-                    <div class="info-card"><strong>Dharma</strong><br>${num.kundalini.dharma}</div>
-                </div>
-            `;
+            content.innerHTML = `<h2>🔢 NUMEROLOGY</h2><div class="grid-2"><div class="info-card"><strong>Life Path</strong><br>${n.lifePath}</div><div class="info-card"><strong>Soul Urge</strong><br>${n.soulUrge}</div></div><h3>🌌 Kundalini</h3><div class="grid-4"><div class="info-card">Soul:${n.kundalini.soul}</div><div class="info-card">Karma:${n.kundalini.karma}</div><div class="info-card">Destiny:${n.kundalini.destiny}</div><div class="info-card">Path:${n.kundalini.path}</div><div class="info-card">Dharma:${n.kundalini.dharma}</div></div>`;
         } else if (currentPage === 5) {
-            content.innerHTML = `
-                <h2>🐉 CHINESE ASTROLOGY</h2>
-                <div class="grid-2">
-                    <div class="info-card"><strong>🐀 Zodiac</strong><br>${num.chineseZodiac}</div>
-                    <div class="info-card"><strong>🌿 Element</strong><br>${num.chineseElement}</div>
-                    <div class="info-card"><strong>☯️ Yin/Yang</strong><br>${parseInt(currentChartData.user.birthDate.split('-')[0]) % 2 === 0 ? 'Yang' : 'Yin'}</div>
-                    <div class="info-card"><strong>🧘 Kua</strong><br>${num.kuaNumber}</div>
-                </div>
-            `;
+            content.innerHTML = `<h2>🐉 CHINESE ASTROLOGY</h2><div class="grid-2"><div class="info-card"><strong>Zodiac</strong><br>${n.chineseZodiac}</div><div class="info-card"><strong>Element</strong><br>${n.chineseElement}</div><div class="info-card"><strong>Kua Number</strong><br>${n.kuaNumber}</div></div>`;
         } else if (currentPage === 6) {
-            content.innerHTML = `
-                <h2>📖 ADVICE</h2>
-                <div class="info-card">${currentChartData.advice}</div>
-                <h3>💎 Recommendations</h3>
-                <div class="grid-2">
-                    <div class="info-card"><strong>Gemstone</strong><br>${currentChartData.chart.sunSign.includes('Leo') ? 'Ruby' : 'Amethyst'}</div>
-                    <div class="info-card"><strong>Lucky Color</strong><br>Gold</div>
-                    <div class="info-card"><strong>Lucky Number</strong><br>${currentChartData.numerology.lifePath}</div>
-                    <div class="info-card"><strong>Mantra</strong><br>Om Namah Shivaya</div>
-                </div>
-            `;
+            content.innerHTML = `<h2>📅 DAILY PREDICTION</h2><div class="prediction-card">${p.daily}</div><div class="prediction-card" style="margin-top:1rem;"><strong>✨ Lucky Color:</strong> Gold &nbsp;|&nbsp; <strong>Lucky Number:</strong> ${n.lifePath}</div>`;
+        } else if (currentPage === 7) {
+            content.innerHTML = `<h2>📆 WEEKLY PREDICTION</h2><div class="prediction-card">${p.weekly}</div>`;
+        } else if (currentPage === 8) {
+            content.innerHTML = `<h2>🌙 MONTHLY PREDICTION</h2><div class="prediction-card">${p.monthly}</div>`;
+        } else if (currentPage === 9) {
+            content.innerHTML = `<h2>📖 PERSONALIZED ADVICE</h2><div class="prediction-card">${p.advice}</div><div class="grid-2" style="margin-top:1rem;"><div class="info-card"><strong>💎 Recommended</strong><br>Amethyst</div><div class="info-card"><strong>🕯️ Mantra</strong><br>Om Namah Shivaya</div></div>`;
         }
     }
     
@@ -707,36 +665,39 @@
             return;
         }
         
-        if (!lat || !lon) {
-            lat = 23.8103;
-            lon = 90.4125;
-        }
+        lat = lat || 23.8103;
+        lon = lon || 90.4125;
         
         errorDiv.style.display = 'none';
         btn.disabled = true;
         btn.innerHTML = '<span class="loading"></span> Calculating...';
         
         setTimeout(() => {
-            const userData = {
-                name: name,
-                birthDate: `${year}-${month}-${day}`,
-                birthTime: `${hour}:${minute}:00`,
-                location: location,
-                latitude: parseFloat(lat),
-                longitude: parseFloat(lon)
-            };
+            currentData = calculateChart({
+                name, birthDate: `${year}-${month}-${day}`,
+                birthTime: `${hour}:${minute}:00`, location,
+                latitude: parseFloat(lat), longitude: parseFloat(lon)
+            });
             
-            currentChartData = calculateChart(userData);
-            
+            localStorage.setItem('shivanetra_data', JSON.stringify(currentData));
             document.getElementById('landingPage').style.display = 'none';
             document.getElementById('mainApp').style.display = 'block';
             document.getElementById('displayUser').innerHTML = `${name} | ${day}/${month}/${year} | ${location}`;
-            
             renderPage();
-            
             btn.disabled = false;
             btn.innerHTML = '🔮 GENERATE MY CHART';
         }, 300);
+    }
+    
+    function downloadHTML() {
+        const html = document.documentElement.outerHTML;
+        const blob = new Blob([html], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Shivanetra_Chart_${currentData?.user?.name || 'User'}.html`;
+        a.click();
+        URL.revokeObjectURL(url);
     }
     
     // Event Listeners
@@ -745,6 +706,7 @@
         document.getElementById('landingPage').style.display = 'block';
         document.getElementById('mainApp').style.display = 'none';
     });
+    document.getElementById('downloadBtn').addEventListener('click', downloadHTML);
     
     document.querySelectorAll('.page-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -754,6 +716,18 @@
             renderPage();
         });
     });
+    
+    // Load saved data
+    const saved = localStorage.getItem('shivanetra_data');
+    if (saved) {
+        try {
+            currentData = JSON.parse(saved);
+            document.getElementById('landingPage').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            document.getElementById('displayUser').innerHTML = `${currentData.user.name} | ${currentData.user.birthDate} | ${currentData.user.location}`;
+            renderPage();
+        } catch(e) {}
+    }
 </script>
 </body>
 </html>
