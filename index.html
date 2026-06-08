@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shivanetra V12 – MARDUKH SYSTEM™</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at 30% 20%, #0a0f1e, #020408);
+            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Landing Page */
+        .landing-container, .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .landing-card {
+            max-width: 550px;
+            margin: 60px auto;
+            background: rgba(10, 14, 23, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 0 2px #d4af37 inset;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f9e0a0, #c9a52c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #b9a46b;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            color: #e5cb7a;
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 12px;
+            border: 1px solid #d4af37;
+            background: #1a1f2e;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .row-3, .row-2 {
+            display: flex;
+            gap: 10px;
+        }
+        .row-3 select, .row-2 select {
+            flex: 1;
+        }
+
+        .enter-btn {
+            background: linear-gradient(135deg, #d4af37, #b8912e);
+            color: #0a0c16;
+            font-weight: bold;
+            font-size: 1.2rem;
+            padding: 14px;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 1.5rem;
+        }
+
+        .enter-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Main App */
+        .app-container {
+            display: none;
+        }
+
+        .header-bar {
+            background: rgba(0,0,0,0.5);
+            border-radius: 1rem;
+            padding: 12px 20px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #d4af37;
+        }
+
+        .user-info {
+            color: #e5cb7a;
+        }
+
+        .change-btn {
+            background: #2a3a2e;
+            border: 1px solid #b5934b;
+            color: #ffeaac;
+            padding: 6px 15px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+
+        .nav-bar {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .page-btn {
+            background: #1c2635;
+            border: none;
+            color: #ecdcaa;
+            padding: 8px 16px;
+            border-radius: 40px;
+            cursor: pointer;
+        }
+
+        .page-btn.active {
+            background: #d4af37;
+            color: #0a0c16;
+        }
+
+        .chart-container {
+            background: #03060cb3;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            text-align: center;
+            color: white;
+        }
+
+        .planet-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            color: #f0f2f5;
+        }
+
+        .planet-table th, .planet-table td {
+            padding: 10px;
+            border-bottom: 1px solid #2e3a48;
+            text-align: left;
+        }
+
+        .planet-table th {
+            color: #e9cf86;
+        }
+
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #6c757d;
+        }
+
+        .error-message {
+            background: rgba(255,0,0,0.2);
+            border: 1px solid #ff4444;
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 1rem;
+            color: #ff8888;
+        }
+    </style>
+</head>
+<body>
+
+<!-- LANDING PAGE -->
+<div id="landingPage" class="landing-container">
+    <div class="landing-card">
+        <div class="logo">⚡ MARDUKH SYSTEM™ ⚡</div>
+        <div class="subtitle">Shivanetra V12 · Data-Driven Natal Astrology</div>
+
+        <div class="form-group">
+            <label>🌟 Full Name</label>
+            <input type="text" id="userName" placeholder="Enter your full name">
+        </div>
+
+        <div class="form-group">
+            <label>🎂 Birth Date</label>
+            <div class="row-3" id="dateSelects"></div>
+        </div>
+
+        <div class="form-group">
+            <label>⏰ Birth Time (24hr)</label>
+            <div class="row-2" id="timeSelects"></div>
+        </div>
+
+        <div class="form-group">
+            <label>📍 Birth Location</label>
+            <input type="text" id="birthLocation" placeholder="City, Country">
+        </div>
+
+        <div class="form-group">
+            <label>🌍 Coordinates (Optional - auto detects)</label>
+            <div class="row-2">
+                <input type="text" id="latitude" placeholder="Latitude (e.g., 28.6139)">
+                <input type="text" id="longitude" placeholder="Longitude (e.g., 77.2090)">
+            </div>
+        </div>
+
+        <button class="enter-btn" id="enterBtn">🔮 GENERATE MY CHART</button>
+        <div class="error-message" id="errorMessage" style="display: none;"></div>
+        <footer>© MARDUKH SYSTEM™ — Sovereign Proprietary License | Seliim Ahmed</footer>
+    </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="mainApp" class="app-container">
+    <div class="header-bar">
+        <span class="user-info" id="displayUser">—</span>
+        <button class="change-btn" id="changeUserBtn">🔄 New User</button>
+    </div>
+
+    <div class="nav-bar" id="navBar">
+        <button class="page-btn active" data-page="1">🌀 NATAL CHART</button>
+        <button class="page-btn" data-page="2">📊 PLANETS</button>
+        <button class="page-btn" data-page="3">✨ NAKSHATRA</button>
+    </div>
+
+    <div id="pageContent" class="chart-container">
+        <!-- Dynamic content loads here -->
+        <div class="loading"></div> Loading chart data...
+    </div>
+
+    <footer>© MARDUKH SYSTEM™ — Data-Driven | Real Planetary Calculations</footer>
+</div>
+
+<script>
+    // Populate dropdowns
+    function populateDropdowns() {
+        // Days
+        let dayHtml = '<select id="birthDay"><option value="">Day</option>';
+        for(let i = 1; i <= 31; i++) dayHtml += `<option value="${i}">${i}</option>`;
+        dayHtml += '</select>';
+        
+        // Months
+        let monthHtml = '<select id="birthMonth"><option value="">Month</option>';
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        months.forEach((m, idx) => monthHtml += `<option value="${idx+1}">${m}</option>`);
+        monthHtml += '</select>';
+        
+        // Years
+        let yearHtml = '<select id="birthYear"><option value="">Year</option>';
+        for(let i = 1950; i <= 2026; i++) yearHtml += `<option value="${i}">${i}</option>`;
+        yearHtml += '</select>';
+        
+        document.getElementById('dateSelects').innerHTML = dayHtml + monthHtml + yearHtml;
+        
+        // Hours
+        let hourHtml = '<select id="birthHour"><option value="">Hour</option>';
+        for(let i = 0; i <= 23; i++) hourHtml += `<option value="${i}">${i.toString().padStart(2,'0')}</option>`;
+        hourHtml += '</select>';
+        
+        // Minutes
+        let minuteHtml = '<select id="birthMinute"><option value="">Minute</option>';
+        for(let i = 0; i <= 59; i++) minuteHtml += `<option value="${i}">${i.toString().padStart(2,'0')}</option>`;
+        minuteHtml += '</select>';
+        
+        document.getElementById('timeSelects').innerHTML = hourHtml + minuteHtml;
+    }
+    
+    populateDropdowns();
+    
+    // City coordinates database (simplified)
+    const cityCoords = {
+        'new york': { lat: 40.7128, lon: -74.0060 },
+        'london': { lat: 51.5074, lon: -0.1278 },
+        'delhi': { lat: 28.6139, lon: 77.2090 },
+        'mumbai': { lat: 19.0760, lon: 72.8777 },
+        'bangalore': { lat: 12.9716, lon: 77.5946 },
+        'chennai': { lat: 13.0827, lon: 80.2707 },
+        'kolkata': { lat: 22.5726, lon: 88.3639 },
+        'dubai': { lat: 25.2048, lon: 55.2708 },
+        'tokyo': { lat: 35.6762, lon: 139.6503 },
+        'sydney': { lat: -33.8688, lon: 151.2093 }
+    };
+    
+    // Auto-detect coordinates from location
+    document.getElementById('birthLocation').addEventListener('blur', function() {
+        const location = this.value.toLowerCase();
+        for (const [city, coords] of Object.entries(cityCoords)) {
+            if (location.includes(city)) {
+                document.getElementById('latitude').value = coords.lat;
+                document.getElementById('longitude').value = coords.lon;
+                break;
+            }
+        }
+    });
+    
+    let currentChartData = null;
+    let currentPage = 1;
+    
+    // Render page based on data
+    function renderPage() {
+        const content = document.getElementById('pageContent');
+        if (!currentChartData) return;
+        
+        const chart = currentChartData.chart;
+        
+        if (currentPage === 1) {
+            // Natal Chart Summary
+            content.innerHTML = `
+                <h2 style="color:#e5cb7a;">🌀 NATAL CHART</h2>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; margin-top:1rem;">
+                    <div class="info-card"><strong>⭐ Ascendant</strong><br>${chart.ascendant.toFixed(2)}°<br>${chart.ascendantSign}</div>
+                    <div class="info-card"><strong>☉ Sun Sign</strong><br>${chart.sunSign}</div>
+                    <div class="info-card"><strong>🌙 Moon Nakshatra</strong><br>${chart.nakshatra ? chart.nakshatra.name : 'Unknown'}</div>
+                    <div class="info-card"><strong>📅 Calculated</strong><br>${new Date(chart.calculatedAt).toLocaleString()}</div>
+                </div>
+                <h3 style="color:#e5cb7a; margin-top:1.5rem;">🏠 House Cusps</h3>
+                <div style="display:grid; grid-template-columns:repeat(6,1fr); gap:0.5rem; margin-top:0.5rem;">
+                    ${chart.houses.map((h, i) => `<div style="background:#1a1f2e; padding:8px; border-radius:8px; text-align:center;"><strong>H${i+1}</strong><br>${h.toFixed(1)}°</div>`).join('')}
+                </div>
+            `;
+        } else if (currentPage === 2) {
+            // Planets Table
+            content.innerHTML = `
+                <h2 style="color:#e5cb7a;">📊 PLANETARY POSITIONS</h2>
+                <table class="planet-table">
+                    <thead><tr><th>Planet</th><th>Longitude</th><th>Zodiac</th><th>House</th></tr></thead>
+                    <tbody>
+                        ${chart.planets.map(p => `
+                            <tr>
+                                <td>${p.name}</td>
+                                <td>${p.longitude.toFixed(2)}°</td>
+                                <td>${p.zodiacSign} ${getSymbol(p.longitude)}</td>
+                                <td>House ${p.house}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        } else if (currentPage === 3) {
+            // Nakshatra Details
+            const nak = chart.nakshatra;
+            content.innerHTML = `
+                <h2 style="color:#e5cb7a;">✨ NAKSHATRA (Lunar Mansion)</h2>
+                ${nak ? `
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; margin-top:1rem;">
+                        <div class="info-card"><strong>🌟 Nakshatra</strong><br>${nak.name}</div>
+                        <div class="info-card"><strong>👑 Ruling Planet</strong><br>${nak.lord}</div>
+                        <div class="info-card"><strong>📐 Pada (Quarter)</strong><br>${nak.pada || 1}</div>
+                        <div class="info-card"><strong>🎯 Range</strong><br>${nak.start.toFixed(1)}° - ${nak.end.toFixed(1)}°</div>
+                    </div>
+                ` : '<p>Nakshatra data unavailable</p>'}
+            `;
+        }
+    }
+    
+    function getSymbol(lon) {
+        const sym = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
+        return sym[Math.floor(lon/30)%12];
+    }
+    
+    // Calculate chart via API
+    async function calculateChart(userData) {
+        const btn = document.getElementById('enterBtn');
+        const errorDiv = document.getElementById('errorMessage');
+        
+        btn.disabled = true;
+        btn.innerHTML = '<span class="loading"></span> Calculating...';
+        errorDiv.style.display = 'none';
+        
+        try {
+            const response = await fetch('/api/chart/calculate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userData)
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                currentChartData = result;
+                localStorage.setItem('shivanetra_chart_data', JSON.stringify(result));
+                localStorage.setItem('shivanetra_user_input', JSON.stringify(userData));
+                
+                document.getElementById('landingPage').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+                document.getElementById('displayUser').innerHTML = `${result.user.name} | ${result.user.birthDate} | ${result.user.location}`;
+                
+                renderPage();
+            } else {
+                errorDiv.style.display = 'block';
+                errorDiv.innerHTML = `❌ Error: ${result.error || 'Calculation failed'}`;
+            }
+        } catch (err) {
+            errorDiv.style.display = 'block';
+            errorDiv.innerHTML = `❌ Network Error: ${err.message}`;
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '🔮 GENERATE MY CHART';
+        }
+    }
+    
+    // Event: Generate Chart
+    document.getElementById('enterBtn').addEventListener('click', () => {
+        const name = document.getElementById('userName').value;
+        const day = document.getElementById('birthDay').value;
+        const month = document.getElementById('birthMonth').value;
+        const year = document.getElementById('birthYear').value;
+        const hour = document.getElementById('birthHour').value;
+        const minute = document.getElementById('birthMinute').value;
+        const location = document.getElementById('birthLocation').value;
+        let lat = document.getElementById('latitude').value;
+        let lon = document.getElementById('longitude').value;
+        
+        if (!name || !day || !month || !year || !hour || !minute || !location) {
+            document.getElementById('errorMessage').style.display = 'block';
+            document.getElementById('errorMessage').innerHTML = '❌ Please fill all fields';
+            return;
+        }
+        
+        // Auto coordinates if not provided
+        if (!lat || !lon) {
+            const locLower = location.toLowerCase();
+            let found = false;
+            for (const [city, coords] of Object.entries(cityCoords)) {
+                if (locLower.includes(city)) {
+                    lat = coords.lat;
+                    lon = coords.lon;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                lat = 28.6139; // Default Delhi
+                lon = 77.2090;
+            }
+        }
+        
+        const userData = {
+            name,
+            birthDate: `${year}-${month}-${day}`,
+            birthTime: `${hour.toString().padStart(2,'0')}:${minute.toString().padStart(2,'0')}:00`,
+            latitude: parseFloat(lat),
+            longitude: parseFloat(lon),
+            location,
+            timezoneOffset: 5.5
+        };
+        
+        calculateChart(userData);
+    });
+    
+    // Change user
+    document.getElementById('changeUserBtn').addEventListener('click', () => {
+        document.getElementById('landingPage').style.display = 'block';
+        document.getElementById('mainApp').style.display = 'none';
+        currentChartData = null;
+    });
+    
+    // Page navigation
+    document.querySelectorAll('.page-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            currentPage = parseInt(btn.dataset.page);
+            document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderPage();
+        });
+    });
+    
+    // Check for saved data on load
+    const savedData = localStorage.getItem('shivanetra_chart_data');
+    if (savedData) {
+        try {
+            currentChartData = JSON.parse(savedData);
+            const savedUser = localStorage.getItem('shivanetra_user_input');
+            if (savedUser) {
+                const userInput = JSON.parse(savedUser);
+                document.getElementById('landingPage').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+                document.getElementById('displayUser').innerHTML = `${userInput.name} | ${userInput.birthDate} | ${userInput.location}`;
+                renderPage();
+            }
+        } catch(e) {}
+    }
+</script>
+</body>
+</html>
