@@ -18,7 +18,6 @@
             padding: 20px;
         }
 
-        /* Landing Page */
         .landing-container, .app-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -117,7 +116,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Main App */
         .app-container {
             display: none;
         }
@@ -194,6 +192,13 @@
             color: #e9cf86;
         }
 
+        .info-card {
+            background: #1a1f2e;
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
         footer {
             margin-top: 2rem;
             text-align: center;
@@ -208,6 +213,17 @@
             padding: 12px;
             margin-top: 1rem;
             color: #ff8888;
+            display: none;
+        }
+
+        .success-message {
+            background: rgba(0,255,0,0.2);
+            border: 1px solid #44ff44;
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 1rem;
+            color: #88ff88;
+            display: none;
         }
     </style>
 </head>
@@ -221,34 +237,67 @@
 
         <div class="form-group">
             <label>🌟 Full Name</label>
-            <input type="text" id="userName" placeholder="Enter your full name">
+            <input type="text" id="userName" placeholder="Enter your full name" value="Seliim Ahmed">
         </div>
 
         <div class="form-group">
             <label>🎂 Birth Date</label>
-            <div class="row-3" id="dateSelects"></div>
+            <div class="row-3">
+                <select id="birthDay">
+                    <option value="">Day</option>
+                    <option value="27" selected>27</option>
+                    <script>for(let i=1;i<=31;i++) if(i!==27) document.write(`<option value="${i}">${i}</option>`);</script>
+                </select>
+                <select id="birthMonth">
+                    <option value="">Month</option>
+                    <option value="5" selected>May</option>
+                    <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option>
+                    <option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option>
+                    <option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option>
+                    <option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option>
+                </select>
+                <select id="birthYear">
+                    <option value="">Year</option>
+                    <option value="1960" selected>1960</option>
+                    <script>for(let i=1950;i<=2026;i++) if(i!==1960) document.write(`<option value="${i}">${i}</option>`);</script>
+                </select>
+            </div>
         </div>
 
         <div class="form-group">
             <label>⏰ Birth Time (24hr)</label>
-            <div class="row-2" id="timeSelects"></div>
+            <div class="row-2">
+                <select id="birthHour">
+                    <option value="">Hour</option>
+                    <option value="5" selected>05</option>
+                    <script>for(let i=0;i<=23;i++) if(i!==5) document.write(`<option value="${i}">${i.toString().padStart(2,'0')}</option>`);</script>
+                </select>
+                <select id="birthMinute">
+                    <option value="">Minute</option>
+                    <option value="30" selected>30</option>
+                    <script>for(let i=0;i<=59;i++) if(i!==30) document.write(`<option value="${i}">${i.toString().padStart(2,'0')}</option>`);</script>
+                </select>
+            </div>
         </div>
 
         <div class="form-group">
             <label>📍 Birth Location</label>
-            <input type="text" id="birthLocation" placeholder="City, Country">
+            <input type="text" id="birthLocation" placeholder="City, Country" value="Dhaka, Bangladesh">
         </div>
 
         <div class="form-group">
-            <label>🌍 Coordinates (Optional - auto detects)</label>
+            <label>🌍 Coordinates (Optional)</label>
             <div class="row-2">
-                <input type="text" id="latitude" placeholder="Latitude (e.g., 28.6139)">
-                <input type="text" id="longitude" placeholder="Longitude (e.g., 77.2090)">
+                <input type="text" id="latitude" placeholder="Latitude" value="23.8103">
+                <input type="text" id="longitude" placeholder="Longitude" value="90.4125">
             </div>
         </div>
 
         <button class="enter-btn" id="enterBtn">🔮 GENERATE MY CHART</button>
-        <div class="error-message" id="errorMessage" style="display: none;"></div>
+        
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+        
         <footer>© MARDUKH SYSTEM™ — Sovereign Proprietary License | Seliim Ahmed</footer>
     </div>
 </div>
@@ -264,10 +313,10 @@
         <button class="page-btn active" data-page="1">🌀 NATAL CHART</button>
         <button class="page-btn" data-page="2">📊 PLANETS</button>
         <button class="page-btn" data-page="3">✨ NAKSHATRA</button>
+        <button class="page-btn" data-page="4">🔢 NUMEROLOGY</button>
     </div>
 
     <div id="pageContent" class="chart-container">
-        <!-- Dynamic content loads here -->
         <div class="loading"></div> Loading chart data...
     </div>
 
@@ -275,56 +324,19 @@
 </div>
 
 <script>
-    // Populate dropdowns
-    function populateDropdowns() {
-        // Days
-        let dayHtml = '<select id="birthDay"><option value="">Day</option>';
-        for(let i = 1; i <= 31; i++) dayHtml += `<option value="${i}">${i}</option>`;
-        dayHtml += '</select>';
-        
-        // Months
-        let monthHtml = '<select id="birthMonth"><option value="">Month</option>';
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        months.forEach((m, idx) => monthHtml += `<option value="${idx+1}">${m}</option>`);
-        monthHtml += '</select>';
-        
-        // Years
-        let yearHtml = '<select id="birthYear"><option value="">Year</option>';
-        for(let i = 1950; i <= 2026; i++) yearHtml += `<option value="${i}">${i}</option>`;
-        yearHtml += '</select>';
-        
-        document.getElementById('dateSelects').innerHTML = dayHtml + monthHtml + yearHtml;
-        
-        // Hours
-        let hourHtml = '<select id="birthHour"><option value="">Hour</option>';
-        for(let i = 0; i <= 23; i++) hourHtml += `<option value="${i}">${i.toString().padStart(2,'0')}</option>`;
-        hourHtml += '</select>';
-        
-        // Minutes
-        let minuteHtml = '<select id="birthMinute"><option value="">Minute</option>';
-        for(let i = 0; i <= 59; i++) minuteHtml += `<option value="${i}">${i.toString().padStart(2,'0')}</option>`;
-        minuteHtml += '</select>';
-        
-        document.getElementById('timeSelects').innerHTML = hourHtml + minuteHtml;
-    }
+    let currentChartData = null;
+    let currentPage = 1;
     
-    populateDropdowns();
-    
-    // City coordinates database (simplified)
+    // Auto-fill coordinates for Dhaka
     const cityCoords = {
+        'dhaka': { lat: 23.8103, lon: 90.4125 },
         'new york': { lat: 40.7128, lon: -74.0060 },
         'london': { lat: 51.5074, lon: -0.1278 },
         'delhi': { lat: 28.6139, lon: 77.2090 },
         'mumbai': { lat: 19.0760, lon: 72.8777 },
-        'bangalore': { lat: 12.9716, lon: 77.5946 },
-        'chennai': { lat: 13.0827, lon: 80.2707 },
-        'kolkata': { lat: 22.5726, lon: 88.3639 },
-        'dubai': { lat: 25.2048, lon: 55.2708 },
-        'tokyo': { lat: 35.6762, lon: 139.6503 },
-        'sydney': { lat: -33.8688, lon: 151.2093 }
+        'kolkata': { lat: 22.5726, lon: 88.3639 }
     };
     
-    // Auto-detect coordinates from location
     document.getElementById('birthLocation').addEventListener('blur', function() {
         const location = this.value.toLowerCase();
         for (const [city, coords] of Object.entries(cityCoords)) {
@@ -336,127 +348,60 @@
         }
     });
     
-    let currentChartData = null;
-    let currentPage = 1;
-    
-    // Render page based on data
-    function renderPage() {
-        const content = document.getElementById('pageContent');
-        if (!currentChartData) return;
-        
-        const chart = currentChartData.chart;
-        
-        if (currentPage === 1) {
-            // Natal Chart Summary
-            content.innerHTML = `
-                <h2 style="color:#e5cb7a;">🌀 NATAL CHART</h2>
-                <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; margin-top:1rem;">
-                    <div class="info-card"><strong>⭐ Ascendant</strong><br>${chart.ascendant.toFixed(2)}°<br>${chart.ascendantSign}</div>
-                    <div class="info-card"><strong>☉ Sun Sign</strong><br>${chart.sunSign}</div>
-                    <div class="info-card"><strong>🌙 Moon Nakshatra</strong><br>${chart.nakshatra ? chart.nakshatra.name : 'Unknown'}</div>
-                    <div class="info-card"><strong>📅 Calculated</strong><br>${new Date(chart.calculatedAt).toLocaleString()}</div>
-                </div>
-                <h3 style="color:#e5cb7a; margin-top:1.5rem;">🏠 House Cusps</h3>
-                <div style="display:grid; grid-template-columns:repeat(6,1fr); gap:0.5rem; margin-top:0.5rem;">
-                    ${chart.houses.map((h, i) => `<div style="background:#1a1f2e; padding:8px; border-radius:8px; text-align:center;"><strong>H${i+1}</strong><br>${h.toFixed(1)}°</div>`).join('')}
-                </div>
-            `;
-        } else if (currentPage === 2) {
-            // Planets Table
-            content.innerHTML = `
-                <h2 style="color:#e5cb7a;">📊 PLANETARY POSITIONS</h2>
-                <table class="planet-table">
-                    <thead><tr><th>Planet</th><th>Longitude</th><th>Zodiac</th><th>House</th></tr></thead>
-                    <tbody>
-                        ${chart.planets.map(p => `
-                            <tr>
-                                <td>${p.name}</td>
-                                <td>${p.longitude.toFixed(2)}°</td>
-                                <td>${p.zodiacSign} ${getSymbol(p.longitude)}</td>
-                                <td>House ${p.house}</td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            `;
-        } else if (currentPage === 3) {
-            // Nakshatra Details
-            const nak = chart.nakshatra;
-            content.innerHTML = `
-                <h2 style="color:#e5cb7a;">✨ NAKSHATRA (Lunar Mansion)</h2>
-                ${nak ? `
-                    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; margin-top:1rem;">
-                        <div class="info-card"><strong>🌟 Nakshatra</strong><br>${nak.name}</div>
-                        <div class="info-card"><strong>👑 Ruling Planet</strong><br>${nak.lord}</div>
-                        <div class="info-card"><strong>📐 Pada (Quarter)</strong><br>${nak.pada || 1}</div>
-                        <div class="info-card"><strong>🎯 Range</strong><br>${nak.start.toFixed(1)}° - ${nak.end.toFixed(1)}°</div>
-                    </div>
-                ` : '<p>Nakshatra data unavailable</p>'}
-            `;
-        }
-    }
-    
-    function getSymbol(lon) {
-        const sym = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
-        return sym[Math.floor(lon/30)%12];
-    }
-    
-    // Calculate chart via API
-    async function calculateChart(userData) {
+    async function calculateChart() {
         const btn = document.getElementById('enterBtn');
         const errorDiv = document.getElementById('errorMessage');
+        const successDiv = document.getElementById('successMessage');
         
-        btn.disabled = true;
-        btn.innerHTML = '<span class="loading"></span> Calculating...';
-        errorDiv.style.display = 'none';
-        
-        try {
-            const response = await fetch('/api/chart/calculate', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(userData)
-            });
-            
-            const result = await response.json();
-            
-            if (result.success) {
-                currentChartData = result;
-                localStorage.setItem('shivanetra_chart_data', JSON.stringify(result));
-                localStorage.setItem('shivanetra_user_input', JSON.stringify(userData));
-                
-                document.getElementById('landingPage').style.display = 'none';
-                document.getElementById('mainApp').style.display = 'block';
-                document.getElementById('displayUser').innerHTML = `${result.user.name} | ${result.user.birthDate} | ${result.user.location}`;
-                
-                renderPage();
-            } else {
-                errorDiv.style.display = 'block';
-                errorDiv.innerHTML = `❌ Error: ${result.error || 'Calculation failed'}`;
-            }
-        } catch (err) {
-            errorDiv.style.display = 'block';
-            errorDiv.innerHTML = `❌ Network Error: ${err.message}`;
-        } finally {
-            btn.disabled = false;
-            btn.innerHTML = '🔮 GENERATE MY CHART';
-        }
-    }
-    
-    // Event: Generate Chart
-    document.getElementById('enterBtn').addEventListener('click', () => {
-        const name = document.getElementById('userName').value;
+        // Get values
+        const name = document.getElementById('userName').value.trim();
         const day = document.getElementById('birthDay').value;
         const month = document.getElementById('birthMonth').value;
         const year = document.getElementById('birthYear').value;
         const hour = document.getElementById('birthHour').value;
         const minute = document.getElementById('birthMinute').value;
-        const location = document.getElementById('birthLocation').value;
+        const location = document.getElementById('birthLocation').value.trim();
         let lat = document.getElementById('latitude').value;
         let lon = document.getElementById('longitude').value;
         
-        if (!name || !day || !month || !year || !hour || !minute || !location) {
-            document.getElementById('errorMessage').style.display = 'block';
-            document.getElementById('errorMessage').innerHTML = '❌ Please fill all fields';
+        // Clear messages
+        errorDiv.style.display = 'none';
+        successDiv.style.display = 'none';
+        
+        // Validation with detailed messages
+        if (!name) {
+            errorDiv.innerHTML = '❌ Please enter your name';
+            errorDiv.style.display = 'block';
+            return;
+        }
+        if (!day) {
+            errorDiv.innerHTML = '❌ Please select birth day';
+            errorDiv.style.display = 'block';
+            return;
+        }
+        if (!month) {
+            errorDiv.innerHTML = '❌ Please select birth month';
+            errorDiv.style.display = 'block';
+            return;
+        }
+        if (!year) {
+            errorDiv.innerHTML = '❌ Please select birth year';
+            errorDiv.style.display = 'block';
+            return;
+        }
+        if (!hour) {
+            errorDiv.innerHTML = '❌ Please select birth hour';
+            errorDiv.style.display = 'block';
+            return;
+        }
+        if (!minute) {
+            errorDiv.innerHTML = '❌ Please select birth minute';
+            errorDiv.style.display = 'block';
+            return;
+        }
+        if (!location) {
+            errorDiv.innerHTML = '❌ Please enter birth location';
+            errorDiv.style.display = 'block';
             return;
         }
         
@@ -473,32 +418,135 @@
                 }
             }
             if (!found) {
-                lat = 28.6139; // Default Delhi
-                lon = 77.2090;
+                lat = 23.8103;
+                lon = 90.4125;
             }
         }
         
+        btn.disabled = true;
+        btn.innerHTML = '<span class="loading"></span> Calculating your chart...';
+        
         const userData = {
-            name,
+            name: name,
             birthDate: `${year}-${month}-${day}`,
             birthTime: `${hour.toString().padStart(2,'0')}:${minute.toString().padStart(2,'0')}:00`,
             latitude: parseFloat(lat),
             longitude: parseFloat(lon),
-            location,
-            timezoneOffset: 5.5
+            location: location,
+            timezoneOffset: 6, // Dhaka GMT+6
+            gender: 'M'
         };
         
-        calculateChart(userData);
-    });
+        console.log('Sending data:', userData);
+        
+        try {
+            const response = await fetch('/api/chart/calculate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userData)
+            });
+            
+            const result = await response.json();
+            console.log('Response:', result);
+            
+            if (result.success) {
+                currentChartData = result;
+                localStorage.setItem('shivanetra_chart_data', JSON.stringify(result));
+                localStorage.setItem('shivanetra_user_input', JSON.stringify(userData));
+                
+                document.getElementById('landingPage').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+                document.getElementById('displayUser').innerHTML = `${result.user.name} | ${result.user.birthDate} | ${result.user.location}`;
+                
+                renderPage();
+            } else {
+                errorDiv.innerHTML = `❌ Error: ${result.error || 'Calculation failed'}`;
+                errorDiv.style.display = 'block';
+            }
+        } catch (err) {
+            console.error('Fetch error:', err);
+            errorDiv.innerHTML = `❌ Network Error: ${err.message}. Make sure server is running on port 3000.`;
+            errorDiv.style.display = 'block';
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '🔮 GENERATE MY CHART';
+        }
+    }
     
-    // Change user
+    function renderPage() {
+        const content = document.getElementById('pageContent');
+        if (!currentChartData) return;
+        
+        const chart = currentChartData.chart;
+        const num = currentChartData.numerology;
+        
+        if (currentPage === 1) {
+            content.innerHTML = `
+                <h2 style="color:#e5cb7a;">🌀 NATAL CHART</h2>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; margin-top:1rem;">
+                    <div class="info-card"><strong>⭐ Ascendant</strong><br>${chart.ascendant.toFixed(2)}°<br>${chart.ascendantSign}</div>
+                    <div class="info-card"><strong>☉ Sun Sign</strong><br>${chart.sunSign}</div>
+                    <div class="info-card"><strong>🌙 Moon Nakshatra</strong><br>${chart.nakshatra ? chart.nakshatra.name : 'Unknown'}</div>
+                    <div class="info-card"><strong>📅 Calculated</strong><br>${new Date(chart.calculatedAt).toLocaleString()}</div>
+                </div>
+                <h3 style="color:#e5cb7a; margin-top:1.5rem;">🏠 House Cusps</h3>
+                <div style="display:grid; grid-template-columns:repeat(6,1fr); gap:0.5rem; margin-top:0.5rem;">
+                    ${chart.houses.map((h, i) => `<div style="background:#1a1f2e; padding:8px; border-radius:8px; text-align:center;"><strong>H${i+1}</strong><br>${h.toFixed(1)}°</div>`).join('')}
+                </div>
+            `;
+        } else if (currentPage === 2) {
+            content.innerHTML = `
+                <h2 style="color:#e5cb7a;">📊 PLANETARY POSITIONS</h2>
+                <table class="planet-table">
+                    <thead><tr><th>Planet</th><th>Longitude</th><th>Zodiac</th><th>House</th></tr></thead>
+                    <tbody>
+                        ${chart.planets.map(p => `
+                            <tr>
+                                <td>${p.name}</td>
+                                <td>${p.longitude.toFixed(2)}°</td>
+                                <td>${p.zodiacSign}</td>
+                                <td>House ${p.house}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        } else if (currentPage === 3) {
+            const nak = chart.nakshatra;
+            content.innerHTML = `
+                <h2 style="color:#e5cb7a;">✨ NAKSHATRA (Lunar Mansion)</h2>
+                ${nak ? `
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; margin-top:1rem;">
+                        <div class="info-card"><strong>🌟 Nakshatra</strong><br>${nak.name}</div>
+                        <div class="info-card"><strong>👑 Ruling Planet</strong><br>${nak.lord}</div>
+                        <div class="info-card"><strong>📐 Pada</strong><br>${nak.pada || 1}</div>
+                        <div class="info-card"><strong>🎯 Range</strong><br>${nak.start.toFixed(1)}° - ${nak.end.toFixed(1)}°</div>
+                    </div>
+                ` : '<p>Nakshatra data unavailable</p>'}
+            `;
+        } else if (currentPage === 4) {
+            content.innerHTML = `
+                <h2 style="color:#e5cb7a;">🔢 NUMEROLOGY REPORT</h2>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:1rem; margin-top:1rem;">
+                    <div class="info-card"><strong>📖 Life Path</strong><br>${num.western.lifePathNumber}</div>
+                    <div class="info-card"><strong>💖 Soul Urge</strong><br>${num.western.soulUrgeNumber}</div>
+                    <div class="info-card"><strong>🕉️ Kabbalah</strong><br>${num.kabbalah.number} - ${num.kabbalah.sphere}</div>
+                    <div class="info-card"><strong>🐉 Chinese Zodiac</strong><br>${num.chinese.zodiac} (${num.chinese.element}, ${num.chinese.yinYang})</div>
+                    <div class="info-card"><strong>🧘 Kua Number</strong><br>${num.chinese.kua.number}</div>
+                    <div class="info-card"><strong>🌌 Kundalini</strong><br>Soul:${num.kundalini.soul} Karma:${num.kundalini.karma} Destiny:${num.kundalini.destiny}</div>
+                </div>
+            `;
+        }
+    }
+    
+    document.getElementById('enterBtn').addEventListener('click', calculateChart);
+    
     document.getElementById('changeUserBtn').addEventListener('click', () => {
         document.getElementById('landingPage').style.display = 'block';
         document.getElementById('mainApp').style.display = 'none';
         currentChartData = null;
     });
     
-    // Page navigation
     document.querySelectorAll('.page-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             currentPage = parseInt(btn.dataset.page);
@@ -508,7 +556,7 @@
         });
     });
     
-    // Check for saved data on load
+    // Check for saved data
     const savedData = localStorage.getItem('shivanetra_chart_data');
     if (savedData) {
         try {
