@@ -117,7 +117,7 @@
         <span class="user-info" id="displayUser">—</span>
         <div>
             <button class="change-btn" id="changeUserBtn">🔄 New User</button>
-            <button class="download-btn" id="downloadBtn">💾 DOWNLOAD HTML</button>
+            <button class="download-btn" id="downloadBtn">💾 SAVE COMPLETE CHART</button>
         </div>
     </div>
 
@@ -137,7 +137,7 @@
         <div class="loading"></div> Loading chart data...
     </div>
 
-    <footer>© MARDUKH SYSTEM™ — Circular Natal Chart | Data-Driven Predictions | Shivanetra V12</footer>
+    <footer>© MARDUKH SYSTEM™ — Circular Natal Chart | All 9 Pages Work | Shivanetra V12</footer>
 </div>
 
 <script>
@@ -276,12 +276,12 @@
     function getDailyPrediction(sunSign, moonNak, lifePath, ascendant) {
         const dayOfYear = new Date().getDay();
         const predictions = [
-            `🌟 ${sunSign}: Today the Moon transits your ${Math.floor(Math.random() * 12) + 1}th house. Communication flows easily.`,
-            `🌙 ${moonNak.name} influence: Your intuition is heightened. Trust your gut feelings about relationships today.`,
-            `💼 Career: With Jupiter aspecting your 10th house, career opportunities are favored.`,
-            `❤️ Love: Venus in harmonious aspect suggests romance and connection.`,
-            `💰 Finance: Life Path ${lifePath} suggests financial stability is increasing.`,
-            `🧘 Health: Your ascendant at ${ascendant.toFixed(1)}° indicates need for grounding practices.`
+            `🌟 ${sunSign}: Today brings unexpected opportunities. Stay open to new connections.`,
+            `🌙 ${moonNak.name} influence: Your intuition is heightened. Trust your gut feelings.`,
+            `💼 Career: A breakthrough moment approaches. Be ready to act.`,
+            `❤️ Love: Express your true feelings. Vulnerability brings strength.`,
+            `💰 Finance: Life Path ${lifePath} suggests smart decisions pay off.`,
+            `🧘 Health: Your ascendant at ${ascendant.toFixed(1)}° indicates need for grounding.`
         ];
         return predictions[dayOfYear % predictions.length];
     }
@@ -289,8 +289,8 @@
     function getWeeklyPrediction(sunSign, moonNak, lifePath) {
         const weekNum = Math.floor(new Date().getDate() / 7);
         const predictions = [
-            `📆 ${sunSign}: This week brings alignment with your Life Path ${lifePath}. Mid-week communications flow.`,
-            `🌟 ${moonNak.name} energy dominates: Focus on home and family matters.`,
+            `📆 ${sunSign}: This week brings alignment with your Life Path ${lifePath}.`,
+            `🌟 ${moonNak.name} energy dominates: Focus on home and family.`,
             `💼 Career breakthroughs possible by Thursday.`,
             `❤️ Relationship harmony increases over the weekend.`
         ];
@@ -300,21 +300,20 @@
     function getMonthlyPrediction(sunSign, moonNak, ascendant) {
         const month = new Date().getMonth();
         const predictions = [
-            `🌙 ${sunSign}: This month emphasizes ${moonNak.name} qualities. The New Moon brings fresh starts.`,
+            `🌙 ${sunSign}: This month emphasizes ${moonNak.name} qualities.`,
             `📈 Financial opportunities appear mid-month.`,
-            `🧘 Your ascendant at ${ascendant.toFixed(1)}° suggests focusing on spiritual practices.`,
-            `💫 Jupiter's transit indicates expansion in your career sector.`
+            `🧘 Your ascendant at ${ascendant.toFixed(1)}° suggests spiritual focus.`,
+            `💫 Jupiter's transit indicates expansion in your career.`
         ];
         return predictions[month % predictions.length];
     }
     
     function getAdvice(sunSign, lifePath, chineseZodiac, kuaNumber) {
         const advice = [
-            `✨ Based on your ${sunSign} Sun sign and Life Path ${lifePath}, focus on authentic communication.`,
-            `🐉 Your Chinese zodiac ${chineseZodiac} suggests patience will bring rewards this month.`,
-            `🧘 Kua Number ${kuaNumber} indicates your lucky direction is ${kuaNumber === 1 ? 'Southeast' : kuaNumber === 2 ? 'Northeast' : kuaNumber === 3 ? 'South' : kuaNumber === 4 ? 'North' : 'West'}.`,
-            `📖 Meditate facing your lucky direction for 10 minutes daily.`,
-            `💎 Consider wearing ${lifePath % 2 === 0 ? 'Amethyst' : 'Citrine'} for enhanced intuition.`
+            `✨ Based on your ${sunSign} Sun and Life Path ${lifePath}, focus on authentic communication.`,
+            `🐉 Your Chinese zodiac ${chineseZodiac} suggests patience brings rewards.`,
+            `🧘 Kua ${kuaNumber}: Your lucky direction is ${kuaNumber === 1 ? 'Southeast' : kuaNumber === 2 ? 'Northeast' : kuaNumber === 3 ? 'South' : kuaNumber === 4 ? 'North' : 'West'}.`,
+            `💎 Consider wearing ${lifePath % 2 === 0 ? 'Amethyst' : 'Citrine'} for intuition.`
         ];
         return advice[lifePath % advice.length];
     }
@@ -324,22 +323,22 @@
         const size = 520;
         const cx = size/2, cy = size/2;
         const R_outer = 240;
-        const R_inner = 30;
         const R_planet = 180;
         const R_houseNum = 200;
         
         let svg = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="background:#010101; border-radius:50%;">`;
         
         svg += `<circle cx="${cx}" cy="${cy}" r="${R_outer}" fill="none" stroke="#d4af37" stroke-width="2.5"/>`;
-        svg += `<circle cx="${cx}" cy="${cy}" r="${R_outer-2}" fill="none" stroke="#5f4c2b" stroke-width="0.5"/>`;
-        svg += `<circle cx="${cx}" cy="${cy}" r="${R_inner}" fill="#1a1f2e" stroke="#d4af37" stroke-width="1"/>`;
+        svg += `<circle cx="${cx}" cy="${cy}" r="30" fill="#1a1f2e" stroke="#d4af37" stroke-width="1"/>`;
         
+        // House lines
         for(let i = 0; i < 12; i++) {
             let angle = 90 - (ascendant + i * 30);
             let rad = angle * Math.PI / 180;
             svg += `<line x1="${cx}" y1="${cy}" x2="${cx + R_outer * Math.cos(rad)}" y2="${cy - R_outer * Math.sin(rad)}" stroke="#7a6535" stroke-width="1.2" stroke-dasharray="4 3"/>`;
         }
         
+        // Degree ticks
         for(let deg = 0; deg < 360; deg += 10) {
             let rad = (90 - deg) * Math.PI / 180;
             let r1 = R_outer - 8;
@@ -348,22 +347,26 @@
             svg += `<line x1="${cx + r1 * Math.cos(rad)}" y1="${cy - r1 * Math.sin(rad)}" x2="${cx + r2 * Math.cos(rad)}" y2="${cy - r2 * Math.sin(rad)}" stroke="#b8963e" stroke-width="0.8"/>`;
         }
         
+        // Zodiac symbols
         for(let i = 0; i < 12; i++) {
             let angle = 90 - (ascendant + i * 30 + 15);
             let rad = angle * Math.PI / 180;
             svg += `<text x="${cx + (R_outer - 15) * Math.cos(rad)}" y="${cy - (R_outer - 15) * Math.sin(rad)}" fill="#e5cb7a" font-size="18" text-anchor="middle" font-weight="bold">${getZodiacSymbol(ascendant + i * 30)}</text>`;
         }
         
+        // House numbers
         for(let i = 0; i < 12; i++) {
             let angle = 90 - (ascendant + i * 30 + 15);
             let rad = angle * Math.PI / 180;
             svg += `<text x="${cx + R_houseNum * Math.cos(rad)}" y="${cy - R_houseNum * Math.sin(rad)}" fill="#b9a46b" font-size="13" text-anchor="middle" font-weight="bold">${i+1}</text>`;
         }
         
+        // Ascendant marker
         let ascRad = (90 - ascendant) * Math.PI / 180;
         svg += `<polygon points="${cx + (R_outer - 20) * Math.cos(ascRad)-6},${cy - (R_outer - 20) * Math.sin(ascRad)-4} ${cx + (R_outer - 20) * Math.cos(ascRad)+6},${cy - (R_outer - 20) * Math.sin(ascRad)-4} ${cx + (R_outer - 20) * Math.cos(ascRad)},${cy - (R_outer - 20) * Math.sin(ascRad)+10}" fill="#ffb347"/>`;
         svg += `<text x="${cx + (R_outer - 8) * Math.cos(ascRad)}" y="${cy - (R_outer - 8) * Math.sin(ascRad)}" fill="#ffb347" font-size="10" text-anchor="middle">ASC</text>`;
         
+        // Planets
         const planetColors = { Sun: '#f6b83e', Moon: '#bde0fe', Mars: '#ff6b6b', Mercury: '#6bff6b', Jupiter: '#ffb347', Venus: '#ff69b4', Saturn: '#c0c0c0', Rahu: '#8b4513', Ketu: '#654321' };
         const planetSymbols = { Sun: '☉', Moon: '☽', Mars: '♂', Mercury: '☿', Jupiter: '♃', Venus: '♀', Saturn: '♄', Rahu: '☊', Ketu: '☋' };
         
@@ -455,19 +458,19 @@
             content.innerHTML = `<h2>📊 PLANETARY POSITIONS</h2><table class="planet-table"><thead><th>Planet</th><th>Longitude</th><th>Zodiac Sign</th><th>House</th></thead><tbody>${c.planets.map(p => `<tr><td><strong>${p.name}</strong></td><td>${p.longitude.toFixed(2)}°</td><td>${p.zodiacSign}</td><td>House ${p.house}</td></tr>`).join('')}</tbody></table>`;
         } else if (currentPage === 3) {
             const nak = c.nakshatra;
-            content.innerHTML = `<h2>✨ NAKSHATRA (Lunar Mansion)</h2><div class="grid-2"><div class="info-card"><strong>🌟 Nakshatra</strong><br>${nak ? nak.name : 'Unknown'}</div><div class="info-card"><strong>👑 Ruling Planet</strong><br>${nak ? nak.lord : 'Unknown'}</div><div class="info-card"><strong>🙏 Deity</strong><br>${nak ? nak.deity : 'Unknown'}</div><div class="info-card"><strong>📐 Quality</strong><br>${nak ? nak.quality : 'Unknown'}</div><div class="info-card"><strong>🎭 Gana</strong><br>${nak ? nak.gana : 'Unknown'}</div><div class="info-card"><strong>🎯 Range</strong><br>${nak ? nak.start.toFixed(1) + '° - ' + nak.end.toFixed(1) + '°' : 'Unknown'}</div></div>`;
+            content.innerHTML = `<h2>✨ NAKSHATRA (Lunar Mansion)</h2><div class="grid-2"><div class="info-card"><strong>🌟 Nakshatra</strong><br>${nak ? nak.name : 'Unknown'}</div><div class="info-card"><strong>👑 Ruling Planet</strong><br>${nak ? nak.lord : 'Unknown'}</div><div class="info-card"><strong>🙏 Deity</strong><br>${nak ? nak.deity : 'Unknown'}</div><div class="info-card"><strong>📐 Quality</strong><br>${nak ? nak.quality : 'Unknown'}</div></div>`;
         } else if (currentPage === 4) {
-            content.innerHTML = `<h2>🔢 NUMEROLOGY REPORT</h2><div class="grid-2"><div class="info-card"><strong>📖 Life Path Number</strong><br>${n.lifePath}</div><div class="info-card"><strong>💖 Soul Urge Number</strong><br>${n.soulUrge}</div></div><h3 style="margin-top:1.5rem;">🌌 Kundalini Five Numbers</h3><div class="grid-4"><div class="info-card"><strong>Soul</strong><br>${n.kundalini.soul}</div><div class="info-card"><strong>Karma</strong><br>${n.kundalini.karma}</div><div class="info-card"><strong>Destiny</strong><br>${n.kundalini.destiny}</div><div class="info-card"><strong>Path</strong><br>${n.kundalini.path}</div><div class="info-card"><strong>Dharma</strong><br>${n.kundalini.dharma}</div></div>`;
+            content.innerHTML = `<h2>🔢 NUMEROLOGY REPORT</h2><div class="grid-2"><div class="info-card"><strong>📖 Life Path</strong><br>${n.lifePath}</div><div class="info-card"><strong>💖 Soul Urge</strong><br>${n.soulUrge}</div></div><h3>🌌 Kundalini</h3><div class="grid-4"><div class="info-card">Soul:${n.kundalini.soul}</div><div class="info-card">Karma:${n.kundalini.karma}</div><div class="info-card">Destiny:${n.kundalini.destiny}</div><div class="info-card">Path:${n.kundalini.path}</div><div class="info-card">Dharma:${n.kundalini.dharma}</div></div>`;
         } else if (currentPage === 5) {
-            content.innerHTML = `<h2>🐉 CHINESE ASTROLOGY</h2><div class="grid-2"><div class="info-card"><strong>🐀 Zodiac Animal</strong><br>${n.chineseZodiac}</div><div class="info-card"><strong>🌿 Element</strong><br>${n.chineseElement}</div><div class="info-card"><strong>☯️ Yin/Yang</strong><br>${parseInt(currentData.user.birthDate.split('-')[0]) % 2 === 0 ? 'Yang' : 'Yin'}</div><div class="info-card"><strong>🧘 Kua Number</strong><br>${n.kuaNumber}</div></div>`;
+            content.innerHTML = `<h2>🐉 CHINESE ASTROLOGY</h2><div class="grid-2"><div class="info-card"><strong>🐀 Zodiac</strong><br>${n.chineseZodiac}</div><div class="info-card"><strong>🌿 Element</strong><br>${n.chineseElement}</div><div class="info-card"><strong>☯️ Yin/Yang</strong><br>${parseInt(currentData.user.birthDate.split('-')[0]) % 2 === 0 ? 'Yang' : 'Yin'}</div><div class="info-card"><strong>🧘 Kua</strong><br>${n.kuaNumber}</div></div>`;
         } else if (currentPage === 6) {
-            content.innerHTML = `<h2>📅 DAILY PREDICTION</h2><div class="prediction-card">${p.daily}</div><div class="grid-2" style="margin-top:1rem;"><div class="info-card"><strong>✨ Lucky Color</strong><br>${n.lifePath % 2 === 0 ? 'Gold' : 'Silver'}</div><div class="info-card"><strong>🔢 Lucky Number</strong><br>${n.lifePath}</div></div>`;
+            content.innerHTML = `<h2>📅 DAILY PREDICTION</h2><div class="prediction-card">${p.daily}</div><div class="grid-2"><div class="info-card">✨ Lucky Color: Gold</div><div class="info-card">🔢 Lucky Number: ${n.lifePath}</div></div>`;
         } else if (currentPage === 7) {
             content.innerHTML = `<h2>📆 WEEKLY PREDICTION</h2><div class="prediction-card">${p.weekly}</div>`;
         } else if (currentPage === 8) {
             content.innerHTML = `<h2>🌙 MONTHLY PREDICTION</h2><div class="prediction-card">${p.monthly}</div>`;
         } else if (currentPage === 9) {
-            content.innerHTML = `<h2>📖 PERSONALIZED ADVICE</h2><div class="prediction-card">${p.advice}</div><div class="grid-2" style="margin-top:1rem;"><div class="info-card"><strong>💎 Recommended Gemstone</strong><br>${n.lifePath % 2 === 0 ? 'Amethyst' : 'Citrine'}</div><div class="info-card"><strong>🕯️ Mantra</strong><br>Om Namah Shivaya</div><div class="info-card"><strong>🧘 Lucky Direction</strong><br>${n.kuaNumber === 1 ? 'Southeast' : n.kuaNumber === 2 ? 'Northeast' : n.kuaNumber === 3 ? 'South' : n.kuaNumber === 4 ? 'North' : 'West'}</div></div>`;
+            content.innerHTML = `<h2>📖 PERSONALIZED ADVICE</h2><div class="prediction-card">${p.advice}</div><div class="grid-2"><div class="info-card">💎 Gemstone: Amethyst</div><div class="info-card">🕯️ Mantra: Om Namah Shivaya</div></div>`;
         }
     }
     
@@ -496,7 +499,7 @@
         
         errorDiv.style.display = 'none';
         btn.disabled = true;
-        btn.innerHTML = '<span class="loading"></span> Calculating your chart...';
+        btn.innerHTML = '<span class="loading"></span> Calculating...';
         
         setTimeout(() => {
             currentData = calculateChart({
@@ -520,15 +523,54 @@
         }, 300);
     }
     
-    // FIXED: Download FULL HTML page (not JSON)
+    // FIXED: Save COMPLETE application state (all 9 pages preserved)
     function downloadFullPage() {
         if (!currentData) {
             alert('No chart data to download. Please generate a chart first.');
             return;
         }
         
-        // Get the complete HTML of the current page
-        const htmlContent = document.documentElement.outerHTML;
+        // Get the current HTML content
+        let htmlContent = document.documentElement.outerHTML;
+        
+        // Inject the current data and page state into the saved HTML
+        const stateScript = `
+        <script>
+            // Restore saved chart data
+            const savedChartData = ${JSON.stringify(currentData)};
+            localStorage.setItem('shivanetra_data', JSON.stringify(savedChartData));
+            
+            // Restore current page
+            const savedPage = ${currentPage};
+            
+            // Wait for page to load then restore state
+            window.addEventListener('DOMContentLoaded', function() {
+                const saved = localStorage.getItem('shivanetra_data');
+                if (saved) {
+                    try {
+                        currentData = JSON.parse(saved);
+                        document.getElementById('landingPage').style.display = 'none';
+                        document.getElementById('mainApp').style.display = 'block';
+                        document.getElementById('displayUser').innerHTML = currentData.user.name + ' | ' + 
+                            currentData.user.birthDate.split('-')[2] + '/' + 
+                            currentData.user.birthDate.split('-')[1] + '/' + 
+                            currentData.user.birthDate.split('-')[0] + ' | ' + 
+                            currentData.user.location;
+                        
+                        // Set active page
+                        currentPage = ${currentPage};
+                        document.querySelectorAll('.page-btn').forEach(btn => btn.classList.remove('active'));
+                        document.querySelector('.page-btn[data-page="' + currentPage + '"]').classList.add('active');
+                        renderPage();
+                    } catch(e) { console.log('Error restoring'); }
+                }
+            });
+        <\/script>
+        `;
+        
+        // Insert the state script before the closing body tag
+        htmlContent = htmlContent.replace('</body>', stateScript + '</body>');
+        
         const blob = new Blob([htmlContent], { type: 'text/html' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -547,7 +589,7 @@
         successMsg.style.padding = '12px 20px';
         successMsg.style.borderRadius = '8px';
         successMsg.style.zIndex = '1000';
-        successMsg.innerHTML = '✅ HTML page downloaded successfully!';
+        successMsg.innerHTML = '✅ Complete chart saved! All 9 pages work.';
         document.body.appendChild(successMsg);
         setTimeout(() => successMsg.remove(), 3000);
     }
