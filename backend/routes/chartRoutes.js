@@ -1,17 +1,11 @@
-/**
- * MARDUKH SYSTEM™ - Shivanetra V12
- * Chart Routes API Endpoints
- * Receives birth data, returns calculated chart
- */
-
 const express = require('express');
 const router = express.Router();
 const { getCompleteChartData, getNakshatra, getZodiacSign } = require('../services/planetaryEngine');
+const { getCompleteNumerology } = require('../services/numerologyService');
 
 /**
  * POST /api/chart/calculate
- * Body: { name, birthDate, birthTime, latitude, longitude, location, timezoneOffset }
- * Returns: Complete calculated chart data
+ * Returns complete chart + numerology
  */
 router.post('/calculate', async (req, res) => {
     try {
@@ -22,7 +16,8 @@ router.post('/calculate', async (req, res) => {
             latitude,
             longitude,
             location,
-            timezoneOffset = 5.5
+            timezoneOffset = 5.5,
+            gender = 'M'
         } = req.body;
 
         // Validation
@@ -49,6 +44,13 @@ router.post('/calculate', async (req, res) => {
             timezoneOffset
         });
 
+        // Calculate numerology
+        const numerology = getCompleteNumerology({
+            name: name || 'Guest',
+            birthDate,
+            gender
+        });
+
         // Find Moon position for Nakshatra
         const moonPlanet = chartData.planets.find(p => p.name === 'Moon');
         const nakshatra = moonPlanet ? getNakshatra(moonPlanet.longitude) : null;
@@ -56,15 +58,12 @@ router.post('/calculate', async (req, res) => {
         // Add zodiac signs to planets
         const planetsWithSigns = chartData.planets.map(planet => ({
             ...planet,
-            zodiacSign: getZodiacSign(planet.longitude),
-            zodiacSymbol: getZodiacSymbol(planet.longitude)
+            zodiacSign: getZodiacSign(planet.longitude)
         }));
 
-        // Find Sun sign for basic horoscope
         const sunPlanet = chartData.planets.find(p => p.name === 'Sun');
         const sunSign = sunPlanet ? getZodiacSign(sunPlanet.longitude) : 'Unknown';
 
-        // Prepare response
         const response = {
             success: true,
             user: {
@@ -84,7 +83,8 @@ router.post('/calculate', async (req, res) => {
                 sunSign: sunSign,
                 julianDay: chartData.julianDay,
                 calculatedAt: chartData.timestamp
-            }
+            },
+            numerology: numerology
         };
 
         res.status(200).json(response);
@@ -99,10 +99,6 @@ router.post('/calculate', async (req, res) => {
     }
 });
 
-/**
- * GET /api/chart/health
- * Health check for chart service
- */
 router.get('/health', (req, res) => {
     res.json({
         success: true,
@@ -111,14 +107,5 @@ router.get('/health', (req, res) => {
         timestamp: new Date().toISOString()
     });
 });
-
-/**
- * Helper: Get zodiac symbol
- */
-function getZodiacSymbol(longitude) {
-    const symbols = ['♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓'];
-    const index = Math.floor(longitude / 30) % 12;
-    return symbols[index];
-}
 
 module.exports = router;
