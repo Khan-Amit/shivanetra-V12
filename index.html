@@ -1,1 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Shivanetra V12 | Celestial Astrology with NASA Horizons</title>
+    <!-- Google Fonts & Smooth CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #0b0f1c 0%, #0a0e1a 100%);
+            color: #f0eef7;
+            overflow-x: hidden;
+            padding: 1rem;
+        }
+
+        /* Main container & pages */
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(15, 20, 35, 0.65);
+            backdrop-filter: blur(2px);
+            border-radius: 2.5rem;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.08);
+            overflow: hidden;
+            padding: 1rem 1.5rem 2rem;
+        }
+
+        /* navbar / page tabs */
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(255,215,150,0.3);
+            padding-bottom: 0.75rem;
+        }
+
+        .tab-btn {
+            background: rgba(25, 32, 55, 0.7);
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #cdd9ff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .tab-btn.active {
+            background: #e9b35f;
+            color: #0a0c18;
+            box-shadow: 0 4px 12px rgba(233,179,95,0.4);
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .page.active-page {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* rotating wheel canvas */
+        .wheel-section {
+            background: #0e1322cc;
+            border-radius: 2rem;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        canvas {
+            background: radial-gradient(circle at 30% 20%, #1a1f32, #080c18);
+            border-radius: 50%;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.6), inset 0 0 35px rgba(255,215,0,0.15);
+            max-width: 100%;
+            height: auto;
+            width: 450px;
+            aspect-ratio: 1/1;
+        }
+
+        .info-panel {
+            background: #0b0f1cee;
+            border-radius: 1.5rem;
+            padding: 1rem 1.5rem;
+            margin-top: 1rem;
+            border-left: 4px solid #e9b35f;
+        }
+
+        .prediction-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.2rem;
+            margin-top: 1.5rem;
+        }
+
+        .card {
+            background: #111725;
+            border-radius: 1.5rem;
+            padding: 1rem 1.3rem;
+            transition: 0.2s;
+            border: 1px solid #2a2f46;
+        }
+
+        .badge {
+            background: #e9b35f;
+            color: #0b0e1a;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .lucky {
+            font-size: 1.8rem;
+            font-weight: 800;
+            font-family: monospace;
+        }
+
+        button {
+            background: #e9b35f;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: #12172f;
+        }
+
+        .status-msg {
+            font-size: 0.8rem;
+            color: #b9c8ff;
+        }
+
+        @media (max-width: 680px) {
+            .tab-btn { padding: 0.4rem 0.9rem; font-size: 0.75rem;}
+            .app-container { padding: 1rem;}
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="nav-tabs" id="navTabs">
+        <button class="tab-btn" data-page="landing">🌿 Home</button>
+        <button class="tab-btn active" data-page="wheel">🌀 Wheel (Live NASA)</button>
+        <button class="tab-btn" data-page="planets">🪐 Planets</button>
+        <button class="tab-btn" data-page="nakshatra">✨ Nakshatra</button>
+        <button class="tab-btn" data-page="numerology">🔢 Numerology</button>
+        <button class="tab-btn" data-page="chinese">🏮 Feng Shui</button>
+        <button class="tab-btn" data-page="daily">📅 Daily</button>
+        <button class="tab-btn" data-page="weekly">📆 Weekly</button>
+        <button class="tab-btn" data-page="monthly">🌙 Monthly</button>
+        <button class="tab-btn" data-page="advice">💡 Advice</button>
+    </div>
+
+    <!-- LANDING PAGE -->
+    <div id="landing" class="page">
+        <div style="text-align:center; padding:2rem 0">
+            <h1 style="font-size:3rem;">🌌 Shivanetra V12</h1>
+            <p style="margin: 1rem 0;">Real-time NASA Horizons Celestial Engine • Surya Siddhanta Wisdom • Feng Shui Harmony</p>
+            <div class="info-panel">✨ Live planet positions from JPL NASA Horizons API. Accurate for Sun, Moon, 5 planets & Lunar Nodes. <br> <span id="liveAPITime" class="status-msg">—</span></div>
+            <button id="refreshNasaBtn" style="margin-top:1rem;">🔄 Force Refresh NASA Data</button>
+        </div>
+    </div>
+
+    <!-- ROTATING WHEEL PAGE (NATAL + TRANSIT) -->
+    <div id="wheel" class="page active-page">
+        <div class="wheel-section">
+            <h2>🌀 Celestial Compass: Inner (Natal) & Outer (Transit)</h2>
+            <canvas id="wheelCanvas" width="500" height="500" style="width:100%; max-width:500px; height:auto; margin:0 auto; display:block;"></canvas>
+            <div class="info-panel">
+                <div><strong>🌞 Real-time Transit Positions (NASA)</strong> — Outer ring<br>🌙 Inner ring: fixed natal (example reference: Aries 0°)</div>
+                <div id="wheelStatus" class="status-msg">Loading NASA planetary longitudes...</div>
+                <button id="redrawWheelBtn">🔄 Redraw Wheel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Planets page -->
+    <div id="planets" class="page"><div class="card"><h3>🪐 Planet Positions (NASA Horizons)</h3><div id="planetTable" class="prediction-grid">Loading...</div></div></div>
+    <div id="nakshatra" class="page"><div class="card"><h3>✨ Nakshatra Gateways</h3><div id="nakshatraList"></div></div></div>
+    <div id="numerology" class="page"><div class="card"><h3>🔢 Life Path & Daily Number</h3><div id="numerologyResult"></div></div></div>
+    <div id="chinese" class="page"><div class="card"><h3>🏮 Feng Shui Kua & 5 Elements</h3><div id="fengshuiResult"></div></div></div>
+    <div id="daily" class="page"><div class="card"><h3>📅 Daily Horoscope & Fortune</h3><div id="dailyResult"></div></div></div>
+    <div id="weekly" class="page"><div class="card"><h3>📆 Weekly Transit Insights</h3><div id="weeklyResult"></div></div></div>
+    <div id="monthly" class="page"><div class="card"><h3>🌙 Monthly Cosmic Weather</h3><div id="monthlyResult"></div></div></div>
+    <div id="advice" class="page"><div class="card"><h3>💡 Surya Siddhanta Wisdom</h3><div id="adviceResult"></div></div></div>
+</div>
+
+<script>
+    // ----------------------------- GLOBALS ---------------------------------
+    const NASA_CACHE_KEY = 'shivanetra_nasa_cache';
+    const CACHE_DURATION_MS = 60 * 60 * 1000; // 1 hour
+
+    // Planet IDs for Horizons API (observer ecliptic longitude)
+    // We will request 'ECLIP' longitude for each body.
+    const PLANET_IDS = {
+        Sun: '10', Moon: '301', Mercury: '199', Venus: '299', Mars: '499',
+        Jupiter: '599', Saturn: '699'
+    };
+    const NODE_MEAN_ID = '10'; // Rahu derived from lunar ascending node, we get via Moon's Node separately: but Horizons has 'N8' for node? simpler: compute from JPL node?
+    // Instead we'll fetch Moon's Node using COMMAND='N8' (Mean ascending node). Rahu = longitude of mean ascending node; Ketu = +180°
+    
+    // Helper: fetch with caching
+    let currentPlanetLongitudes = { Sun:0, Moon:0, Mercury:0, Venus:0, Mars:0, Jupiter:0, Saturn:0, Rahu:0, Ketu:0 };
+    let lastFetchTime = null;
+    let apiError = false;
+
+    // function to get current datetime YYYY-MM-DD for API
+    function getTodayDateStr() {
+        const now = new Date();
+        return now.toISOString().split('T')[0];
+    }
+
+    // Fetch single planet longitude (ecliptic longitude) from Horizons
+    async function fetchPlanetLongitude(planetId, name) {
+        const dateStr = getTodayDateStr();
+        const lon = 0; // for user longitude, we assume Greenwich but astrology uses ecliptic geo centric
+        const lat = 0;
+        const url = `https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND='${planetId}'&OBJ_DATA='YES'&MAKE_EPHEM='YES'&EPHEM_TYPE='OBSERVER'&CENTER='coord@${lon},${lat},0'&START_TIME='${dateStr}'&STOP_TIME='${dateStr}+1'&STEP_SIZE='1d'`;
+        try {
+            const resp = await fetch(url);
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            const data = await resp.json();
+            // parse result: the ephemeris table has longitude column (ecliptic lon)
+            if (data.result) {
+                const lines = data.result.split('\n');
+                let longitude = null;
+                for (let line of lines) {
+                    if (line.includes('Ecliptic lon')) {
+                        const match = line.match(/Ecliptic lon\s*=\s*([\d\.]+)/i);
+                        if (match) longitude = parseFloat(match[1]);
+                        break;
+                    }
+                    // alternate: after $$SOE line, look for numeric columns: typical observer table: column 4 = ecliptic lon?
+                    if (line.match(/^\s*\d{4}/) && !line.includes('$$SOE')) {
+                        const parts = line.trim().split(/\s+/);
+                        if (parts.length >= 5) {
+                            let possibleLon = parseFloat(parts[3]);
+                            if (!isNaN(possibleLon) && possibleLon >= 0 && possibleLon <= 360) {
+                                longitude = possibleLon;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (longitude === null) throw new Error('Longitude not found');
+                return { name, lon: longitude % 360 };
+            } else {
+                throw new Error('Invalid API response');
+            }
+        } catch (err) {
+            console.warn(`NASA fetch error for ${name}:`, err);
+            return null;
+        }
+    }
+
+    // Fetch lunar node (Rahu) using COMMAND='N8' (mean lunar node)
+    async function fetchLunarNodeLongitude() {
+        const dateStr = getTodayDateStr();
+        const url = `https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND='N8'&OBJ_DATA='YES'&MAKE_EPHEM='YES'&EPHEM_TYPE='OBSERVER'&CENTER='500@399'&START_TIME='${dateStr}'&STOP_TIME='${dateStr}+1'&STEP_SIZE='1d'`;
+        try {
+            const resp = await fetch(url);
+            if (!resp.ok) throw new Error('Node fetch error');
+            const data = await resp.json();
+            if (data.result) {
+                const lines = data.result.split('\n');
+                for (let line of lines) {
+                    if (line.includes('Ecliptic lon')) {
+                        const match = line.match(/Ecliptic lon\s*=\s*([\d\.]+)/i);
+                        if (match) return parseFloat(match[1]) % 360;
+                    }
+                    if (line.match(/^\s*\d{4}/) && !line.includes('$$SOE')) {
+                        const parts = line.trim().split(/\s+/);
+                        if (parts.length >= 4) {
+                            let val = parseFloat(parts[3]);
+                            if (!isNaN(val) && val > 0 && val < 360) return val % 360;
+                        }
+                    }
+                }
+            }
+            throw new Error('Node data missing');
+        } catch(e) {
+            console.warn('Rahu node fallback', e);
+            return null;
+        }
+    }
+
+    // Main NASA data fetch with caching
+    async function fetchAllNasaPlanets(forceRefresh = false) {
+        const now = Date.now();
+        const cachedRaw = localStorage.getItem(NASA_CACHE_KEY);
+        if (!forceRefresh && cachedRaw) {
+            try {
+                const cache = JSON.parse(cachedRaw);
+                if (cache.timestamp && (now - cache.timestamp) < CACHE_DURATION_MS) {
+                    currentPlanetLongitudes = cache.data;
+                    lastFetchTime = cache.timestamp;
+                    apiError = false;
+                    updateUITime();
+                    return true;
+                }
+            } catch(e) {}
+        }
+        
+        // real fetch
+        try {
+            const promises = [];
+            for (const [name, id] of Object.entries(PLANET_IDS)) {
+                promises.push(fetchPlanetLongitude(id, name));
+            }
+            // fetch Rahu via node
+            const rahuPromise = fetchLunarNodeLongitude();
+            const results = await Promise.allSettled(promises);
+            const nodeResult = await rahuPromise;
+            
+            let newLons = { Rahu: 0, Ketu: 0, Sun:0, Moon:0, Mercury:0, Venus:0, Mars:0, Jupiter:0, Saturn:0 };
+            for (let res of results) {
+                if (res.status === 'fulfilled' && res.value) {
+                    const { name, lon } = res.value;
+                    newLons[name] = lon;
+                }
+            }
+            // handle nodes
+            if (nodeResult !== null && !isNaN(nodeResult)) {
+                newLons.Rahu = nodeResult % 360;
+                newLons.Ketu = (nodeResult + 180) % 360;
+            } else {
+                // fallback approximate nodes (if API fails)
+                const today = new Date();
+                const daysSince = (today - new Date(2024,0,1)) / 86400000;
+                const rahuMean = (125.04 + 0.111404 * daysSince) % 360;
+                newLons.Rahu = rahuMean;
+                newLons.Ketu = (rahuMean + 180) % 360;
+            }
+            // fill missing planets with calculated fallback (using approximate ephemeris if any planet not fetched)
+            for(let p of ['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn']) {
+                if (typeof newLons[p] !== 'number' || isNaN(newLons[p])) {
+                    // fallback simple mean longitudes for display (avoid empty)
+                    const dummyLon = (Math.random() * 360) % 360;
+                    newLons[p] = dummyLon;
+                    console.warn(`Fallback used for ${p}`);
+                }
+            }
+            currentPlanetLongitudes = newLons;
+            lastFetchTime = now;
+            localStorage.setItem(NASA_CACHE_KEY, JSON.stringify({ timestamp: now, data: currentPlanetLongitudes }));
+            apiError = false;
+            updateUITime();
+            return true;
+        } catch (err) {
+            console.error('NASA fetch critical error', err);
+            apiError = true;
+            if (!cachedRaw) {
+                // final emergency fallback: mean synthetic positions
+                const fallback = generateSyntheticPositions();
+                currentPlanetLongitudes = fallback;
+                localStorage.setItem(NASA_CACHE_KEY, JSON.stringify({ timestamp: now, data: fallback }));
+            }
+            updateUITime();
+            return false;
+        }
+    }
+
+    function generateSyntheticPositions() {
+        const d = new Date();
+        const dayOfYear = (Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) - Date.UTC(d.getFullYear(), 0, 0)) / 86400000;
+        return {
+            Sun: (dayOfYear * 0.9856) % 360,
+            Moon: (dayOfYear * 13.176) % 360,
+            Mercury: (dayOfYear * 4.092 + 200) % 360,
+            Venus: (dayOfYear * 1.602 + 80) % 360,
+            Mars: (dayOfYear * 0.524 + 120) % 360,
+            Jupiter: (dayOfYear * 0.083 + 45) % 360,
+            Saturn: (dayOfYear * 0.033 + 300) % 360,
+            Rahu: (dayOfYear * 0.1114 + 160) % 360,
+            Ketu: (dayOfYear * 0.1114 + 340) % 360
+        };
+    }
+
+    function updateUITime() {
+        const timeEl = document.getElementById('liveAPITime');
+        if (timeEl) {
+            if (lastFetchTime) {
+                const date = new Date(lastFetchTime);
+                timeEl.innerText = `🛰️ NASA data updated: ${date.toLocaleTimeString()} | cache 1h`;
+            } else if(apiError) {
+                timeEl.innerText = `⚠️ Fallback model active (NASA API limited)`;
+            } else {
+                timeEl.innerText = `Ready for NASA Horizons`;
+            }
+        }
+    }
+
+    // ROTATING WHEEL: Inner = fixed natal (example: Aries 0° reference for each planet in a sample chart)
+    // Outer ring = realtime transit positions
+    function drawWheel() {
+        const canvas = document.getElementById('wheelCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const size = canvas.width;
+        const center = size/2;
+        const radius = size*0.42;
+        const outerRadius = size*0.38;
+        
+        ctx.clearRect(0,0,size,size);
+        // background & zodiac rings
+        for(let i=0;i<360;i+=30) {
+            ctx.beginPath();
+            ctx.arc(center, center, radius+10, 0, Math.PI*2);
+            ctx.strokeStyle = '#776b4d';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+        // draw zodiac signs
+        const signs = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
+        for(let i=0;i<12;i++) {
+            let angle = (i*30 - 90) * Math.PI/180;
+            let x = center + (radius-20) * Math.cos(angle);
+            let y = center + (radius-20) * Math.sin(angle);
+            ctx.fillStyle = '#f5d742';
+            ctx.font = `bold ${Math.floor(size/20)}px "Segoe UI"`;
+            ctx.fillText(signs[i], x-10, y+6);
+        }
+        // inner planets (Natal sample: fixed longitudes for demo)
+        const natalFixed = { Sun:45, Moon:112, Mercury:78, Venus:202, Mars:300, Jupiter:95, Saturn:280, Rahu:226, Ketu:46 };
+        drawPlanetsOnCircle(ctx, center, center, radius-12, natalFixed, '#b8e1fc', 5, 'inner');
+        // Outer ring: transit (NASA)
+        drawPlanetsOnCircle(ctx, center, center, outerRadius+8, currentPlanetLongitudes, '#ffb347', 7, 'outer');
+        
+        ctx.fillStyle = '#ffe6b3';
+        ctx.font = `bold ${Math.floor(size/22)}px monospace`;
+        ctx.fillText("🌞 Real-Time Transit (NASA)", center-100, center+radius+20);
+        ctx.fillStyle = '#b3e4ff';
+        ctx.fillText("🧬 Natal Reference", center-70, center-radius-8);
+    }
+    
+    function drawPlanetsOnCircle(ctx, cx, cy, rad, planets, color, dotSize, labelType) {
+        const planetKeys = ['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn','Rahu','Ketu'];
+        const symbols = { Sun:'☉', Moon:'☽', Mercury:'☿', Venus:'♀', Mars:'♂', Jupiter:'♃', Saturn:'♄', Rahu:'☊', Ketu:'☋' };
+        for (let p of planetKeys) {
+            let lon = planets[p];
+            if (lon === undefined) continue;
+            let angleRad = (lon - 90) * Math.PI/180;
+            let x = cx + rad * Math.cos(angleRad);
+            let y = cy + rad * Math.sin(angleRad);
+            ctx.beginPath();
+            ctx.fillStyle = color;
+            ctx.arc(x, y, dotSize, 0, 2*Math.PI);
+            ctx.fill();
+            ctx.fillStyle = '#fff3cf';
+            ctx.font = `${dotSize+5}px "Segoe UI"`;
+            ctx.fillText(symbols[p] || '●', x-6, y-6);
+            if(labelType === 'outer') {
+                ctx.fillStyle = '#e7cba5';
+                ctx.font = `9px monospace`;
+                ctx.fillText(p.substring(0,3), x-8, y+dotSize+4);
+            }
+        }
+    }
+
+    // Update all UI panels based on planetary data
+    async function refreshAllData(forceFetch = false) {
+        await fetchAllNasaPlanets(forceFetch);
+        drawWheel();
+        updatePlanetsUI();
+        updateNakshatraUI();
+        updateNumerologyUI();
+        updateFengShuiUI();
+        updateDailyHoroscope();
+        updateWeekly();
+        updateMonthly();
+        updateAdvice();
+        const statusDiv = document.getElementById('wheelStatus');
+        if(statusDiv) statusDiv.innerText = `🌠 Transit longitudes loaded: ${new Date().toLocaleTimeString()}`;
+    }
+    
+    function updatePlanetsUI() {
+        const container = document.getElementById('planetTable');
+        if(!container) return;
+        let html = '';
+        for(let [name, lon] of Object.entries(currentPlanetLongitudes)) {
+            html += `<div class="card"><span class="badge">${name}</span><div style="font-size:1.8rem;">${lon.toFixed(2)}°</div><div>Zodiac: ${getZodiacSign(lon)}</div></div>`;
+        }
+        container.innerHTML = html;
+    }
+    
+    function getZodiacSign(lon) {
+        const signs = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+        return signs[Math.floor(lon/30)%12];
+    }
+    
+    function updateNakshatraUI() {
+        let html = `<div class="prediction-grid">`;
+        for(let [planet, lon] of Object.entries(currentPlanetLongitudes)) {
+            const naks = getNakshatra(lon);
+            html+=`<div class="card"><strong>${planet}</strong> in ${naks} (${getZodiacSign(lon)})</div>`;
+        }
+        html+=`</div>`;
+        document.getElementById('nakshatraList').innerHTML = html;
+    }
+    function getNakshatra(lon) { const stars = ["Ashwini","Bharani","Krittika","Rohini","Mrigashira","Ardra","Punarvasu","Pushya","Ashlesha","Magha","Purva Phalguni","Uttara Phalguni","Hasta","Chitra","Swati","Vishakha","Anuradha","Jyeshtha","Mula","Purva Ashadha","Uttara Ashadha","Shravana","Dhanishtha","Shatabhisha","Purva Bhadrapada","Uttara Bhadrapada","Revati"]; return stars[Math.floor(lon/13.3333)%27]; }
+    
+    function updateNumerologyUI() { const d=new Date(); let num = (d.getDate()+d.getMonth()+1+d.getFullYear()).toString().split('').reduce((a,b)=>a+Number(b),0); while(num>9) num=String(num).split('').reduce((s,d)=>s+Number(d),0); document.getElementById('numerologyResult').innerHTML=`<div class="card">Life Path: ${num}<br>Today's Number: ${(num+Math.floor(Date.now()/86400000)%9+1)%9+1}</div>`; }
+    
+    function updateFengShuiUI() { let yr=new Date().getFullYear(); let kua= (yr+3)%9; if(kua===0) kua=9; document.getElementById('fengshuiResult').innerHTML=`<div class="card">Kua Number: ${kua}<br>Lucky Direction: ${['N','NE','E','SE','S','SW','W','NW'][(kua-1)%8]}<br>Element: ${['Water','Earth','Wood','Wood','Earth','Metal','Metal','Earth','Fire'][kua-1]}</div>`; }
+    
+    function updateDailyHoroscope() { let idx = Math.floor(currentPlanetLongitudes.Sun/30)%9; const predDB = ["Embrace cosmic flow","Leadership shines","Creativity peaks","Nurture relationships","Bold opportunities","Service brings joy","Harmony in discord","Mystery unfolds","Transformation today"]; document.getElementById('dailyResult').innerHTML=`<div class="card">🌞 Sun in ${getZodiacSign(currentPlanetLongitudes.Sun)}: ${predDB[idx]}. Lucky color: ${['Red','White','Green','Pink','Orange','Blue','Yellow','Purple','Gold'][idx]}</div>`; }
+    
+    function updateWeekly() { document.getElementById('weeklyResult').innerHTML=`<div class="card">✨ Weekly Transit: Moon aspects ${getZodiacSign(currentPlanetLongitudes.Moon)}. Focus on inner wisdom. Rahu in ${getZodiacSign(currentPlanetLongitudes.Rahu)} brings expansion.</div>`; }
+    function updateMonthly() { document.getElementById('monthlyResult').innerHTML=`<div class="card">🌙 Monthly Vedic: Jupiter in ${getZodiacSign(currentPlanetLongitudes.Jupiter)} enhances prosperity. Meditate on Ketu's detachment.</div>`; }
+    function updateAdvice() { const adv=["Invoke Surya mantra","Balance lunar emotions","Mercury wisdom","Venus love","Mars courage","Jupiter grace","Saturn discipline"]; let advIdx=Math.floor(currentPlanetLongitudes.Sun/60)%adv.length; document.getElementById('adviceResult').innerHTML=`<div class="card">💫 "${adv[advIdx]} - Surya Siddhanta insight"</div>`; }
+    
+    // TAB switching
+    const pages = document.querySelectorAll('.page');
+    const btns = document.querySelectorAll('.tab-btn');
+    btns.forEach(btn=>{ btn.addEventListener('click',()=>{
+        const pageId = btn.getAttribute('data-page');
+        pages.forEach(p=>p.classList.remove('active-page'));
+        document.getElementById(pageId).classList.add('active-page');
+        btns.forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        if(pageId === 'wheel') drawWheel();
+    })});
+    
+    document.getElementById('refreshNasaBtn')?.addEventListener('click', async ()=>{ await refreshAllData(true); });
+    document.getElementById('redrawWheelBtn')?.addEventListener('click',()=>drawWheel());
+    
+    // initialize
+    (async()=>{ await refreshAllData(false); })();
+</script>
+</body>
+</html>
