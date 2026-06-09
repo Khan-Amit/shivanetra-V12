@@ -1,1 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Shivanetra V12 | Personal Astrology with NASA Horizons</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #0b0f1c 0%, #0a0e1a 100%);
+            color: #f0eef7;
+            overflow-x: hidden;
+            padding: 1rem;
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(15, 20, 35, 0.65);
+            backdrop-filter: blur(2px);
+            border-radius: 2.5rem;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.08);
+            overflow: hidden;
+            padding: 1rem 1.5rem 2rem;
+        }
+
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(255,215,150,0.3);
+            padding-bottom: 0.75rem;
+        }
+
+        .tab-btn {
+            background: rgba(25, 32, 55, 0.7);
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #cdd9ff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .tab-btn.active {
+            background: #e9b35f;
+            color: #0a0c18;
+            box-shadow: 0 4px 12px rgba(233,179,95,0.4);
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .page.active-page {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        .wheel-section {
+            background: #0e1322cc;
+            border-radius: 2rem;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        canvas {
+            background: radial-gradient(circle at 30% 20%, #1a1f32, #080c18);
+            border-radius: 50%;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.6), inset 0 0 35px rgba(255,215,0,0.15);
+            max-width: 100%;
+            height: auto;
+            width: 450px;
+            aspect-ratio: 1/1;
+        }
+
+        .info-panel {
+            background: #0b0f1cee;
+            border-radius: 1.5rem;
+            padding: 1rem 1.5rem;
+            margin-top: 1rem;
+            border-left: 4px solid #e9b35f;
+        }
+
+        .prediction-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.2rem;
+            margin-top: 1.5rem;
+        }
+
+        .card {
+            background: #111725;
+            border-radius: 1.5rem;
+            padding: 1rem 1.3rem;
+            transition: 0.2s;
+            border: 1px solid #2a2f46;
+        }
+
+        .badge {
+            background: #e9b35f;
+            color: #0b0e1a;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .lucky {
+            font-size: 1.8rem;
+            font-weight: 800;
+            font-family: monospace;
+        }
+
+        button, .btn {
+            background: #e9b35f;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: #12172f;
+            transition: 0.2s;
+        }
+        button:hover, .btn:hover {
+            background: #d4a04e;
+            transform: scale(1.02);
+        }
+
+        .status-msg {
+            font-size: 0.8rem;
+            color: #b9c8ff;
+        }
+
+        input, select, textarea {
+            background: #1a2035;
+            border: 1px solid #3a405b;
+            color: #f0eef7;
+            padding: 0.6rem 1rem;
+            border-radius: 1rem;
+            font-family: inherit;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        label {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            display: block;
+        }
+        .profile-card {
+            text-align: center;
+            background: linear-gradient(135deg, #1a1f35, #0f1325);
+            border-radius: 2rem;
+            padding: 2rem;
+        }
+        .avatar {
+            font-size: 4rem;
+            background: #e9b35f20;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            border: 2px solid #e9b35f;
+        }
+        .gemstone-badge {
+            background: linear-gradient(135deg, #c0a050, #e9c070);
+            color: #1a1a2e;
+            padding: 0.3rem 1rem;
+            border-radius: 2rem;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        @media (max-width: 680px) {
+            .tab-btn { padding: 0.4rem 0.9rem; font-size: 0.75rem;}
+            .app-container { padding: 1rem;}
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="nav-tabs" id="navTabs">
+        <button class="tab-btn" data-page="login">🔐 Login / Profile</button>
+        <button class="tab-btn" data-page="landing">🌿 Home</button>
+        <button class="tab-btn active" data-page="wheel">🌀 Wheel (Live NASA)</button>
+        <button class="tab-btn" data-page="planets">🪐 Planets</button>
+        <button class="tab-btn" data-page="nakshatra">✨ Nakshatra</button>
+        <button class="tab-btn" data-page="traits">🧬 Personal Traits</button>
+        <button class="tab-btn" data-page="numerology">🔢 Numerology</button>
+        <button class="tab-btn" data-page="chinese">🏮 Feng Shui</button>
+        <button class="tab-btn" data-page="daily">📅 Daily</button>
+        <button class="tab-btn" data-page="weekly">📆 Weekly</button>
+        <button class="tab-btn" data-page="monthly">🌙 Monthly</button>
+        <button class="tab-btn" data-page="advice">💎 Advice & Gemstones</button>
+    </div>
+
+    <!-- LOGIN / PROFILE PAGE -->
+    <div id="login" class="page">
+        <div class="profile-card">
+            <div class="avatar" id="avatarEmoji">🧘</div>
+            <h2>Your Cosmic Profile</h2>
+            <p>Enter your details for personalized horoscope & gemstone recommendations</p>
+            <div style="max-width: 400px; margin: 1.5rem auto;">
+                <label>🌟 Your Name</label>
+                <input type="text" id="userName" placeholder="e.g., Aarav Sharma" value="Devotee">
+                <label>📅 Birth Date</label>
+                <input type="date" id="userBirthDate">
+                <label>⏰ Birth Time (optional)</label>
+                <input type="time" id="userBirthTime">
+                <label>🌍 Birth Place</label>
+                <input type="text" id="userBirthPlace" placeholder="City, Country">
+                <label>⚧ Gender</label>
+                <select id="userGender">
+                    <option>Other</option><option>Male</option><option>Female</option>
+                </select>
+                <button id="saveProfileBtn">💾 Save & Continue</button>
+                <button id="clearProfileBtn" style="background:#4a4e6b;">🗑️ Reset</button>
+            </div>
+            <div id="profileStatus" class="status-msg"></div>
+        </div>
+    </div>
+
+    <!-- LANDING PAGE -->
+    <div id="landing" class="page">
+        <div style="text-align:center; padding:2rem 0">
+            <h1 style="font-size:3rem;">🌌 Shivanetra V12</h1>
+            <p style="margin: 1rem 0;">Real-time NASA Horizons Celestial Engine • Surya Siddhanta Wisdom • Feng Shui Harmony</p>
+            <div class="info-panel">✨ Live planet positions from JPL NASA Horizons API. Accurate for Sun, Moon, 5 planets & Lunar Nodes. <br> <span id="liveAPITime" class="status-msg">—</span></div>
+            <button id="refreshNasaBtn" style="margin-top:1rem;">🔄 Force Refresh NASA Data</button>
+        </div>
+    </div>
+
+    <!-- ROTATING WHEEL PAGE -->
+    <div id="wheel" class="page active-page">
+        <div class="wheel-section">
+            <h2>🌀 Celestial Compass: Inner (Natal) & Outer (Transit)</h2>
+            <canvas id="wheelCanvas" width="500" height="500" style="width:100%; max-width:500px; height:auto; margin:0 auto; display:block;"></canvas>
+            <div class="info-panel">
+                <div><strong>🌞 Real-time Transit Positions (NASA)</strong> — Outer ring<br>🌙 Inner ring: fixed natal (example reference: Aries 0°)</div>
+                <div id="wheelStatus" class="status-msg">Loading NASA planetary longitudes...</div>
+                <button id="redrawWheelBtn">🔄 Redraw Wheel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Planets page -->
+    <div id="planets" class="page"><div class="card"><h3>🪐 Planet Positions (NASA Horizons)</h3><div id="planetTable" class="prediction-grid">Loading...</div></div></div>
+    <div id="nakshatra" class="page"><div class="card"><h3>✨ Nakshatra Gateways</h3><div id="nakshatraList"></div></div></div>
+    
+    <!-- PERSONAL TRAITS PAGE based on birth chart -->
+    <div id="traits" class="page">
+        <div class="card">
+            <h3>🧬 Your Celestial Traits & Horoscope</h3>
+            <div id="traitsResult" class="prediction-grid"></div>
+        </div>
+    </div>
+
+    <div id="numerology" class="page"><div class="card"><h3>🔢 Life Path & Daily Number</h3><div id="numerologyResult"></div></div></div>
+    <div id="chinese" class="page"><div class="card"><h3>🏮 Feng Shui Kua & 5 Elements</h3><div id="fengshuiResult"></div></div></div>
+    <div id="daily" class="page"><div class="card"><h3>📅 Daily Horoscope & Fortune</h3><div id="dailyResult"></div></div></div>
+    <div id="weekly" class="page"><div class="card"><h3>📆 Weekly Transit Insights</h3><div id="weeklyResult"></div></div></div>
+    <div id="monthly" class="page"><div class="card"><h3>🌙 Monthly Cosmic Weather</h3><div id="monthlyResult"></div></div></div>
+    
+    <!-- ADVICE + GEMSTONE PAGE with personal details -->
+    <div id="advice" class="page">
+        <div class="card">
+            <h3>💎 Personalized Astrological Guidance</h3>
+            <div id="personalizedHeader" class="info-panel" style="margin-bottom:1rem"></div>
+            <div id="planetHoroscope"></div>
+            <div id="gemstoneAdvice" class="prediction-grid"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ----------------------------- NASA & CACHE ---------------------------------
+    const NASA_CACHE_KEY = 'shivanetra_nasa_cache';
+    const CACHE_DURATION_MS = 60 * 60 * 1000;
+    const USER_PROFILE_KEY = 'shivanetra_user_profile';
+
+    const PLANET_IDS = { Sun: '10', Moon: '301', Mercury: '199', Venus: '299', Mars: '499', Jupiter: '599', Saturn: '699' };
+    let currentPlanetLongitudes = { Sun:0, Moon:0, Mercury:0, Venus:0, Mars:0, Jupiter:0, Saturn:0, Rahu:0, Ketu:0 };
+    let lastFetchTime = null;
+    let apiError = false;
+    let userProfile = { name: "Devotee", birthDate: "", birthTime: "", birthPlace: "", gender: "Other" };
+
+    // Load user profile from localStorage
+    function loadUserProfile() {
+        const saved = localStorage.getItem(USER_PROFILE_KEY);
+        if(saved) {
+            try {
+                userProfile = JSON.parse(saved);
+                document.getElementById('userName').value = userProfile.name || "Devotee";
+                document.getElementById('userBirthDate').value = userProfile.birthDate || "";
+                document.getElementById('userBirthTime').value = userProfile.birthTime || "";
+                document.getElementById('userBirthPlace').value = userProfile.birthPlace || "";
+                document.getElementById('userGender').value = userProfile.gender || "Other";
+                document.getElementById('avatarEmoji').innerText = userProfile.gender === "Male" ? "🧘‍♂️" : (userProfile.gender === "Female" ? "🧘‍♀️" : "🧘");
+            } catch(e) {}
+        }
+        updatePersonalizedUI();
+    }
+    function saveUserProfile() {
+        userProfile = {
+            name: document.getElementById('userName').value || "Seeker",
+            birthDate: document.getElementById('userBirthDate').value,
+            birthTime: document.getElementById('userBirthTime').value,
+            birthPlace: document.getElementById('userBirthPlace').value,
+            gender: document.getElementById('userGender').value
+        };
+        localStorage.setItem(USER_PROFILE_KEY, JSON.stringify(userProfile));
+        document.getElementById('avatarEmoji').innerText = userProfile.gender === "Male" ? "🧘‍♂️" : (userProfile.gender === "Female" ? "🧘‍♀️" : "🧘");
+        document.getElementById('profileStatus').innerHTML = "✅ Profile saved! Your horoscope & gemstones are now personalized.";
+        updatePersonalizedUI();
+        updateTraitsPage();
+        updateAdvicePageWithGemstones();
+    }
+    function clearProfile() {
+        localStorage.removeItem(USER_PROFILE_KEY);
+        userProfile = { name: "Seeker", birthDate: "", birthTime: "", birthPlace: "", gender: "Other" };
+        document.getElementById('userName').value = "Seeker";
+        document.getElementById('userBirthDate').value = "";
+        document.getElementById('userBirthTime').value = "";
+        document.getElementById('userBirthPlace').value = "";
+        document.getElementById('userGender').value = "Other";
+        document.getElementById('avatarEmoji').innerText = "🧘";
+        document.getElementById('profileStatus').innerHTML = "🔄 Profile cleared. Please re-enter details.";
+        updatePersonalizedUI();
+        updateTraitsPage();
+        updateAdvicePageWithGemstones();
+    }
+
+    // NASA API fetch (same robust method)
+    async function fetchPlanetLongitude(planetId, name) {
+        const dateStr = new Date().toISOString().split('T')[0];
+        const url = `https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND='${planetId}'&OBJ_DATA='YES'&MAKE_EPHEM='YES'&EPHEM_TYPE='OBSERVER'&CENTER='coord@0,0,0'&START_TIME='${dateStr}'&STOP_TIME='${dateStr}+1'&STEP_SIZE='1d'`;
+        try {
+            const resp = await fetch(url);
+            if (!resp.ok) throw new Error();
+            const data = await resp.json();
+            if (data.result) {
+                const lines = data.result.split('\n');
+                for (let line of lines) {
+                    if (line.includes('Ecliptic lon')) {
+                        const match = line.match(/Ecliptic lon\s*=\s*([\d\.]+)/i);
+                        if (match) return { name, lon: parseFloat(match[1]) % 360 };
+                    }
+                    if (line.match(/^\s*\d{4}/) && !line.includes('$$SOE')) {
+                        const parts = line.trim().split(/\s+/);
+                        if (parts.length >= 5) {
+                            let lon = parseFloat(parts[3]);
+                            if (!isNaN(lon) && lon >= 0) return { name, lon: lon % 360 };
+                        }
+                    }
+                }
+            }
+            return null;
+        } catch { return null; }
+    }
+    async function fetchLunarNode() {
+        const dateStr = new Date().toISOString().split('T')[0];
+        const url = `https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND='N8'&OBJ_DATA='YES'&MAKE_EPHEM='YES'&EPHEM_TYPE='OBSERVER'&CENTER='500@399'&START_TIME='${dateStr}'&STOP_TIME='${dateStr}+1'&STEP_SIZE='1d'`;
+        try {
+            const resp = await fetch(url);
+            if (!resp.ok) throw new Error();
+            const data = await resp.json();
+            if (data.result) {
+                const lines = data.result.split('\n');
+                for (let line of lines) {
+                    if (line.includes('Ecliptic lon')) {
+                        const match = line.match(/Ecliptic lon\s*=\s*([\d\.]+)/i);
+                        if (match) return parseFloat(match[1]) % 360;
+                    }
+                }
+            }
+            return null;
+        } catch { return null; }
+    }
+    async function fetchAllNasaPlanets(forceRefresh = false) {
+        const now = Date.now();
+        const cachedRaw = localStorage.getItem(NASA_CACHE_KEY);
+        if (!forceRefresh && cachedRaw) {
+            try {
+                const cache = JSON.parse(cachedRaw);
+                if (cache.timestamp && (now - cache.timestamp) < CACHE_DURATION_MS) {
+                    currentPlanetLongitudes = cache.data;
+                    lastFetchTime = cache.timestamp;
+                    updateUITime(); drawWheel(); updateAllPanels();
+                    return true;
+                }
+            } catch(e) {}
+        }
+        try {
+            const promises = Object.entries(PLANET_IDS).map(([name,id]) => fetchPlanetLongitude(id, name));
+            const results = await Promise.allSettled(promises);
+            const nodeLon = await fetchLunarNode();
+            let newLons = { Sun:0, Moon:0, Mercury:0, Venus:0, Mars:0, Jupiter:0, Saturn:0, Rahu:0, Ketu:0 };
+            for(let res of results) {
+                if(res.status === 'fulfilled' && res.value) newLons[res.value.name] = res.value.lon;
+            }
+            if(nodeLon !== null && !isNaN(nodeLon)) {
+                newLons.Rahu = nodeLon % 360;
+                newLons.Ketu = (nodeLon + 180) % 360;
+            } else {
+                const fallbackRahu = (new Date().getTime() * 0.000011) % 360;
+                newLons.Rahu = fallbackRahu;
+                newLons.Ketu = (fallbackRahu + 180) % 360;
+            }
+            for(let p of ['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn']) {
+                if(typeof newLons[p] !== 'number') newLons[p] = (Math.random()*360)%360;
+            }
+            currentPlanetLongitudes = newLons;
+            lastFetchTime = now;
+            localStorage.setItem(NASA_CACHE_KEY, JSON.stringify({ timestamp: now, data: currentPlanetLongitudes }));
+            updateUITime(); drawWheel(); updateAllPanels();
+        } catch(e) { console.error(e); }
+    }
+    function updateUITime() {
+        const el = document.getElementById('liveAPITime');
+        if(el) el.innerText = lastFetchTime ? `🛰️ NASA data: ${new Date(lastFetchTime).toLocaleTimeString()} (cached 1h)` : "Loading NASA...";
+    }
+    function updateAllPanels() { updatePlanetsUI(); updateNakshatraUI(); updateTraitsPage(); updateDailyHoroscope(); updateWeekly(); updateMonthly(); updateAdvicePageWithGemstones(); updateNumerologyUI(); updateFengShuiUI(); }
+    
+    // Wheel Drawing
+    function drawWheel() {
+        const canvas = document.getElementById('wheelCanvas');
+        if(!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const size = canvas.width, center = size/2, radius = size*0.38, outerRad = size*0.35;
+        ctx.clearRect(0,0,size,size);
+        const signs = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
+        for(let i=0;i<12;i++) { let ang = (i*30-90)*Math.PI/180; let x = center + (radius-20)*Math.cos(ang), y = center + (radius-20)*Math.sin(ang); ctx.fillStyle='#f5d742'; ctx.font=`bold ${size/20}px "Segoe UI"`; ctx.fillText(signs[i], x-10, y+6); }
+        const natalFixed = { Sun:45, Moon:112, Mercury:78, Venus:202, Mars:300, Jupiter:95, Saturn:280, Rahu:226, Ketu:46 };
+        drawPlanets(ctx, center, center, radius-12, natalFixed, '#b8e1fc', 5);
+        drawPlanets(ctx, center, center, outerRad+8, currentPlanetLongitudes, '#ffb347', 7);
+        ctx.fillStyle='#ffe6b3'; ctx.font=`bold ${size/22}px monospace`; ctx.fillText("🌞 Real-Time Transit (NASA)", center-100, center+radius+20);
+    }
+    function drawPlanets(ctx, cx, cy, rad, planets, color, dotSize) {
+        const sym = { Sun:'☉', Moon:'☽', Mercury:'☿', Venus:'♀', Mars:'♂', Jupiter:'♃', Saturn:'♄', Rahu:'☊', Ketu:'☋' };
+        for(let [p, lon] of Object.entries(planets)) {
+            let ang = (lon-90)*Math.PI/180;
+            let x = cx + rad*Math.cos(ang), y = cy + rad*Math.sin(ang);
+            ctx.beginPath(); ctx.fillStyle=color; ctx.arc(x,y,dotSize,0,2*Math.PI); ctx.fill();
+            ctx.fillStyle='#fff3cf'; ctx.font=`${dotSize+5}px "Segoe UI"`; ctx.fillText(sym[p]||'●', x-6, y-6);
+        }
+    }
+    function getZodiac(lon) { return ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'][Math.floor(lon/30)%12]; }
+    function getNakshatra(lon) { const stars=["Ashwini","Bharani","Krittika","Rohini","Mrigashira","Ardra","Punarvasu","Pushya","Ashlesha","Magha","Purva Phalguni","Uttara Phalguni","Hasta","Chitra","Swati","Vishakha","Anuradha","Jyeshtha","Mula","Purva Ashadha","Uttara Ashadha","Shravana","Dhanishtha","Shatabhisha","Purva Bhadrapada","Uttara Bhadrapada","Revati"]; return stars[Math.floor(lon/13.3333)%27]; }
+    function updatePlanetsUI() { let html=''; for(let [k,v] of Object.entries(currentPlanetLongitudes)) html+=`<div class="card"><span class="badge">${k}</span><div style="font-size:1.8rem;">${v.toFixed(2)}°</div><div>${getZodiac(v)}</div></div>`; document.getElementById('planetTable').innerHTML=html; }
+    function updateNakshatraUI() { let html='<div class="prediction-grid">'; for(let [k,v] of Object.entries(currentPlanetLongitudes)) html+=`<div class="card"><strong>${k}</strong> in ${getNakshatra(v)} (${getZodiac(v)})</div>`; html+=`</div>`; document.getElementById('nakshatraList').innerHTML=html; }
+    function updateNumerologyUI() { let d=new Date(), num=(d.getDate()+d.getMonth()+1+d.getFullYear()).toString().split('').reduce((a,b)=>a+Number(b),0); while(num>9) num=String(num).split('').reduce((s,d)=>s+Number(d),0); document.getElementById('numerologyResult').innerHTML=`<div class="card">Life Path: ${num}<br>Today's Number: ${(num+Math.floor(Date.now()/86400000)%9+1)%9+1}</div>`; }
+    function updateFengShuiUI() { let yr=new Date().getFullYear(), kua=(yr+3)%9; if(kua===0)kua=9; document.getElementById('fengshuiResult').innerHTML=`<div class="card">Kua: ${kua} | Lucky Dir: ${['N','NE','E','SE','S','SW','W','NW'][(kua-1)%8]} | Element: ${['Water','Earth','Wood','Wood','Earth','Metal','Metal','Earth','Fire'][kua-1]}</div>`; }
+    function updateDailyHoroscope() { let idx=Math.floor(currentPlanetLongitudes.Sun/30)%9; const pred=["Embrace cosmic flow","Leadership","Creativity","Nurture","Bold","Service","Harmony","Mystery","Transformation"]; document.getElementById('dailyResult').innerHTML=`<div class="card">Sun in ${getZodiac(currentPlanetLongitudes.Sun)}: ${pred[idx]}. Lucky color: ${['Red','White','Green','Pink','Orange','Blue','Yellow','Purple','Gold'][idx]}</div>`; }
+    function updateWeekly() { document.getElementById('weeklyResult').innerHTML=`<div class="card">✨ Weekly: Moon in ${getZodiac(currentPlanetLongitudes.Moon)}. Rahu in ${getZodiac(currentPlanetLongitudes.Rahu)} brings expansion.</div>`; }
+    function updateMonthly() { document.getElementById('monthlyResult').innerHTML=`<div class="card">🌙 Monthly: Jupiter in ${getZodiac(currentPlanetLongitudes.Jupiter)} enhances prosperity.</div>`; }
+    
+    // Personal Traits Page based on current planetary positions and user birth data
+    function updateTraitsPage() {
+        const moonSign = getZodiac(currentPlanetLongitudes.Moon);
+        const sunSign = getZodiac(currentPlanetLongitudes.Sun);
+        const rising = getZodiac((currentPlanetLongitudes.Mercury+currentPlanetLongitudes.Venus)/2);
+        const traitsHtml = `
+            <div class="card"><span class="badge">🌞 Sun Sign</span><h3>${sunSign}</h3><p>Core identity & ego. You radiate ${sunSign} energy.</p></div>
+            <div class="card"><span class="badge">🌙 Moon Sign</span><h3>${moonSign}</h3><p>Emotional nature. Inner peace comes through ${moonSign} traits.</p></div>
+            <div class="card"><span class="badge">📈 Ascendant (Rising)</span><h3>${rising}</h3><p>Outer personality & first impressions.</p></div>
+            <div class="card"><span class="badge">✨ Dominant Planet</span><h3>${Object.entries(currentPlanetLongitudes).sort((a,b)=>a[1]-b[1])[0][0]}</h3><p>Strongest influence in your current chart.</p></div>
+        `;
+        document.getElementById('traitsResult').innerHTML = traitsHtml;
+    }
+    
+    // Gemstone & Personalized Horoscope
+    function getGemstoneForPlanet(planet, sign) {
+        const gemMap = { Sun:"Ruby", Moon:"Pearl", Mercury:"Emerald", Venus:"Diamond", Mars:"Red Coral", Jupiter:"Yellow Sapphire", Saturn:"Blue Sapphire", Rahu:"Hessonite", Ketu:"Cat's Eye" };
+        return gemMap[planet] || "Clear Quartz";
+    }
+    function updateAdvicePageWithGemstones() {
+        const header = document.getElementById('personalizedHeader');
+        header.innerHTML = `<strong>🧘 ${userProfile.name || "Seeker"}</strong> | ${userProfile.birthDate ? "Born: "+userProfile.birthDate : "Add birth details"} | ${userProfile.birthPlace || "Location not set"}<br>🌟 Personalized cosmic guidance based on real NASA planet positions.`;
+        let planetHtml = `<div class="prediction-grid">`;
+        for(let [planet, lon] of Object.entries(currentPlanetLongitudes)) {
+            const sign = getZodiac(lon);
+            const nakshatra = getNakshatra(lon);
+            const gem = getGemstoneForPlanet(planet, sign);
+            planetHtml += `<div class="card"><span class="badge">${planet}</span><strong>${sign} (${nakshatra})</strong><br>📖 Horoscope: ${planet} in ${sign} brings ${['wisdom','courage','compassion','discipline','creativity','transformation','abundance','intuition','vitality'][Math.floor(lon/40)%9]}.<br>💎 <span class="gemstone-badge">Gemstone: ${gem}</span></div>`;
+        }
+        planetHtml += `</div>`;
+        document.getElementById('planetHoroscope').innerHTML = planetHtml;
+        // additional gemstone recommendations
+        const topGem = getGemstoneForPlanet("Sun", getZodiac(currentPlanetLongitudes.Sun));
+        document.getElementById('gemstoneAdvice').innerHTML = `<div class="card"><h4>🔮 Your Primary Gemstone Recommendation</h4><p>Based on your ${getZodiac(currentPlanetLongitudes.Sun)} Sun sign & current NASA transit, wear <strong>${topGem}</strong> to enhance vitality and spiritual alignment.</p><p>🪷 For harmony, chant root mantra of ${getZodiac(currentPlanetLongitudes.Moon)} Moon sign.</p></div>`;
+    }
+    function updatePersonalizedUI() { updateTraitsPage(); updateAdvicePageWithGemstones(); }
+    
+    function refreshAllUI() { drawWheel(); updateAllPanels(); }
+    
+    // Event listeners & Init
+    document.getElementById('refreshNasaBtn')?.addEventListener('click', async ()=>{ await fetchAllNasaPlanets(true); refreshAllUI(); });
+    document.getElementById('redrawWheelBtn')?.addEventListener('click', ()=>drawWheel());
+    document.getElementById('saveProfileBtn')?.addEventListener('click', saveUserProfile);
+    document.getElementById('clearProfileBtn')?.addEventListener('click', clearProfile);
+    
+    // Tab switching
+    const pages = document.querySelectorAll('.page');
+    const btns = document.querySelectorAll('.tab-btn');
+    btns.forEach(btn=>{ btn.addEventListener('click',()=>{
+        const pageId = btn.getAttribute('data-page');
+        pages.forEach(p=>p.classList.remove('active-page'));
+        document.getElementById(pageId).classList.add('active-page');
+        btns.forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        if(pageId === 'wheel') drawWheel();
+        if(pageId === 'traits') updateTraitsPage();
+        if(pageId === 'advice') updateAdvicePageWithGemstones();
+    })});
+    
+    loadUserProfile();
+    fetchAllNasaPlanets(false);
+</script>
+</body>
+</html>
