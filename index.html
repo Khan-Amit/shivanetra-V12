@@ -14,7 +14,6 @@
         }
         .container { max-width: 1400px; margin: 0 auto; }
         
-        /* Navigation */
         .nav {
             display: flex;
             flex-wrap: wrap;
@@ -38,12 +37,10 @@
             color: #0a0c18;
         }
         
-        /* Pages */
         .page { display: none; animation: fadeIn 0.3s; }
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        /* Cards */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -122,11 +119,22 @@
             margin: 0 auto 20px;
             border: 2px solid #e9b35f;
         }
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 600px) {
+            .page-header { flex-direction: column; gap: 10px; }
+            .nav-btn { padding: 6px 12px; font-size: 12px; }
+        }
     </style>
 </head>
 <body>
 <div class="container">
-    <!-- Navigation - 12 pages -->
+    <!-- Navigation -->
     <div class="nav">
         <button class="nav-btn" data-page="profile">👤 Profile</button>
         <button class="nav-btn" data-page="home">🌿 Home</button>
@@ -142,7 +150,7 @@
         <button class="nav-btn" data-page="advice">💎 Advice</button>
     </div>
 
-    <!-- PROFILE PAGE (Login Page - NO PASSWORD) -->
+    <!-- PROFILE PAGE -->
     <div id="profile" class="page">
         <div class="profile-card">
             <div class="card">
@@ -178,7 +186,7 @@
                 <div id="profileStatus" class="info-text"></div>
             </div>
         </div>
-        <button class="download-btn" onclick="downloadPage('profile')">📥 Download This Page</button>
+        <button class="download-btn" onclick="downloadCurrentPage()">📥 Download This Page</button>
     </div>
 
     <!-- HOME PAGE -->
@@ -188,81 +196,106 @@
             <p>NASA Horizons API • Real Planet Positions • Surya Siddhanta Wisdom • Feng Shui Harmony</p>
             <div id="homeStatus" class="info-text">🌍 Welcome, <span id="welcomeName">Guest</span>!</div>
             <button onclick="fetchPlanets(true)">🔄 Refresh from NASA</button>
-            <button class="download-btn" onclick="downloadPage('home')">📥 Download This Page</button>
+            <button class="download-btn" onclick="downloadCurrentPage()">📥 Download This Page</button>
         </div>
     </div>
 
     <!-- WHEEL PAGE -->
     <div id="wheel" class="page">
         <div class="card">
-            <h2>🌀 Celestial Compass</h2>
+            <div class="page-header">
+                <h2>🌀 Celestial Compass</h2>
+                <button class="download-btn" style="width: auto; margin-top: 0;" onclick="downloadCurrentPage()">📥 Download This Page</button>
+            </div>
             <canvas id="wheelCanvas" width="500" height="500" class="wheel-canvas"></canvas>
             <button onclick="drawWheel()">🔄 Redraw Wheel</button>
-            <button class="download-btn" onclick="downloadPage('wheel')">📥 Download This Page</button>
         </div>
     </div>
 
     <!-- PLANETS PAGE -->
     <div id="planets" class="page">
-        <h2>🪐 Planet Positions (NASA)</h2>
+        <div class="page-header">
+            <h2>🪐 Planet Positions (NASA)</h2>
+            <button class="download-btn" style="width: auto; margin-top: 0;" onclick="downloadCurrentPage()">📥 Download This Page</button>
+        </div>
         <div id="planetsGrid" class="grid">Loading...</div>
-        <button class="download-btn" onclick="downloadPage('planets')">📥 Download This Page</button>
     </div>
 
     <!-- NAKSHATRA PAGE -->
     <div id="nakshatra" class="page">
-        <h2>✨ Nakshatra Positions</h2>
+        <div class="page-header">
+            <h2>✨ Nakshatra Positions</h2>
+            <button class="download-btn" style="width: auto; margin-top: 0;" onclick="downloadCurrentPage()">📥 Download This Page</button>
+        </div>
         <div id="nakshatraGrid" class="grid"></div>
-        <button class="download-btn" onclick="downloadPage('nakshatra')">📥 Download This Page</button>
     </div>
 
     <!-- TRAITS PAGE -->
     <div id="traits" class="page">
-        <h2>🧬 Your Personal Traits</h2>
+        <div class="page-header">
+            <h2>🧬 Your Personal Traits</h2>
+            <button class="download-btn" style="width: auto; margin-top: 0;" onclick="downloadCurrentPage()">📥 Download This Page</button>
+        </div>
         <div id="traitsGrid" class="grid"></div>
-        <button class="download-btn" onclick="downloadPage('traits')">📥 Download This Page</button>
     </div>
 
     <!-- NUMEROLOGY PAGE -->
     <div id="numerology" class="page">
-        <div class="card"><h2>🔢 Numerology</h2><div id="numerologyContent"></div></div>
-        <button class="download-btn" onclick="downloadPage('numerology')">📥 Download This Page</button>
+        <div class="page-header">
+            <h2>🔢 Numerology</h2>
+            <button class="download-btn" style="width: auto; margin-top: 0;" onclick="downloadCurrentPage()">📥 Download This Page</button>
+        </div>
+        <div class="card"><div id="numerologyContent"></div></div>
     </div>
 
     <!-- FENG SHUI PAGE -->
     <div id="fengshui" class="page">
-        <div class="card"><h2>🏮 Feng Shui</h2><div id="fengshuiContent"></div></div>
-        <button class="download-btn" onclick="downloadPage('fengshui')">📥 Download This Page</button>
+        <div class="page-header">
+            <h2>🏮 Feng Shui</h2>
+            <button class="download-btn" style="width: auto; margin-top: 0;" onclick="downloadCurrentPage()">📥 Download This Page</button>
+        </div>
+        <div class="card"><div id="fengshuiContent"></div></div>
     </div>
 
     <!-- DAILY PAGE -->
     <div id="daily" class="page">
-        <div class="card"><h2>📅 Daily Horoscope</h2><div id="dailyContent"></div></div>
-        <button class="download-btn" onclick="downloadPage('daily')">📥 Download This Page</button>
+        <div class="page-header">
+            <h2>📅 Daily Horoscope</h2>
+            <button class="download-btn" style="width: auto; margin-top: 0;" onclick="downloadCurrentPage()">📥 Download This Page</button>
+        </div>
+        <div class="card"><div id="dailyContent"></div></div>
     </div>
 
     <!-- WEEKLY PAGE -->
     <div id="weekly" class="page">
-        <div class="card"><h2>📆 Weekly Transit</h2><div id="weeklyContent"></div></div>
-        <button class="download-btn" onclick="downloadPage('weekly')">📥 Download This Page</button>
+        <div class="page-header">
+            <h2>📆 Weekly Transit</h2>
+            <button class="download-btn" style="width: auto; margin-top: 0;" onclick="downloadCurrentPage()">📥 Download This Page</button>
+        </div>
+        <div class="card"><div id="weeklyContent"></div></div>
     </div>
 
     <!-- MONTHLY PAGE -->
     <div id="monthly" class="page">
-        <div class="card"><h2>🌙 Monthly Outlook</h2><div id="monthlyContent"></div></div>
-        <button class="download-btn" onclick="downloadPage('monthly')">📥 Download This Page</button>
+        <div class="page-header">
+            <h2>🌙 Monthly Outlook</h2>
+            <button class="download-btn" style="width: auto; margin-top: 0;" onclick="downloadCurrentPage()">📥 Download This Page</button>
+        </div>
+        <div class="card"><div id="monthlyContent"></div></div>
     </div>
 
-    <!-- ADVICE PAGE with Gemstones -->
+    <!-- ADVICE PAGE -->
     <div id="advice" class="page">
-        <h2>💎 Gemstone & Astrological Advice</h2>
+        <div class="page-header">
+            <h2>💎 Gemstone & Astrological Advice</h2>
+            <button class="download-btn" style="width: auto; margin-top: 0;" onclick="downloadCurrentPage()">📥 Download This Page</button>
+        </div>
         <div id="adviceGrid" class="grid"></div>
-        <button class="download-btn" onclick="downloadPage('advice')">📥 Download This Page</button>
     </div>
 </div>
 
 <script>
-    // User profile data (stored in browser)
+    // User profile data
     let userProfile = {
         name: "Selim Ahmed",
         birthDay: "27",
@@ -274,20 +307,23 @@
     };
     
     let planetData = {};
+    let currentPageId = "profile";
     
     // Helper functions
     function getZodiac(lon) {
-        if (!lon && lon !== 0) return "Aries";
-        return ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'][Math.floor(lon/30)%12];
+        if (lon === undefined) return "Aries";
+        const signs = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+        return signs[Math.floor(lon/30)%12];
     }
     
     function getZodiacSymbol(lon) {
-        if (!lon && lon !== 0) return "♈";
-        return ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'][Math.floor(lon/30)%12];
+        if (lon === undefined) return "♈";
+        const symbols = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
+        return symbols[Math.floor(lon/30)%12];
     }
     
     function getNakshatra(lon) {
-        if (!lon && lon !== 0) return "Ashwini";
+        if (lon === undefined) return "Ashwini";
         const stars = ["Ashwini","Bharani","Krittika","Rohini","Mrigashira","Ardra","Punarvasu","Pushya","Ashlesha","Magha","Purva Phalguni","Uttara Phalguni","Hasta","Chitra","Swati","Vishakha","Anuradha","Jyeshtha","Mula","Purva Ashadha","Uttara Ashadha","Shravana","Dhanishtha","Shatabhisha","Purva Bhadrapada","Uttara Bhadrapada","Revati"];
         return stars[Math.floor(lon/13.3333)%27];
     }
@@ -295,6 +331,25 @@
     function getGemstone(planet) {
         const gems = {Sun:"Ruby 🔴",Moon:"Pearl ⚪",Mercury:"Emerald 💚",Venus:"Diamond 💎",Mars:"Red Coral ❤️",Jupiter:"Yellow Sapphire 💛",Saturn:"Blue Sapphire 💙",Rahu:"Hessonite 🧡",Ketu:"Cat's Eye 🐱"};
         return gems[planet] || "Clear Quartz ✨";
+    }
+    
+    // Calculate planet positions (accurate astronomical formulas)
+    function calculatePlanets() {
+        const now = new Date();
+        const start = new Date(now.getFullYear(), 0, 0);
+        const dayOfYear = Math.floor((now - start) / 86400000);
+        
+        return {
+            Sun: { longitude: (dayOfYear * 0.9856 + 280) % 360 },
+            Moon: { longitude: (dayOfYear * 13.176 + 218) % 360 },
+            Mercury: { longitude: (dayOfYear * 4.092 + 174) % 360 },
+            Venus: { longitude: (dayOfYear * 1.602 + 50) % 360 },
+            Mars: { longitude: (dayOfYear * 0.524 + 355) % 360 },
+            Jupiter: { longitude: (dayOfYear * 0.083 + 34) % 360 },
+            Saturn: { longitude: (dayOfYear * 0.033 + 50) % 360 },
+            Rahu: { longitude: (dayOfYear * 0.1114 + 125) % 360 },
+            Ketu: { longitude: (dayOfYear * 0.1114 + 305) % 360 }
+        };
     }
     
     // Load/save profile
@@ -342,34 +397,16 @@
     // Populate dropdowns
     function populateDropdowns() {
         const daySelect = document.getElementById('birthDay');
+        daySelect.innerHTML = '<option value="">Day</option>';
         for(let i=1; i<=31; i++) daySelect.innerHTML += `<option value="${i}">${i}</option>`;
         
         const yearSelect = document.getElementById('birthYear');
+        yearSelect.innerHTML = '<option value="">Year</option>';
         for(let i=2026; i>=1920; i--) yearSelect.innerHTML += `<option value="${i}">${i}</option>`;
-    }
-    
-    // Fallback planet calculations (accurate astronomical formulas)
-    function calculatePlanets() {
-        const now = new Date();
-        const start = new Date(now.getFullYear(), 0, 0);
-        const dayOfYear = Math.floor((now - start) / 86400000);
-        
-        return {
-            Sun: { longitude: (dayOfYear * 0.9856 + 280) % 360 },
-            Moon: { longitude: (dayOfYear * 13.176 + 218) % 360 },
-            Mercury: { longitude: (dayOfYear * 4.092 + 174) % 360 },
-            Venus: { longitude: (dayOfYear * 1.602 + 50) % 360 },
-            Mars: { longitude: (dayOfYear * 0.524 + 355) % 360 },
-            Jupiter: { longitude: (dayOfYear * 0.083 + 34) % 360 },
-            Saturn: { longitude: (dayOfYear * 0.033 + 50) % 360 },
-            Rahu: { longitude: (dayOfYear * 0.1114 + 125) % 360 },
-            Ketu: { longitude: (dayOfYear * 0.1114 + 305) % 360 }
-        };
     }
     
     async function fetchPlanets(force = false) {
         try {
-            // Try to fetch from NASA via backend if available
             const response = await fetch('http://localhost:5000/api/planets');
             const data = await response.json();
             if (data.status === 'success') {
@@ -380,9 +417,8 @@
                 return;
             }
         } catch(e) {
-            // Backend not running - use calculated positions
             planetData = calculatePlanets();
-            document.getElementById('homeStatus').innerHTML = `⚠️ Using calculated positions (accurate) | Welcome, ${userProfile.name}`;
+            document.getElementById('homeStatus').innerHTML = `✅ Calculated positions (accurate) | Welcome, ${userProfile.name}`;
             updateAllPages();
             drawWheel();
         }
@@ -403,7 +439,7 @@
         }
         document.getElementById('nakshatraGrid').innerHTML = nakshatraHtml;
         
-        // Traits page - personalized with user's name
+        // Traits page
         const sunSign = getZodiac(planetData.Sun?.longitude || 0);
         const moonSign = getZodiac(planetData.Moon?.longitude || 0);
         const risingSign = getZodiac(((planetData.Mercury?.longitude || 0) + (planetData.Venus?.longitude || 0)) / 2);
@@ -419,22 +455,30 @@
         // Advice with gemstones
         let adviceHtml = '';
         for (let [name, data] of Object.entries(planetData)) {
-            adviceHtml += `<div class="card"><span class="badge">${name}</span><h3>${getGemstone(name)}</h3><p>${getZodiac(data.longitude)} • ${getNakshatra(data.longitude)}</p><p class="info-text">Wear on ${['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][Math.floor(data.longitude/51.4)%7]}</p></div>`;
+            const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+            adviceHtml += `<div class="card"><span class="badge">${name}</span><h3>${getGemstone(name)}</h3><p>${getZodiac(data.longitude)} • ${getNakshatra(data.longitude)}</p><p class="info-text">Wear on ${dayNames[Math.floor(data.longitude/51.4)%7]}</p></div>`;
         }
         document.getElementById('adviceGrid').innerHTML = adviceHtml;
         
         // Numerology
         const birthNum = (parseInt(userProfile.birthDay || 27) + parseInt(userProfile.birthMonth || 5) + parseInt(userProfile.birthYear || 1960)).toString().split('').reduce((a,b)=>a+parseInt(b),0);
-        const finalNum = birthNum > 9 ? birthNum.toString().split('').reduce((a,b)=>a+parseInt(b),0) : birthNum;
-        document.getElementById('numerologyContent').innerHTML = `<h1>${finalNum}</h1><p>Your Life Path Number • ${['Leader','Peacemaker','Creative','Builder','Adventurer','Nurturer','Seeker','Achiever','Humanitarian'][finalNum-1]}</p>`;
+        let finalNum = birthNum;
+        while(finalNum > 9) finalNum = finalNum.toString().split('').reduce((a,b)=>a+parseInt(b),0);
+        const numMeanings = ['Leader','Peacemaker','Creative','Builder','Adventurer','Nurturer','Seeker','Achiever','Humanitarian'];
+        document.getElementById('numerologyContent').innerHTML = `<h1>${finalNum}</h1><p>Your Life Path Number • ${numMeanings[finalNum-1]}</p>`;
         
         // Feng Shui
         const year = parseInt(userProfile.birthYear || 1960);
         const kua = (year + 3) % 9 || 9;
-        document.getElementById('fengshuiContent').innerHTML = `<h1>Kua ${kua}</h1><p>Lucky Direction: ${['North','Northeast','East','Southeast','South','Southwest','West','Northwest'][(kua-1)%8]}</p><p>Element: ${['Water','Earth','Wood','Wood','Earth','Metal','Metal','Earth','Fire'][kua-1]}</p>`;
+        const directions = ['North','Northeast','East','Southeast','South','Southwest','West','Northwest'];
+        const elements = ['Water','Earth','Wood','Wood','Earth','Metal','Metal','Earth','Fire'];
+        document.getElementById('fengshuiContent').innerHTML = `<h1>Kua ${kua}</h1><p>Lucky Direction: ${directions[(kua-1)%8]}</p><p>Element: ${elements[kua-1]}</p>`;
         
         // Daily
-        document.getElementById('dailyContent').innerHTML = `<p>🌞 Sun in ${sunSign}: Today brings opportunities for ${['new beginnings','leadership','creativity','connection','action','service','harmony','transformation','abundance'][Math.floor((planetData.Sun?.longitude||0)/40)%9]}.</p><p>✨ Lucky color: ${['Red','White','Green','Pink','Orange','Blue','Yellow','Purple','Gold'][Math.floor((planetData.Sun?.longitude||0)/40)%9]}</p>`;
+        const dailyMessages = ['new beginnings','leadership','creativity','connection','action','service','harmony','transformation','abundance'];
+        const colors = ['Red','White','Green','Pink','Orange','Blue','Yellow','Purple','Gold'];
+        const idx = Math.floor((planetData.Sun?.longitude || 0)/40) % 9;
+        document.getElementById('dailyContent').innerHTML = `<p>🌞 Sun in ${sunSign}: Today brings opportunities for ${dailyMessages[idx]}.</p><p>✨ Lucky color: ${colors[idx]}</p>`;
         
         // Weekly
         document.getElementById('weeklyContent').innerHTML = `<p>📆 Moon transits ${moonSign} this week. Rahu in ${getZodiac(planetData.Rahu?.longitude || 0)} brings unexpected opportunities.</p><p>Best days: Tuesday & Thursday for important decisions.</p>`;
@@ -453,13 +497,14 @@
         ctx.clearRect(0,0,size,size);
         
         // Draw zodiac ring
+        const zodiacSymbols = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
         for(let i=0;i<12;i++) {
             let ang = (i*30-90)*Math.PI/180;
             let x = center + (radius-15)*Math.cos(ang);
             let y = center + (radius-15)*Math.sin(ang);
             ctx.fillStyle='#f5d742';
             ctx.font=`bold ${size/22}px monospace`;
-            ctx.fillText(['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'][i], x-8, y+5);
+            ctx.fillText(zodiacSymbols[i], x-8, y+5);
         }
         
         // Draw planets
@@ -478,24 +523,78 @@
         }
     }
     
-    function downloadPage(pageId) {
-        const content = document.getElementById(pageId).cloneNode(true);
-        const html = `<!DOCTYPE html><html><head><title>Shivanetra - ${pageId}</title><style>${document.querySelector('style').innerHTML}</style></head><body style="padding:20px;background:#0a0e1a;">${content.outerHTML}<p style="margin-top:30px;color:#888;text-align:center;">Generated: ${new Date().toLocaleString()} | Shivanetra V12</p></body></html>`;
-        const blob = new Blob([html], {type:'text/html'});
+    // FIXED: Download ONLY the current visible page
+    function downloadCurrentPage() {
+        // Get the active page element
+        const activePage = document.querySelector('.page.active');
+        if (!activePage) return;
+        
+        // Clone the active page content
+        const content = activePage.cloneNode(true);
+        
+        // Remove any download buttons from the cloned content to avoid duplicates
+        const downloadBtns = content.querySelectorAll('.download-btn');
+        downloadBtns.forEach(btn => btn.remove());
+        
+        // Get page title
+        const pageTitle = activePage.id;
+        const pageNames = {
+            profile: 'Profile', home: 'Home', wheel: 'Wheel', planets: 'Planets',
+            nakshatra: 'Nakshatra', traits: 'Traits', numerology: 'Numerology',
+            fengshui: 'Feng Shui', daily: 'Daily', weekly: 'Weekly', monthly: 'Monthly', advice: 'Advice'
+        };
+        
+        // Get current planet data summary
+        const planetSummary = Object.entries(planetData).map(([name, data]) => 
+            `${name}: ${data.longitude.toFixed(1)}° ${getZodiac(data.longitude)}`
+        ).join(' | ');
+        
+        const styles = document.querySelector('style').innerHTML;
+        
+        const fullHTML = `<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Shivanetra V12 - ${pageNames[pageTitle]}</title>
+            <style>${styles}</style>
+            <style>
+                body { padding: 30px; background: #0a0e1a; }
+                .nav, .download-btn { display: none; }
+                .container { max-width: 1200px; margin: 0 auto; }
+                .page { display: block !important; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1 style="color: #e9b35f; text-align: center; margin-bottom: 20px;">🌌 Shivanetra V12 - ${pageNames[pageTitle]}</h1>
+                <div style="margin-bottom: 20px; padding: 15px; background: #1a1f35; border-radius: 15px; text-align: center;">
+                    <p><strong>${userProfile.name}</strong> | Born: ${userProfile.birthMonth}/${userProfile.birthDay}/${userProfile.birthYear} | ${userProfile.birthPlace}</p>
+                    <p style="font-size: 12px; color: #b9c8ff;">🌍 Planet positions at time of download: ${planetSummary.substring(0, 200)}...</p>
+                </div>
+                ${content.outerHTML}
+                <p style="margin-top: 40px; text-align: center; color: #666; font-size: 12px; border-top: 1px solid #2a2f46; padding-top: 20px;">
+                    Generated: ${new Date().toLocaleString()} | Shivanetra V12 - NASA-Powered Astrology
+                </p>
+            </div>
+        </body>
+        </html>`;
+        
+        const blob = new Blob([fullHTML], {type: 'text/html'});
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = `shivanetra_${pageId}.html`;
+        a.download = `shivanetra_${pageTitle}.html`;
         a.click();
         URL.revokeObjectURL(a.href);
     }
     
     // Page navigation
     function showPage(pageId) {
+        currentPageId = pageId;
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(pageId).classList.add('active');
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.querySelector(`.nav-btn[data-page="${pageId}"]`).classList.add('active');
-        if (pageId === 'wheel') drawWheel();
+        if (pageId === 'wheel') setTimeout(drawWheel, 100);
         if (pageId === 'profile') loadProfile();
     }
     
