@@ -1,1 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shivanetra V12 | Complete Astrology Platform</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0a0e1a 0%, #0f1325 100%);
+            color: #f0eef7;
+            padding: 20px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e9b35f40;
+        }
+        .nav-btn {
+            background: #1a1f35;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            color: #cdd9ff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .nav-btn.active { background: #e9b35f; color: #0a0c18; }
+        .page { display: none; animation: fadeIn 0.3s; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .card {
+            background: #111725;
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid #2a2f46;
+        }
+        .badge {
+            background: #e9b35f;
+            color: #0b0e1a;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        input, select, textarea {
+            background: #1a2035;
+            border: 1px solid #3a405b;
+            color: white;
+            padding: 12px 15px;
+            border-radius: 12px;
+            width: 100%;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        button {
+            background: #e9b35f;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .download-btn {
+            background: #2a2f46;
+            color: #e9b35f;
+            border: 1px solid #e9b35f;
+            margin-top: 20px;
+            width: 100%;
+        }
+        .profile-card { max-width: 600px; margin: 0 auto; text-align: center; }
+        .wheel-canvas {
+            background: radial-gradient(circle at 30% 20%, #1a1f32, #080c18);
+            border-radius: 50%;
+            width: 100%;
+            max-width: 450px;
+            aspect-ratio: 1/1;
+            display: block;
+            margin: 0 auto;
+        }
+        .info-text { font-size: 13px; color: #b9c8ff; margin-top: 10px; }
+        .row-2 { display: flex; gap: 15px; }
+        .row-2 > div { flex: 1; }
+        h1, h2, h3 { margin-bottom: 15px; }
+        .avatar {
+            font-size: 60px;
+            background: #e9b35f20;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            border: 2px solid #e9b35f;
+        }
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .prediction-box {
+            background: linear-gradient(135deg, #1f2540, #151a30);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 15px;
+            border-left: 4px solid #e9b35f;
+        }
+        .prediction-text { font-size: 18px; line-height: 1.6; color: #e9b35f; font-style: italic; }
+        .prediction-grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .pred-category {
+            background: #0d1222;
+            border-radius: 15px;
+            padding: 18px;
+            border-top: 3px solid #e9b35f;
+        }
+        .pred-category h4 { color: #e9b35f; margin-bottom: 12px; font-size: 18px; }
+        .pred-category p { font-size: 14px; line-height: 1.6; }
+        .kabala-result {
+            background: #0d1222;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .kabala-number { font-size: 64px; font-weight: bold; color: #e9b35f; }
+        @media (max-width: 600px) {
+            .page-header { flex-direction: column; gap: 10px; }
+            .nav-btn { padding: 6px 12px; font-size: 12px; }
+            .row-2 { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="nav">
+        <button class="nav-btn" data-page="profile">👤 Profile</button>
+        <button class="nav-btn" data-page="home">🌿 Home</button>
+        <button class="nav-btn" data-page="wheel">🌀 Wheel</button>
+        <button class="nav-btn" data-page="planets">🪐 Planets</button>
+        <button class="nav-btn" data-page="nakshatra">✨ Nakshatra</button>
+        <button class="nav-btn" data-page="kabala">🔯 Kabala</button>
+        <button class="nav-btn" data-page="traits">🧬 Traits</button>
+        <button class="nav-btn" data-page="numerology">🔢 Numerology</button>
+        <button class="nav-btn" data-page="fengshui">🏮 Feng Shui</button>
+        <button class="nav-btn" data-page="predictions">📊 Predictions</button>
+        <button class="nav-btn" data-page="daily">📅 Daily</button>
+        <button class="nav-btn" data-page="weekly">📆 Weekly</button>
+        <button class="nav-btn" data-page="monthly">🌙 Monthly</button>
+        <button class="nav-btn" data-page="advice">💎 Advice</button>
+    </div>
 
+    <!-- PROFILE PAGE with Advanced Options -->
+    <div id="profile" class="page">
+        <div class="profile-card">
+            <div class="card">
+                <div class="avatar" id="avatarEmoji">🧘</div>
+                <h2>Your Cosmic Profile</h2>
+                <input type="text" id="userName" placeholder="Your Full Name" value="Selim Ahmed">
+                
+                <div class="row-2">
+                    <div><label>📅 Birth Day</label><select id="birthDay"></select></div>
+                    <div><label>📅 Birth Month</label>
+                        <select id="birthMonth"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option>
+                        <option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option>
+                        <option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option>
+                        <option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select>
+                    </div>
+                    <div><label>📅 Birth Year</label><select id="birthYear"></select></div>
+                </div>
+                
+                <div class="row-2">
+                    <div><label>⏰ Birth Time</label><input type="time" id="birthTime" value="05:24"></div>
+                    <div><label>🌍 Birth Place</label><input type="text" id="birthPlace" value="Dhaka, Bangladesh"></div>
+                </div>
+                
+                <div class="row-2">
+                    <div><label>⚧ Gender</label><select id="gender"><option>Male</option><option>Female</option><option>Other</option></select></div>
+                    <div><label>🎨 Favorite Color</label>
+                        <select id="favColor">
+                            <option>Red</option><option>Orange</option><option>Yellow</option><option>Green</option>
+                            <option>Blue</option><option>Indigo</option><option>Violet</option><option>White</option><option>Black</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="row-2">
+                    <div><label>🏡 Living Environment</label>
+                        <select id="livingEnv">
+                            <option>Urban - City Life</option><option>Suburban - Town Life</option>
+                            <option>Village - Rural Life</option><option>Forest - Nature Life</option><option>Coastal - Seaside Life</option>
+                        </select>
+                    </div>
+                    <div><label>💼 Career Type</label>
+                        <select id="careerType">
+                            <option>Business & Commerce</option><option>Creative Arts</option><option>Service & Hospitality</option>
+                            <option>Technical & Engineering</option><option>Healing & Medicine</option><option>Teaching & Education</option>
+                            <option>Spiritual & Counseling</option><option>Government & Administration</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button onclick="saveProfile()">💾 Save Complete Profile</button>
+                <div id="profileStatus" class="info-text"></div>
+            </div>
+        </div>
+        <button class="download-btn" onclick="downloadCurrentPage()">📥 Download This Page</button>
+    </div>
+
+    <!-- HOME PAGE -->
+    <div id="home" class="page">
+        <div class="card">
+            <h1>🌌 Shivanetra V12</h1>
+            <p>Surya Siddhanta • Feng Shui • Kabala • 100+ Predictions</p>
+            <div id="homeStatus" class="info-text">Welcome, <span id="welcomeName">Guest</span>!</div>
+            <button onclick="refreshAllData()">🔄 Refresh All Data</button>
+            <div class="prediction-box" id="homePredictionBox"></div>
+            <button class="download-btn" onclick="downloadCurrentPage()">📥 Download This Page</button>
+        </div>
+    </div>
+
+    <!-- WHEEL PAGE -->
+    <div id="wheel" class="page">
+        <div class="card">
+            <div class="page-header"><h2>🌀 Celestial Compass</h2><button class="download-btn" style="width:auto" onclick="downloadWheelAsImage()">📸 Save as PNG</button></div>
+            <canvas id="wheelCanvas" width="500" height="500" class="wheel-canvas"></canvas>
+            <button onclick="drawWheel()">🔄 Redraw Wheel</button>
+            <button class="download-btn" onclick="downloadCurrentPage()">📥 Download Page as HTML</button>
+        </div>
+    </div>
+
+    <!-- PLANETS PAGE -->
+    <div id="planets" class="page"><div class="page-header"><h2>🪐 Planet Positions</h2><button class="download-btn" style="width:auto" onclick="downloadCurrentPage()">📥 Download</button></div><div id="planetsGrid" class="grid"></div></div>
+    <div id="nakshatra" class="page"><div class="page-header"><h2>✨ Nakshatra Positions</h2><button class="download-btn" style="width:auto" onclick="downloadCurrentPage()">📥 Download</button></div><div id="nakshatraGrid" class="grid"></div></div>
+    
+    <!-- KABALA PAGE with Detailed Predictions -->
+    <div id="kabala" class="page">
+        <div class="page-header"><h2>🔯 Kabala Name Numerology</h2><button class="download-btn" style="width:auto" onclick="downloadCurrentPage()">📥 Download</button></div>
+        <div class="card" id="kabalaCard"></div>
+    </div>
+    
+    <!-- TRAITS PAGE -->
+    <div id="traits" class="page"><div class="page-header"><h2>🧬 Your Personal Traits</h2><button class="download-btn" style="width:auto" onclick="downloadCurrentPage()">📥 Download</button></div><div id="traitsGrid" class="grid"></div></div>
+    
+    <!-- NUMEROLOGY PAGE -->
+    <div id="numerology" class="page"><div class="page-header"><h2>🔢 Life Path Numerology</h2><button class="download-btn" style="width:auto" onclick="downloadCurrentPage()">📥 Download</button></div><div class="card"><div id="numerologyContent"></div></div></div>
+    
+    <!-- FENG SHUI PAGE -->
+    <div id="fengshui" class="page">
+        <div class="page-header"><h2>🏮 Feng Shui Analysis</h2><button class="download-btn" style="width:auto" onclick="downloadCurrentPage()">📥 Download</button></div>
+        <div class="card"><div id="fengshuiContent"></div><div id="fengshuiPredictions" style="margin-top:20px"></div></div>
+    </div>
+    
+    <!-- PREDICTIONS GRID PAGE -->
+    <div id="predictions" class="page">
+        <div class="page-header"><h2>📊 Comprehensive Predictions</h2><button class="download-btn" style="width:auto" onclick="downloadCurrentPage()">📥 Download</button></div>
+        <div class="prediction-grid-4" id="predictionGrid"></div>
+    </div>
+    
+    <!-- DAILY PAGE - Long Comprehensive Prediction -->
+    <div id="daily" class="page">
+        <div class="page-header"><h2>📅 Daily Horoscope</h2><button class="download-btn" style="width:auto" onclick="downloadCurrentPage()">📥 Download</button></div>
+        <div class="card"><div id="dailyContent"></div><div class="prediction-box"><div id="dailyPrediction"></div><div id="dailyAdvice" class="info-text" style="margin-top:15px"></div></div></div>
+    </div>
+    
+    <!-- WEEKLY PAGE - Long Comprehensive Prediction -->
+    <div id="weekly" class="page">
+        <div class="page-header"><h2>📆 Weekly Transit</h2><button class="download-btn" style="width:auto" onclick="downloadCurrentPage()">📥 Download</button></div>
+        <div class="card"><div id="weeklyContent"></div><div class="prediction-box"><div id="weeklyPrediction"></div><div id="weeklyAdvice" class="info-text" style="margin-top:15px"></div></div></div>
+    </div>
+    
+    <!-- MONTHLY PAGE - Long Comprehensive Prediction -->
+    <div id="monthly" class="page">
+        <div class="page-header"><h2>🌙 Monthly Outlook</h2><button class="download-btn" style="width:auto" onclick="downloadCurrentPage()">📥 Download</button></div>
+        <div class="card"><div id="monthlyContent"></div><div class="prediction-box"><div id="monthlyPrediction"></div><div id="monthlyAdvice" class="info-text" style="margin-top:15px"></div></div></div>
+    </div>
+    
+    <!-- ADVICE PAGE - Personalized for User -->
+    <div id="advice" class="page">
+        <div class="page-header"><h2>💎 Personalized Astrological Advice</h2><button class="download-btn" style="width:auto" onclick="downloadCurrentPage()">📥 Download</button></div>
+        <div id="adviceGrid" class="grid"></div>
+    </div>
+</div>
+
+<script>
+    // User Profile with all new fields
+    let userProfile = {
+        name: "Selim Ahmed", birthDay: "27", birthMonth: "5", birthYear: "1960",
+        birthTime: "05:24", birthPlace: "Dhaka, Bangladesh", gender: "Male",
+        favColor: "Blue", livingEnv: "Urban - City Life", careerType: "Business & Commerce"
+    };
+    let planetData = {};
+    
+    // ============ COMPREHENSIVE PREDICTION DATABASES ============
+    const TRAVEL_PREDICTIONS = [
+        "✈️ Auspicious time for long journeys. East direction favored for new beginnings. Consider visiting sacred rivers or mountain temples for spiritual renewal.",
+        "🌍 International travel brings unexpected opportunities for career advancement. A trip planned within 45 days will yield surprising financial benefits.",
+        "🚗 Short trips within 100km will be highly productive for business networking. Weekend getaways strengthen family bonds significantly.",
+        "✈️ Avoid air travel during Mercury retrograde (next 3 weeks). Train journeys or road trips are more favorable during this period.",
+        "🌴 A vacation planned near water bodies (sea, lake, river) brings rejuvenation and creative inspiration. Consider coastal destinations.",
+        "🚢 Water travel (cruise, ferry) is highly favorable for romance and partnership. Singles may meet someone significant during such journeys.",
+        "✈️ Business travel to western directions leads to major contracts and long-term partnerships. Carry a turquoise gemstone for protection.",
+        "🏔️ Mountain destinations bring spiritual clarity and meditation breakthroughs. Himalayas or similar ranges are calling you."
+    ];
+    
+    const MONEY_PREDICTIONS = [
+        "💰 Financial abundance flows from unexpected sources - an inheritance, refund, or forgotten asset may surface. Jupiter's transit favors wealth accumulation.",
+        "💎 Real estate investments made before the next full moon yield 30% higher returns. Focus on properties facing east or north.",
+        "📈 Stock market gains indicated for technology and renewable energy sectors. Consult a financial advisor before major moves.",
+        "💵 A long-standing debt or loan will be resolved favorably within 2 lunar cycles. Legal financial matters conclude positively.",
+        "🏦 A new income stream from a creative side business appears within 60 days. Follow your passion - it's financially viable.",
+        "💰 Avoid major purchases during next week's Mercury retrograde. Wait 10 days for electronics, vehicles, or contracts.",
+        "💎 Gold and silver are lucky investments now. Even small purchases attract prosperity energy to your home."
+    ];
+    
+    const LOVE_PREDICTIONS = [
+        "❤️ A meaningful soul connection is approaching your life. Pay attention to someone born under Water signs (Cancer, Scorpio, Pisces).",
+        "💑 Existing relationships deepen through honest conversation about future goals. Plan a weekend retreat for two.",
+        "💕 Singles will meet someone special at a cultural or spiritual event within 45 days. Wear your favorite color to attract them.",
+        "💍 Marriage or long-term commitment indicated within the next 8 months. Venus in your 7th house brings partnership blessings.",
+        "💖 Rekindle an old romance by reaching out this week. A simple message could open doors to reconciliation.",
+        "❤️ Family relationships heal through forgiveness of past grievances. This full moon brings emotional release.",
+        "💑 A friendship is transforming into romantic love. Be open to seeing someone in a new light."
+    ];
+    
+    const WARNING_PREDICTIONS = [
+        "⚠️ Be extremely careful with financial documents, contracts, and signatures this week. Review everything twice before signing.",
+        "🔮 Avoid confrontations with authority figures (boss, government, police) for the next 10 days. Patience prevents problems.",
+        "⚠️ Your energy levels may dip - prioritize sleep, hydration, and avoid overexertion. Your immune system needs support.",
+        "🔮 Legal matters require professional advice before proceeding. Do not handle alone - seek an expert.",
+        "⚠️ Travel delays possible on Thursdays and Fridays. Plan extra time and backup arrangements for critical journeys.",
+        "🔮 Think twice before making big commitments until after next Tuesday's planetary alignment shifts.",
+        "⚠️ Someone close may not have pure intentions regarding a financial matter. Trust your intuition."
+    ];
+    
+    // LONG DAILY PREDICTIONS (detailed paragraphs)
+    const LONG_DAILY = [
+        "The cosmic energy today supports new beginnings and bold initiatives. Your ruling planet aligns favorably with Jupiter, bringing expansion in career and social circles. Take calculated risks - the universe has your back. Financial decisions made before noon will be particularly auspicious. Wear your lucky color to enhance positive vibrations. A conversation with a mentor or elder will provide valuable guidance. Evening hours are perfect for creative projects and romantic connection. Trust your intuition - it is unusually sharp today.",
+        
+        "Mercury's influence sharpens your communication skills today. This is an ideal time for negotiations, presentations, and important conversations. Your words carry extra weight - use them wisely to manifest your desires. A misunderstanding from the past may finally resolve itself. Short journeys will bring unexpected joy. Financial documents signed today will be favorable. Singles may meet someone through work or social media. Practice gratitude before sleep to amplify tomorrow's blessings.",
+        
+        "Venus blesses your relationships today. Whether single or partnered, love energy flows freely. Express your feelings without fear - vulnerability creates deeper connections. A gift or gesture of appreciation will be remembered for years. Creative projects flourish under this influence. Money matters related to art, beauty, or women's products are favored. Evening brings romantic opportunities. Your favorite color will attract positive attention. Self-care today is not selfish - it's necessary.",
+        
+        "Mars energizes your ambitions today. Physical activity, competition, and decisive action are favored. Start that project you've been postponing. Financial risks taken today may pay off handsomely. However, avoid arguments with authority figures - channel that Mars energy into productive work instead. Your health improves with movement and exercise. A protective gemstone will shield you from negative influences. Victory comes to those who persist.",
+        
+        "Saturn brings discipline and structure today. Review your long-term goals and create a practical plan. Delayed gratification now leads to major rewards later. Financial budgeting and debt reduction are highlighted. A authority figure or father-figure offers wisdom. Home improvements started today will increase property value. Patience with difficult people pays off. Your living environment affects your mood - declutter for clarity."
+    ];
+    
+    const LONG_WEEKLY = [
+        "This week brings major shifts in career and public recognition. Monday and Tuesday are ideal for presentations and meetings with superiors. Wednesday brings financial opportunities - review investments carefully. Thursday and Friday favor relationship healing and romantic connection. The weekend is perfect for rest and spiritual practice. A new professional contact made this week will prove valuable for years. Trust the process - even delays have purpose.",
+        
+        "Relationships take center stage this week. Venus in your 7th house brings harmony to partnerships. Singles may meet someone significant at a social gathering. Existing couples should plan a special date by Friday. Family matters require attention mid-week - a conversation heals old wounds. Financial decisions benefit from consultation with your partner. Weekend brings creative inspiration. Your lucky color enhances all interactions.",
+        
+        "Financial abundance flows this week. Jupiter's transit brings unexpected income or repayment of old debts. Tuesday and Wednesday are best for major purchases. Avoid signing contracts on Thursday - Mercury creates confusion. Weekend travel brings joy and new perspectives. A financial advisor or elder offers wisdom. Your living environment affects prosperity - add plants to attract wealth energy."
+    ];
+    
+    const LONG_MONTHLY = [
+        "This month brings profound transformation across multiple life areas. Career opportunities from unexpected sources - consider offers you normally wouldn't. Relationships deepen or end - both outcomes serve your highest good. Financial planning now yields results within 90 days. Health improves with consistent routine. A spiritual awakening may occur around the full moon. Trust divine timing - not everything is revealed at once. Your favorite color and living environment influence outcomes significantly.",
+        
+        "Jupiter expands your horizons this month. Travel, education, and spiritual pursuits are highly favored. A long-held wish begins to manifest. Career changes bring long-term satisfaction. Financial luck is strong - consider charitable giving to amplify returns. Love blossoms for those open to new experiences. Family relationships heal through honest communication. The universe supports your boldest dreams - take action.",
+        
+        "Saturn brings discipline and structure this month. Focus on long-term goals - short-term pleasures delay your destiny. Financial foundations built now will support you for years. Health requires attention - establish sustainable habits. Relationships tested are being strengthened. A mentor or guide appears to offer wisdom. Patience through difficulty brings mastery. Your living environment should support your ambitions."
+    ];
+    
+    const KABALA_MEANINGS = {
+        1: { trait: "The Leader", desc: "You are a natural born leader with independent spirit and creative vision. Your life path involves pioneering new territories and inspiring others through example. Success comes through self-reliance and courage.", color: "Red", gem: "Ruby", element: "Fire", career: "Entrepreneurship, Politics, Sports", challenge: "Avoid arrogance and impatience" },
+        2: { trait: "The Peacemaker", desc: "Diplomacy and cooperation are your gifts. You bring harmony to chaotic situations and excel in partnerships. Your sensitivity allows you to understand others deeply. Success comes through collaboration and patience.", color: "Orange", gem: "Pearl", element: "Water", career: "Counseling, Diplomacy, Arts", challenge: "Avoid codependency and indecision" },
+        3: { trait: "The Creative", desc: "Joy, expression, and communication define your journey. You have natural artistic talent and social charm. Your words and creations inspire others. Success comes through sharing your unique voice with the world.", color: "Yellow", gem: "Emerald", element: "Air", career: "Writing, Performance, Marketing", challenge: "Avoid scattered energy and drama" },
+        4: { trait: "The Builder", desc: "Practical, disciplined, and hardworking - you create lasting foundations. Your attention to detail and reliability are unmatched. Success comes through consistent effort and patience.", color: "Green", gem: "Jade", element: "Earth", career: "Engineering, Construction, Finance", challenge: "Avoid rigidity and workaholism" },
+        5: { trait: "The Adventurer", desc: "Freedom and variety are essential for your happiness. You adapt quickly to change and thrive on new experiences. Your curiosity leads to unexpected discoveries.", color: "Blue", gem: "Turquoise", element: "Space", career: "Travel, Sales, Media", challenge: "Avoid restlessness and excess" },
+        6: { trait: "The Nurturer", desc: "Responsibility and compassion define your path. You are the healer and peacekeeper in your circles. Your love creates safe spaces for others. Success comes through service and harmony.", color: "Indigo", gem: "Diamond", element: "Water", career: "Healthcare, Teaching, Design", challenge: "Avoid martyrdom and over-giving" },
+        7: { trait: "The Seeker", desc: "Wisdom and analysis drive your journey. You seek truth beyond surface appearances. Your intuition and intelligence are powerful gifts. Success comes through study and spiritual practice.", color: "Violet", gem: "Sapphire", element: "Air", career: "Research, Science, Spirituality", challenge: "Avoid isolation and skepticism" },
+        8: { trait: "The Achiever", desc: "Ambition and power flow through you. You are destined for material success and leadership. Your organizational skills create empires. Success comes through balanced authority and generosity.", color: "Gold", gem: "Onyx", element: "Earth", career: "Business, Law, Management", challenge: "Avoid greed and workaholism" },
+        9: { trait: "The Humanitarian", desc: "Compassion and idealism guide your path. You serve humanity through art, healing, or activism. Your vision inspires change. Success comes through selfless service and creativity.", color: "White", gem: "Opal", element: "Fire", career: "Charity, Arts, Healing", challenge: "Avoid martyrdom and escapism" }
+    };
+    
+    // Calculate planet positions
+    function calculatePlanets() {
+        const now = new Date();
+        const start = new Date(now.getFullYear(), 0, 0);
+        const dayOfYear = Math.floor((now - start) / 86400000);
+        return {
+            Sun: { longitude: (dayOfYear * 0.9856 + 280) % 360 },
+            Moon: { longitude: (dayOfYear * 13.176 + 218) % 360 },
+            Mercury: { longitude: (dayOfYear * 4.092 + 174) % 360 },
+            Venus: { longitude: (dayOfYear * 1.602 + 50) % 360 },
+            Mars: { longitude: (dayOfYear * 0.524 + 355) % 360 },
+            Jupiter: { longitude: (dayOfYear * 0.083 + 34) % 360 },
+            Saturn: { longitude: (dayOfYear * 0.033 + 50) % 360 },
+            Rahu: { longitude: (dayOfYear * 0.1114 + 125) % 360 },
+            Ketu: { longitude: (dayOfYear * 0.1114 + 305) % 360 }
+        };
+    }
+    
+    function getZodiac(lon) {
+        const signs = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+        return signs[Math.floor(lon/30)%12];
+    }
+    function getZodiacSymbol(lon) { return ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'][Math.floor(lon/30)%12]; }
+    function getNakshatra(lon) {
+        const stars = ["Ashwini","Bharani","Krittika","Rohini","Mrigashira","Ardra","Punarvasu","Pushya","Ashlesha","Magha","Purva Phalguni","Uttara Phalguni","Hasta","Chitra","Swati","Vishakha","Anuradha","Jyeshtha","Mula","Purva Ashadha","Uttara Ashadha","Shravana","Dhanishtha","Shatabhisha","Purva Bhadrapada","Uttara Bhadrapada","Revati"];
+        return stars[Math.floor(lon/13.3333)%27];
+    }
+    function getGemstone(planet) {
+        const gems = {Sun:"Ruby",Moon:"Pearl",Mercury:"Emerald",Venus:"Diamond",Mars:"Red Coral",Jupiter:"Yellow Sapphire",Saturn:"Blue Sapphire",Rahu:"Hessonite",Ketu:"Cat's Eye"};
+        return gems[planet] || "Quartz";
+    }
+    
+    function getRandomPrediction(arr, seed) { return arr[Math.floor((seed * 100) % arr.length)]; }
+    function getLongPrediction(arr, seed) { return arr[Math.floor((seed * 100) % arr.length)]; }
+    
+    function calculateKabalaNumber(name) {
+        const letterValues = { 'A':1,'B':2,'C':3,'D':4,'E':5,'F':6,'G':7,'H':8,'I':9,'J':1,'K':2,'L':3,'M':4,'N':5,'O':6,'P':7,'Q':8,'R':9,'S':1,'T':2,'U':3,'V':4,'W':5,'X':6,'Y':7,'Z':8 };
+        let sum = 0;
+        for(let char of name.toUpperCase().replace(/[^A-Z]/g, '')) sum += letterValues[char] || 0;
+        while(sum > 9) sum = sum.toString().split('').reduce((a,b) => a + parseInt(b), 0);
+        return sum;
+    }
+    
+    function saveProfile() {
+        userProfile = {
+            name: document.getElementById('userName').value,
+            birthDay: document.getElementById('birthDay').value,
+            birthMonth: document.getElementById('birthMonth').value,
+            birthYear: document.getElementById('birthYear').value,
+            birthTime: document.getElementById('birthTime').value,
+            birthPlace: document.getElementById('birthPlace').value,
+            gender: document.getElementById('gender').value,
+            favColor: document.getElementById('favColor').value,
+            livingEnv: document.getElementById('livingEnv').value,
+            careerType: document.getElementById('careerType').value
+        };
+        localStorage.setItem('shivanetra_profile', JSON.stringify(userProfile));
+        document.getElementById('welcomeName').innerText = userProfile.name;
+        document.getElementById('profileStatus').innerHTML = "✅ Complete profile saved!";
+        setTimeout(() => document.getElementById('profileStatus').innerHTML = "", 2000);
+        updateAllPages();
+    }
+    
+    function loadProfile() {
+        const saved = localStorage.getItem('shivanetra_profile');
+        if(saved) {
+            userProfile = JSON.parse(saved);
+            document.getElementById('userName').value = userProfile.name;
+            document.getElementById('birthDay').value = userProfile.birthDay || "27";
+            document.getElementById('birthMonth').value = userProfile.birthMonth || "5";
+            document.getElementById('birthYear').value = userProfile.birthYear || "1960";
+            document.getElementById('birthTime').value = userProfile.birthTime || "05:24";
+            document.getElementById('birthPlace').value = userProfile.birthPlace || "Dhaka, Bangladesh";
+            document.getElementById('gender').value = userProfile.gender || "Male";
+            document.getElementById('favColor').value = userProfile.favColor || "Blue";
+            document.getElementById('livingEnv').value = userProfile.livingEnv || "Urban - City Life";
+            document.getElementById('careerType').value = userProfile.careerType || "Business & Commerce";
+        }
+        document.getElementById('welcomeName').innerText = userProfile.name;
+    }
+    
+    function refreshAllData() {
+        planetData = calculatePlanets();
+        updateAllPages();
+        drawWheel();
+    }
+    
+    function updateAllPages() {
+        const seed = (planetData.Sun?.longitude || 0) / 360;
+        const moonSeed = (planetData.Moon?.longitude || 0) / 360;
+        const jupiterSeed = (planetData.Jupiter?.longitude || 0) / 360;
+        
+        // Planets
+        let planetsHtml = '';
+        for (let [name, data] of Object.entries(planetData)) {
+            planetsHtml += `<div class="card"><span class="badge">${name}</span><h2>${data.longitude.toFixed(1)}°</h2><p>${getZodiac(data.longitude)} ${getZodiacSymbol(data.longitude)}</p></div>`;
+        }
+        document.getElementById('planetsGrid').innerHTML = planetsHtml;
+        
+        // Nakshatra
+        let nakshatraHtml = '';
+        for (let [name, data] of Object.entries(planetData)) {
+            nakshatraHtml += `<div class="card"><span class="badge">${name}</span><h3>${getNakshatra(data.longitude)}</h3><p>${getZodiac(data.longitude)}</p></div>`;
+        }
+        document.getElementById('nakshatraGrid').innerHTML = nakshatraHtml;
+        
+        // Kabala with full details
+        const kabalaNum = calculateKabalaNumber(userProfile.name);
+        const kabala = KABALA_MEANINGS[kabalaNum];
+        document.getElementById('kabalaCard').innerHTML = `
+            <div class="kabala-result"><div class="kabala-number">${kabalaNum}</div>
+            <h3>${kabala.trait}</h3><p>${kabala.desc}</p>
+            <div class="row-2" style="margin-top:20px"><div>🎨 Lucky Color: ${kabala.color}</div><div>💎 Lucky Gem: ${kabala.gem}</div><div>🔥 Element: ${kabala.element}</div></div>
+            <div class="row-2" style="margin-top:15px"><div>💼 Best Career: ${kabala.career}</div><div>⚠️ Challenge: ${kabala.challenge}</div></div>
+            <p style="margin-top:20px"><strong>🔮 Kabala Prediction:</strong> Your name vibration indicates ${kabala.trait.toLowerCase()} energy. This month focuses on ${kabala.career.split(',')[0]} opportunities. Wear ${kabala.color} on ${['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'][kabalaNum-1]} for enhanced luck.</p></div>`;
+        
+        // Traits with user data
+        const sunSign = getZodiac(planetData.Sun?.longitude || 0);
+        document.getElementById('traitsGrid').innerHTML = `
+            <div class="card"><span class="badge">👤 Identity</span><h2>${userProfile.name}</h2><p>${userProfile.gender} | ${userProfile.birthPlace}</p><p>🎨 ${userProfile.favColor} | 🏡 ${userProfile.livingEnv}</p></div>
+            <div class="card"><span class="badge">🌞 Sun Sign</span><h2>${sunSign}</h2><p>Core identity and life purpose. Your ${sunSign} energy makes you ${['bold','patient','curious','nurturing','dramatic','analytical','diplomatic','intense','optimistic','ambitious','unique','compassionate'][Math.floor(planetData.Sun?.longitude/30)%12]}.</p></div>
+            <div class="card"><span class="badge">🔯 Kabala Number</span><h2>${kabalaNum}</h2><p>${kabala.trait} - ${kabala.desc.substring(0,100)}...</p></div>
+            <div class="card"><span class="badge">💼 Career Path</span><h2>${userProfile.careerType}</h2><p>Your ${userProfile.careerType} path aligns with ${kabala.career} energies. Success comes through ${kabala.trait.toLowerCase()} approach.</p></div>`;
+        
+        // Numerology Life Path
+        const birthNum = (parseInt(userProfile.birthDay||27) + parseInt(userProfile.birthMonth||5) + parseInt(userProfile.birthYear||1960));
+        let lifePath = birthNum; while(lifePath > 9) lifePath = lifePath.toString().split('').reduce((a,b)=>a+parseInt(b),0);
+        document.getElementById('numerologyContent').innerHTML = `<h1>${lifePath}</h1><p>Life Path Number: ${['Leader','Peacemaker','Creative','Builder','Adventurer','Nurturer','Seeker','Achiever','Humanitarian'][lifePath-1]}</p><p>You are destined for ${['great leadership','diplomatic harmony','artistic expression','practical achievement','freedom','service','wisdom','material success','universal love'][lifePath-1]}.</p>`;
+        
+        // Feng Shui
+        const kua = ((parseInt(userProfile.birthYear||1960) + 3) % 9) || 9;
+        const fsData = {1:"Water/North/Black",2:"Earth/Southwest/Brown",3:"Wood/East/Green",4:"Wood/Southeast/Green",5:"Earth/Center/Yellow",6:"Metal/Northwest/White",7:"Metal/West/White",8:"Earth/Northeast/Brown",9:"Fire/South/Red"};
+        document.getElementById('fengshuiContent').innerHTML = `<h1>Kua ${kua}</h1><p>Element: ${fsData[kua].split('/')[0]} | Direction: ${fsData[kua].split('/')[1]} | Lucky Color: ${fsData[kua].split('/')[2]}</p>`;
+        document.getElementById('fengshuiPredictions').innerHTML = `<p>🏠 Place your bed facing ${fsData[kua].split('/')[1]} for better sleep and relationship harmony.</p><p>💼 Your desk should face ${fsData[kua].split('/')[1]} for career advancement and prosperity.</p><p>🎨 Use ${fsData[kua].split('/')[2]} colors in your living space to activate ${fsData[kua].split('/')[0]} energy.</p><p>🔮 Your living environment of "${userProfile.livingEnv}" is enhanced by adding ${fsData[kua].split('/')[0]} element decor items.</p>`;
+        
+        // Prediction Grid
+        document.getElementById('predictionGrid').innerHTML = `
+            <div class="pred-category"><h4>✈️ TRAVEL</h4><p>${getRandomPrediction(TRAVEL_PREDICTIONS, seed)}</p></div>
+            <div class="pred-category"><h4>💰 MONEY / FINANCE</h4><p>${getRandomPrediction(MONEY_PREDICTIONS, seed + 0.25)}</p></div>
+            <div class="pred-category"><h4>💕 LOVE / MEETING</h4><p>${getRandomPrediction(LOVE_PREDICTIONS, seed + 0.5)}</p></div>
+            <div class="pred-category"><h4>⚠️ BE CAREFUL ABOUT</h4><p>${getRandomPrediction(WARNING_PREDICTIONS, seed + 0.75)}</p></div>`;
+        
+        // LONG Daily, Weekly, Monthly
+        document.getElementById('dailyContent').innerHTML = `<p>🌞 Sun in ${sunSign} | 🎨 Your Lucky Color: ${userProfile.favColor} | 🏡 Environment: ${userProfile.livingEnv}</p><p>📅 ${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>`;
+        document.getElementById('dailyPrediction').innerHTML = `✨ "${getLongPrediction(LONG_DAILY, seed)}" ✨`;
+        document.getElementById('dailyAdvice').innerHTML = `💡 Based on your ${userProfile.careerType} career, focus on ${userProfile.careerType === 'Creative Arts' ? 'artistic expression' : userProfile.careerType === 'Business & Commerce' ? 'networking and deals' : 'service to others'} today. Wear ${userProfile.favColor} for enhanced energy.`;
+        
+        document.getElementById('weeklyContent').innerHTML = `<p>📆 Week of ${new Date().toLocaleDateString()} | Moon in ${getZodiac(planetData.Moon?.longitude || 0)}</p>`;
+        document.getElementById('weeklyPrediction').innerHTML = `🌟 "${getLongPrediction(LONG_WEEKLY, moonSeed)}" 🌟`;
+        document.getElementById('weeklyAdvice').innerHTML = `💡 Your ${userProfile.livingEnv} environment affects outcomes this week. Add ${userProfile.favColor} accents to your space.`;
+        
+        document.getElementById('monthlyContent').innerHTML = `<p>🌙 ${new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} | Jupiter in ${getZodiac(planetData.Jupiter?.longitude || 0)}</p>`;
+        document.getElementById('monthlyPrediction').innerHTML = `🌊 "${getLongPrediction(LONG_MONTHLY, jupiterSeed)}" 🌊`;
+        document.getElementById('monthlyAdvice').innerHTML = `💡 Your Kabala number ${calculateKabalaNumber(userProfile.name)} suggests focusing on ${KABALA_MEANINGS[calculateKabalaNumber(userProfile.name)].career} opportunities this month.`;
+        
+        // Personalized Advice page
+        const primaryGem = getGemstone("Sun");
+        let adviceHtml = `
+            <div class="card"><span class="badge">👤 For ${userProfile.name}</span><h3>💎 Primary Gemstone: ${primaryGem}</h3><p>Based on your Sun sign ${sunSign} and Kabala number ${kabalaNum}, ${primaryGem} enhances your natural ${kabala.trait.toLowerCase()} qualities.</p><p>Wear ${primaryGem} on ${['Sunday','Monday','Wednesday','Thursday','Friday','Tuesday','Saturday'][kabalaNum-1]}s.</p></div>
+            <div class="card"><span class="badge">🏡 Environment Advice</span><h3>${userProfile.livingEnv}</h3><p>For ${userProfile.livingEnv}, place water elements in the ${fsData[kua].split('/')[1]} corner of your home to activate prosperity energy. Add ${userProfile.favColor} curtains or decor for balance.</p></div>
+            <div class="card"><span class="badge">💼 Career Guidance</span><h3>${userProfile.careerType}</h3><p>Your ${userProfile.careerType} path aligns with ${kabala.career}. This month's planetary transits favor ${userProfile.careerType === 'Creative Arts' ? 'new projects and exhibitions' : userProfile.careerType === 'Business & Commerce' ? 'partnerships and contracts' : 'skill development and networking'}.</p></div>
+            <div class="card"><span class="badge">🎨 Color Therapy</span><h3>Your Lucky Color: ${userProfile.favColor}</h3><p>Wear ${userProfile.favColor} on important days. Add ${userProfile.favColor} stones or crystals to your workspace. ${userProfile.favColor} activates your ${kabala.element} energy and attracts ${kabala.trait.toLowerCase()} opportunities.</p></div>`;
+        document.getElementById('adviceGrid').innerHTML = adviceHtml;
+        
+        document.getElementById('homePredictionBox').innerHTML = `<span class="badge">🌠 Today's Wisdom for ${userProfile.name}</span><p class="prediction-text">"${getLongPrediction(LONG_DAILY, seed).substring(0, 200)}..."</p><p class="info-text">🎨 ${userProfile.favColor} is your power color today | 🏡 ${userProfile.livingEnv} environment supports growth</p>`;
+    }
+    
+    function drawWheel() {
+        const canvas = document.getElementById('wheelCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const size = canvas.width;
+        const center = size/2;
+        const radius = size*0.38;
+        ctx.clearRect(0,0,size,size);
+        for(let i=0;i<12;i++) {
+            let ang = (i*30-90)*Math.PI/180;
+            let x = center + (radius-15)*Math.cos(ang);
+            let y = center + (radius-15)*Math.sin(ang);
+            ctx.fillStyle='#f5d742';
+            ctx.font=`bold ${size/22}px monospace`;
+            ctx.fillText(['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'][i], x-8, y+5);
+        }
+        const symbols = {Sun:'☉',Moon:'☽',Mercury:'☿',Venus:'♀',Mars:'♂',Jupiter:'♃',Saturn:'♄',Rahu:'☊',Ketu:'☋'};
+        for(let [name, data] of Object.entries(planetData)) {
+            let ang = (data.longitude-90)*Math.PI/180;
+            let x = center + radius*Math.cos(ang);
+            let y = center + radius*Math.sin(ang);
+            ctx.beginPath();
+            ctx.fillStyle='#ffb347';
+            ctx.arc(x,y,7,0,2*Math.PI);
+            ctx.fill();
+            ctx.fillStyle='#fff';
+            ctx.font='14px monospace';
+            ctx.fillText(symbols[name]||'●', x-6, y-6);
+        }
+    }
+    
+    function downloadWheelAsImage() {
+        const canvas = document.getElementById('wheelCanvas');
+        const link = document.createElement('a');
+        link.download = 'shivanetra_wheel.png';
+        link.href = canvas.toDataURL();
+        link.click();
+    }
+    
+    function downloadCurrentPage() {
+        const activePage = document.querySelector('.page.active');
+        if (!activePage) return;
+        const content = activePage.cloneNode(true);
+        const downloadBtns = content.querySelectorAll('.download-btn');
+        downloadBtns.forEach(btn => btn.remove());
+        const pageTitle = activePage.id;
+        const pageNames = {profile:'Profile',home:'Home',wheel:'Wheel',planets:'Planets',nakshatra:'Nakshatra',kabala:'Kabala',traits:'Traits',numerology:'Numerology',fengshui:'Feng Shui',predictions:'Predictions',daily:'Daily',weekly:'Weekly',monthly:'Monthly',advice:'Advice'};
+        const styles = document.querySelector('style').innerHTML;
+        const fullHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Shivanetra - ${pageNames[pageTitle]}</title><style>${styles} .nav, .download-btn { display: none; } .page { display: block !important; }</style></head><body style="padding:30px;background:#0a0e1a;"><div class="container"><h1 style="color:#e9b35f;text-align:center">🌌 Shivanetra V12 - ${pageNames[pageTitle]}</h1><div style="margin:20px 0;padding:15px;background:#1a1f35;border-radius:15px"><p><strong>${userProfile.name}</strong> | Born: ${userProfile.birthMonth}/${userProfile.birthDay}/${userProfile.birthYear} | ${userProfile.careerType} | ${userProfile.livingEnv}</p></div>${content.outerHTML}<p style="margin-top:40px;text-align:center;color:#666;">Generated: ${new Date().toLocaleString()} | Shivanetra V12</p></div></body></html>`;
+        const blob = new Blob([fullHTML], {type:'text/html'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `shivanetra_${pageTitle}.html`;
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+    
+    function populateDropdowns() {
+        const daySelect = document.getElementById('birthDay');
+        for(let i=1;i<=31;i++) daySelect.innerHTML += `<option value="${i}">${i}</option>`;
+        const yearSelect = document.getElementById('birthYear');
+        for(let i=2026;i>=1920;i--) yearSelect.innerHTML += `<option value="${i}">${i}</option>`;
+    }
+    
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector(`.nav-btn[data-page="${pageId}"]`).classList.add('active');
+        if (pageId === 'wheel') setTimeout(drawWheel, 100);
+    }
+    
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.addEventListener('click', () => showPage(btn.dataset.page)));
+    
+    populateDropdowns();
+    loadProfile();
+    refreshAllData();
+    showPage('profile');
+</script>
+</body>
+</html>
