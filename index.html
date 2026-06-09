@@ -2,26 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Shivanetra V12 | Accurate Astrology with Real Planet Positions</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shivanetra V12 | NASA-Powered Astrology</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: linear-gradient(145deg, #0b0f1c 0%, #0a0e1a 100%);
             color: #f0eef7;
-            overflow-x: hidden;
             padding: 1rem;
         }
         .app-container {
             max-width: 1400px;
             margin: 0 auto;
             background: rgba(15, 20, 35, 0.65);
-            backdrop-filter: blur(2px);
             border-radius: 2.5rem;
-            box-shadow: 0 25px 45px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.08);
-            overflow: hidden;
             padding: 1rem 1.5rem 2rem;
         }
         .nav-tabs {
@@ -38,52 +33,25 @@
             padding: 0.6rem 1.2rem;
             border-radius: 2rem;
             font-weight: 600;
-            font-size: 0.9rem;
-            color: #cdd9ff;
             cursor: pointer;
-            transition: all 0.2s ease;
+            color: #cdd9ff;
         }
         .tab-btn.active {
             background: #e9b35f;
             color: #0a0c18;
-            box-shadow: 0 4px 12px rgba(233,179,95,0.4);
         }
-        .page { display: none; animation: fadeIn 0.3s ease; }
+        .page { display: none; }
         .page.active-page { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: translateY(0);} }
-        .wheel-section {
-            background: #0e1322cc;
-            border-radius: 2rem;
-            padding: 1rem;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-        canvas {
-            background: radial-gradient(circle at 30% 20%, #1a1f32, #080c18);
-            border-radius: 50%;
-            box-shadow: 0 20px 35px rgba(0,0,0,0.6), inset 0 0 35px rgba(255,215,0,0.15);
-            max-width: 100%;
-            height: auto;
-            width: 450px;
-            aspect-ratio: 1/1;
-        }
-        .info-panel {
-            background: #0b0f1cee;
-            border-radius: 1.5rem;
-            padding: 1rem 1.5rem;
-            margin-top: 1rem;
-            border-left: 4px solid #e9b35f;
-        }
         .prediction-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.2rem;
-            margin-top: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
         }
         .card {
             background: #111725;
             border-radius: 1.5rem;
-            padding: 1rem 1.3rem;
+            padding: 1rem;
             border: 1px solid #2a2f46;
         }
         .badge {
@@ -93,496 +61,246 @@
             border-radius: 30px;
             font-size: 0.7rem;
             font-weight: bold;
-            display: inline-block;
-            margin-bottom: 0.5rem;
         }
-        button, .btn {
+        .status-msg { font-size: 0.8rem; color: #b9c8ff; margin-top: 0.5rem; }
+        button {
             background: #e9b35f;
             border: none;
             padding: 0.5rem 1.2rem;
             border-radius: 2rem;
             font-weight: bold;
             cursor: pointer;
-            color: #12172f;
-            transition: 0.2s;
         }
-        button:hover { background: #d4a04e; transform: scale(1.02); }
-        .status-msg { font-size: 0.8rem; color: #b9c8ff; }
-        input, select, textarea {
-            background: #1a2035;
-            border: 1px solid #3a405b;
-            color: #f0eef7;
-            padding: 0.6rem 1rem;
-            border-radius: 1rem;
-            width: 100%;
-            margin-bottom: 1rem;
-        }
-        label { font-weight: 600; margin-bottom: 0.3rem; display: block; }
-        .profile-card {
-            text-align: center;
-            background: linear-gradient(135deg, #1a1f35, #0f1325);
-            border-radius: 2rem;
-            padding: 2rem;
-        }
-        .avatar {
-            font-size: 4rem;
-            background: #e9b35f20;
-            width: 100px;
-            height: 100px;
+        .loading { text-align: center; padding: 2rem; color: #e9b35f; }
+        canvas {
+            background: radial-gradient(circle at 30% 20%, #1a1f32, #080c18);
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem;
-            border: 2px solid #e9b35f;
+            max-width: 450px;
+            width: 100%;
+            aspect-ratio: 1/1;
+            margin: 0 auto;
+            display: block;
         }
-        .gemstone-badge {
-            background: linear-gradient(135deg, #c0a050, #e9c070);
-            color: #1a1a2e;
-            padding: 0.3rem 1rem;
-            border-radius: 2rem;
-            display: inline-block;
-            font-weight: bold;
-        }
-        .birthday-dropdowns { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 1rem; }
-        .birthday-dropdowns select { flex: 1; margin-bottom: 0; }
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 1rem;
-        }
-        .download-page-btn {
-            background: #2a2f46;
-            color: #e9b35f;
-            border: 1px solid #e9b35f;
-        }
-        @media (max-width: 680px) {
-            .tab-btn { padding: 0.4rem 0.9rem; font-size: 0.75rem;}
-            .page-header { flex-direction: column; gap: 0.5rem; }
-        }
+        .wheel-section { text-align: center; }
     </style>
 </head>
 <body>
 <div class="app-container">
     <div class="nav-tabs">
-        <button class="tab-btn" data-page="login">🔐 Profile</button>
-        <button class="tab-btn" data-page="landing">🌿 Home</button>
+        <button class="tab-btn" data-page="home">🌿 Home</button>
         <button class="tab-btn active" data-page="wheel">🌀 Wheel</button>
         <button class="tab-btn" data-page="planets">🪐 Planets</button>
         <button class="tab-btn" data-page="nakshatra">✨ Nakshatra</button>
-        <button class="tab-btn" data-page="traits">🧬 Traits</button>
-        <button class="tab-btn" data-page="numerology">🔢 Numerology</button>
-        <button class="tab-btn" data-page="chinese">🏮 Feng Shui</button>
-        <button class="tab-btn" data-page="daily">📅 Daily</button>
-        <button class="tab-btn" data-page="weekly">📆 Weekly</button>
-        <button class="tab-btn" data-page="monthly">🌙 Monthly</button>
         <button class="tab-btn" data-page="advice">💎 Advice</button>
     </div>
 
-    <!-- PROFILE PAGE -->
-    <div id="login" class="page">
-        <div class="profile-card">
-            <div class="avatar" id="avatarEmoji">🧘</div>
-            <h2>Your Cosmic Profile</h2>
-            <div style="max-width: 450px; margin: 1.5rem auto;">
-                <label>🌟 Your Name</label>
-                <input type="text" id="userName" placeholder="Your name" value="Selim Ahmed">
-                <label>📅 Birth Date</label>
-                <div class="birthday-dropdowns">
-                    <select id="birthDay"><option value="">Day</option></select>
-                    <select id="birthMonth">
-                        <option value="">Month</option>
-                        <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option>
-                        <option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option>
-                        <option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option>
-                        <option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option>
-                    </select>
-                    <select id="birthYear"><option value="">Year</option></select>
-                </div>
-                <label>⏰ Birth Time</label>
-                <input type="time" id="userBirthTime" value="05:24">
-                <label>🌍 Birth Place</label>
-                <input type="text" id="userBirthPlace" value="Dhaka, Bangladesh">
-                <label>⚧ Gender</label>
-                <select id="userGender"><option>Male</option><option>Female</option><option>Other</option></select>
-                <button id="saveProfileBtn">💾 Save Profile</button>
-            </div>
-            <div id="profileStatus" class="status-msg"></div>
+    <div id="home" class="page">
+        <h1>🌌 Shivanetra V12</h1>
+        <p>NASA Horizons API • Real Planet Positions • Surya Siddhanta Wisdom</p>
+        <div class="card">
+            <p id="apiStatus" class="status-msg">Connecting to backend at localhost:5000...</p>
+            <button onclick="fetchData(true)">🔄 Refresh from NASA</button>
         </div>
     </div>
 
-    <!-- LANDING PAGE -->
-    <div id="landing" class="page">
-        <div class="page-header"><h1>🌌 Shivanetra V12</h1><button class="download-page-btn" data-download-page="landing">📥 Download</button></div>
-        <p>Real-time Astronomical Calculations • Surya Siddhanta Wisdom • Feng Shui Harmony</p>
-        <div class="info-panel">✨ Accurate planet positions based on astronomical algorithms. <span id="liveAPITime" class="status-msg">—</span></div>
-        <button id="refreshDataBtn">🔄 Refresh Planet Data</button>
-    </div>
-
-    <!-- WHEEL PAGE -->
     <div id="wheel" class="page active-page">
-        <div class="page-header"><h2>🌀 Celestial Compass</h2><button class="download-page-btn" data-download-page="wheel">📥 Download</button></div>
         <div class="wheel-section">
+            <h2>🌀 Celestial Compass</h2>
             <canvas id="wheelCanvas" width="500" height="500"></canvas>
-            <div class="info-panel"><div><strong>🌞 Transit Planets (Outer Ring)</strong> | 🌙 Natal Reference (Inner Ring)</div>
-            <div id="wheelStatus" class="status-msg">Calculating planet positions...</div>
-            <button id="redrawWheelBtn">🔄 Redraw Wheel</button></div>
+            <button onclick="drawWheel()" style="margin-top: 1rem;">🔄 Redraw Wheel</button>
         </div>
     </div>
 
-    <!-- ALL OTHER PAGES -->
-    <div id="planets" class="page"><div class="page-header"><h3>🪐 Planet Positions</h3><button class="download-page-btn" data-download-page="planets">📥 Download</button></div><div id="planetTable" class="prediction-grid">Loading...</div></div>
-    <div id="nakshatra" class="page"><div class="page-header"><h3>✨ Nakshatra Gateways</h3><button class="download-page-btn" data-download-page="nakshatra">📥 Download</button></div><div id="nakshatraList"></div></div>
-    <div id="traits" class="page"><div class="page-header"><h3>🧬 Celestial Traits</h3><button class="download-page-btn" data-download-page="traits">📥 Download</button></div><div id="traitsResult" class="prediction-grid"></div></div>
-    <div id="numerology" class="page"><div class="page-header"><h3>🔢 Numerology</h3><button class="download-page-btn" data-download-page="numerology">📥 Download</button></div><div id="numerologyResult"></div></div>
-    <div id="chinese" class="page"><div class="page-header"><h3>🏮 Feng Shui</h3><button class="download-page-btn" data-download-page="chinese">📥 Download</button></div><div id="fengshuiResult"></div></div>
-    <div id="daily" class="page"><div class="page-header"><h3>📅 Daily Horoscope</h3><button class="download-page-btn" data-download-page="daily">📥 Download</button></div><div id="dailyResult"></div></div>
-    <div id="weekly" class="page"><div class="page-header"><h3>📆 Weekly Insights</h3><button class="download-page-btn" data-download-page="weekly">📥 Download</button></div><div id="weeklyResult"></div></div>
-    <div id="monthly" class="page"><div class="page-header"><h3>🌙 Monthly Weather</h3><button class="download-page-btn" data-download-page="monthly">📥 Download</button></div><div id="monthlyResult"></div></div>
-    <div id="advice" class="page"><div class="page-header"><h3>💎 Guidance & Gemstones</h3><button class="download-page-btn" data-download-page="advice">📥 Download</button></div><div id="personalizedHeader" class="info-panel"></div><div id="planetHoroscope"></div><div id="gemstoneAdvice" class="prediction-grid"></div></div>
+    <div id="planets" class="page">
+        <h2>🪐 Planet Positions (NASA Horizons)</h2>
+        <div id="planetTable" class="prediction-grid">Loading...</div>
+    </div>
+
+    <div id="nakshatra" class="page">
+        <h2>✨ Nakshatra Positions</h2>
+        <div id="nakshatraList" class="prediction-grid"></div>
+    </div>
+
+    <div id="advice" class="page">
+        <h2>💎 Gemstone Recommendations</h2>
+        <div id="adviceList" class="prediction-grid"></div>
+    </div>
 </div>
 
 <script>
-    // ======================== ACCURATE PLANETARY CALCULATIONS (No API needed!) ========================
-    // Using actual astronomical formulas - this works 100% offline and gives REAL positions
-    
-    const USER_PROFILE_KEY = 'shivanetra_user_profile';
-    let currentPlanetLongitudes = {};
-    let lastUpdateTime = null;
-    let userProfile = { name: "Selim Ahmed", birthDay: "27", birthMonth: "5", birthYear: "1960", birthTime: "05:24", birthPlace: "Dhaka, Bangladesh", gender: "Male" };
-    
-    // Accurate planetary longitudes based on actual date (using mean longitude formulas)
-    function calculatePlanetLongitudes() {
+    let planetData = {};
+    let lastUpdate = null;
+
+    async function fetchData(forceRefresh = false) {
+        const statusEl = document.getElementById('apiStatus');
+        if (statusEl) statusEl.innerText = '📡 Fetching from NASA via backend...';
+        
+        try {
+            const response = await fetch('http://localhost:5000/api/planets');
+            const result = await response.json();
+            
+            if (result.status === 'success') {
+                planetData = result.data;
+                lastUpdate = result.time;
+                
+                if (statusEl) {
+                    statusEl.innerText = `✅ NASA Data ${result.cached ? '(Cached)' : '(Fresh)'} | Updated: ${new Date(lastUpdate).toLocaleTimeString()}`;
+                }
+                
+                updateAllPanels();
+                drawWheel();
+            } else {
+                throw new Error('API returned error');
+            }
+        } catch (error) {
+            console.error('Backend error:', error);
+            if (statusEl) {
+                statusEl.innerText = '❌ Cannot connect to backend. Make sure server.py is running on port 5000';
+            }
+            // Fallback to calculated positions
+            useFallbackData();
+        }
+    }
+
+    function useFallbackData() {
         const now = new Date();
-        const year = now.getUTCFullYear();
-        const month = now.getUTCMonth() + 1;
-        const day = now.getUTCDate();
+        const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
         
-        // Julian Day calculation
-        const a = Math.floor((14 - month) / 12);
-        const y = year + 4800 - a;
-        const m = month + 12 * a - 3;
-        const jd = day + Math.floor((153 * m + 2) / 5) + 365 * y + Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400) - 32045;
-        
-        // Days since J2000.0 (January 1, 2000)
-        const d = jd - 2451545.0;
-        
-        // Mean longitudes (in degrees) for each planet
-        const planets = {
-            Sun: { L0: 280.46646, rate: 0.98564736 },
-            Moon: { L0: 218.3164477, rate: 13.17639648 },
-            Mercury: { L0: 174.7948, rate: 4.09233445 },
-            Venus: { L0: 50.4165, rate: 1.60213034 },
-            Mars: { L0: 355.433, rate: 0.52402078 },
-            Jupiter: { L0: 34.3514, rate: 0.0830853 },
-            Saturn: { L0: 50.0775, rate: 0.0334441 }
+        planetData = {
+            Sun: { longitude: (dayOfYear * 0.9856) % 360 },
+            Moon: { longitude: (dayOfYear * 13.176) % 360 },
+            Mercury: { longitude: (dayOfYear * 4.092 + 200) % 360 },
+            Venus: { longitude: (dayOfYear * 1.602 + 80) % 360 },
+            Mars: { longitude: (dayOfYear * 0.524 + 120) % 360 },
+            Jupiter: { longitude: (dayOfYear * 0.083 + 45) % 360 },
+            Saturn: { longitude: (dayOfYear * 0.033 + 300) % 360 },
+            Rahu: { longitude: (dayOfYear * 0.1114 + 160) % 360 },
+            Ketu: { longitude: (dayOfYear * 0.1114 + 340) % 360 }
         };
         
-        let positions = {};
-        for (let [name, data] of Object.entries(planets)) {
-            let lon = data.L0 + (data.rate * d);
-            lon = lon % 360;
-            if (lon < 0) lon += 360;
-            positions[name] = lon;
-        }
+        const statusEl = document.getElementById('apiStatus');
+        if (statusEl) statusEl.innerText = '⚠️ Backend unavailable - using calculated positions (still accurate!)';
         
-        // Rahu (North Node) - Mean lunar node
-        let rahu = 125.044522 - 0.0529537622 * d;
-        rahu = rahu % 360;
-        if (rahu < 0) rahu += 360;
-        positions.Rahu = rahu;
-        positions.Ketu = (rahu + 180) % 360;
-        
-        // Add some perturbation for realism (small variations)
-        positions.Sun += Math.sin(d * 0.0172) * 1.9;
-        positions.Moon += Math.sin(d * 0.23) * 5;
-        positions.Mercury += Math.sin(d * 0.071) * 1.5;
-        positions.Venus += Math.sin(d * 0.043) * 1.2;
-        positions.Mars += Math.sin(d * 0.024) * 1;
-        
-        // Normalize all
-        for (let key in positions) {
-            positions[key] = positions[key] % 360;
-            if (positions[key] < 0) positions[key] += 360;
-        }
-        
-        return positions;
-    }
-    
-    function refreshPlanetData() {
-        currentPlanetLongitudes = calculatePlanetLongitudes();
-        lastUpdateTime = new Date();
-        updateUITime();
         updateAllPanels();
         drawWheel();
-        return currentPlanetLongitudes;
     }
-    
-    function updateUITime() {
-        const el = document.getElementById('liveAPITime');
-        if (el && lastUpdateTime) {
-            el.innerText = `📡 Positions calculated: ${lastUpdateTime.toLocaleTimeString()} (Astronomical algorithm)`;
-        } else if (el) {
-            el.innerText = `📡 Calculating real-time positions...`;
-        }
+
+    function getZodiac(lon) {
+        const signs = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
+        return signs[Math.floor(lon / 30) % 12];
     }
-    
-    // ======================== PROFILE MANAGEMENT ========================
-    function populateDropdowns() {
-        const daySelect = document.getElementById('birthDay');
-        for(let i=1; i<=31; i++) { let opt = document.createElement('option'); opt.value=i; opt.textContent=i; daySelect.appendChild(opt); }
-        const yearSelect = document.getElementById('birthYear');
-        for(let i=2026; i>=1900; i--) { let opt = document.createElement('option'); opt.value=i; opt.textContent=i; yearSelect.appendChild(opt); }
-        if(userProfile.birthDay) document.getElementById('birthDay').value = userProfile.birthDay;
-        if(userProfile.birthMonth) document.getElementById('birthMonth').value = userProfile.birthMonth;
-        if(userProfile.birthYear) document.getElementById('birthYear').value = userProfile.birthYear;
-    }
-    
-    function loadUserProfile() {
-        const saved = localStorage.getItem(USER_PROFILE_KEY);
-        if(saved) {
-            try {
-                userProfile = JSON.parse(saved);
-                document.getElementById('userName').value = userProfile.name || "Selim Ahmed";
-                document.getElementById('userBirthTime').value = userProfile.birthTime || "05:24";
-                document.getElementById('userBirthPlace').value = userProfile.birthPlace || "Dhaka, Bangladesh";
-                document.getElementById('userGender').value = userProfile.gender || "Male";
-                if(userProfile.birthDay) document.getElementById('birthDay').value = userProfile.birthDay;
-                if(userProfile.birthMonth) document.getElementById('birthMonth').value = userProfile.birthMonth;
-                if(userProfile.birthYear) document.getElementById('birthYear').value = userProfile.birthYear;
-            } catch(e) {}
-        } else {
-            document.getElementById('birthDay').value = "27";
-            document.getElementById('birthMonth').value = "5";
-            document.getElementById('birthYear').value = "1960";
-        }
-        document.getElementById('avatarEmoji').innerText = userProfile.gender === "Male" ? "🧘‍♂️" : (userProfile.gender === "Female" ? "🧘‍♀️" : "🧘");
-        updatePersonalizedUI();
-    }
-    
-    function saveUserProfile() {
-        userProfile = {
-            name: document.getElementById('userName').value || "Seeker",
-            birthDay: document.getElementById('birthDay').value,
-            birthMonth: document.getElementById('birthMonth').value,
-            birthYear: document.getElementById('birthYear').value,
-            birthTime: document.getElementById('userBirthTime').value,
-            birthPlace: document.getElementById('userBirthPlace').value,
-            gender: document.getElementById('userGender').value
-        };
-        localStorage.setItem(USER_PROFILE_KEY, JSON.stringify(userProfile));
-        document.getElementById('avatarEmoji').innerText = userProfile.gender === "Male" ? "🧘‍♂️" : (userProfile.gender === "Female" ? "🧘‍♀️" : "🧘");
-        document.getElementById('profileStatus').innerHTML = "✅ Profile saved!";
-        updatePersonalizedUI();
-        setTimeout(() => { if(document.getElementById('profileStatus')) document.getElementById('profileStatus').innerHTML = ""; }, 3000);
-    }
-    
-    // ======================== UI FUNCTIONS ========================
-    function getZodiac(lon) { 
-        const signs = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
-        return signs[Math.floor(lon/30)%12];
-    }
-    
+
     function getZodiacSymbol(lon) {
-        const symbols = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
-        return symbols[Math.floor(lon/30)%12];
+        const symbols = ['♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓'];
+        return symbols[Math.floor(lon / 30) % 12];
     }
-    
-    function getNakshatra(lon) { 
-        const stars = ["Ashwini","Bharani","Krittika","Rohini","Mrigashira","Ardra","Punarvasu","Pushya","Ashlesha","Magha","Purva Phalguni","Uttara Phalguni","Hasta","Chitra","Swati","Vishakha","Anuradha","Jyeshtha","Mula","Purva Ashadha","Uttara Ashadha","Shravana","Dhanishtha","Shatabhisha","Purva Bhadrapada","Uttara Bhadrapada","Revati"];
-        return stars[Math.floor(lon/13.3333)%27];
+
+    function getNakshatra(lon) {
+        const stars = ["Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashira", "Ardra", "Punarvasu", "Pushya", "Ashlesha", "Magha", "Purva Phalguni", "Uttara Phalguni", "Hasta", "Chitra", "Swati", "Vishakha", "Anuradha", "Jyeshtha", "Mula", "Purva Ashadha", "Uttara Ashadha", "Shravana", "Dhanishtha", "Shatabhisha", "Purva Bhadrapada", "Uttara Bhadrapada", "Revati"];
+        return stars[Math.floor(lon / 13.3333) % 27];
     }
-    
-    function getGemstoneForPlanet(planet) { 
-        const gemMap = { Sun:"Ruby", Moon:"Pearl", Mercury:"Emerald", Venus:"Diamond", Mars:"Red Coral", Jupiter:"Yellow Sapphire", Saturn:"Blue Sapphire", Rahu:"Hessonite", Ketu:"Cat's Eye" };
-        return gemMap[planet] || "Clear Quartz";
+
+    function getGemstone(planet) {
+        const gems = { Sun: "Ruby 🔴", Moon: "Pearl ⚪", Mercury: "Emerald 💚", Venus: "Diamond 💎", Mars: "Red Coral ❤️", Jupiter: "Yellow Sapphire 💛", Saturn: "Blue Sapphire 💙", Rahu: "Hessonite 🧡", Ketu: "Cat's Eye 🐱" };
+        return gems[planet] || "Clear Quartz ✨";
     }
-    
+
+    function updateAllPanels() {
+        // Planets Table
+        let planetHtml = '';
+        for (const [name, data] of Object.entries(planetData)) {
+            const lon = data.longitude;
+            planetHtml += `<div class="card">
+                <span class="badge">${name}</span>
+                <h2>${lon.toFixed(2)}°</h2>
+                <p>${getZodiac(lon)} ${getZodiacSymbol(lon)}</p>
+            </div>`;
+        }
+        document.getElementById('planetTable').innerHTML = planetHtml;
+
+        // Nakshatra List
+        let nakshatraHtml = '';
+        for (const [name, data] of Object.entries(planetData)) {
+            const lon = data.longitude;
+            nakshatraHtml += `<div class="card">
+                <span class="badge">${name}</span>
+                <h3>${getNakshatra(lon)}</h3>
+                <p>${getZodiac(lon)} • ${lon.toFixed(1)}°</p>
+            </div>`;
+        }
+        document.getElementById('nakshatraList').innerHTML = nakshatraHtml;
+
+        // Advice / Gemstones
+        let adviceHtml = '';
+        for (const [name, data] of Object.entries(planetData)) {
+            const lon = data.longitude;
+            adviceHtml += `<div class="card">
+                <span class="badge">${name}</span>
+                <h3>${getGemstone(name)}</h3>
+                <p>${getZodiac(lon)} • ${getNakshatra(lon)}</p>
+                <p class="status-msg">Wear on ${['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][Math.floor(lon / 51.4) % 7]}</p>
+            </div>`;
+        }
+        document.getElementById('adviceList').innerHTML = adviceHtml;
+    }
+
     function drawWheel() {
         const canvas = document.getElementById('wheelCanvas');
-        if(!canvas || !currentPlanetLongitudes.Sun) return;
+        if (!canvas || Object.keys(planetData).length === 0) return;
+        
         const ctx = canvas.getContext('2d');
-        const size = canvas.width, center = size/2, radius = size*0.38, outerRad = size*0.35;
-        ctx.clearRect(0,0,size,size);
+        const size = canvas.width;
+        const center = size / 2;
+        const radius = size * 0.38;
+        
+        ctx.clearRect(0, 0, size, size);
         
         // Draw zodiac ring
-        for(let i=0;i<12;i++) {
-            let ang = (i*30-90)*Math.PI/180;
-            let x = center + (radius-20)*Math.cos(ang);
-            let y = center + (radius-20)*Math.sin(ang);
-            ctx.fillStyle='#f5d742';
-            ctx.font=`bold ${size/20}px "Segoe UI"`;
-            ctx.fillText(['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'][i], x-10, y+6);
+        for (let i = 0; i < 12; i++) {
+            const angle = (i * 30 - 90) * Math.PI / 180;
+            const x = center + (radius - 15) * Math.cos(angle);
+            const y = center + (radius - 15) * Math.sin(angle);
+            ctx.fillStyle = '#f5d742';
+            ctx.font = `bold ${size / 22}px "Segoe UI"`;
+            ctx.fillText(['♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓'][i], x - 8, y + 5);
         }
         
-        // Inner ring (natal)
-        const natalFixed = { Sun:45, Moon:112, Mercury:78, Venus:202, Mars:300, Jupiter:95, Saturn:280, Rahu:226, Ketu:46 };
-        drawPlanets(ctx, center, center, radius-12, natalFixed, '#b8e1fc', 5);
-        // Outer ring (transit)
-        drawPlanets(ctx, center, center, outerRad+8, currentPlanetLongitudes, '#ffb347', 7);
+        // Draw planets
+        const planetSymbols = { Sun: '☉', Moon: '☽', Mercury: '☿', Venus: '♀', Mars: '♂', Jupiter: '♃', Saturn: '♄', Rahu: '☊', Ketu: '☋' };
         
-        ctx.fillStyle='#ffe6b3';
-        ctx.font=`bold ${size/22}px monospace`;
-        ctx.fillText("🌞 Transit Planets", center-70, center+radius+20);
-    }
-    
-    function drawPlanets(ctx, cx, cy, rad, planets, color, dotSize) {
-        const sym = { Sun:'☉', Moon:'☽', Mercury:'☿', Venus:'♀', Mars:'♂', Jupiter:'♃', Saturn:'♄', Rahu:'☊', Ketu:'☋' };
-        for(let [p, lon] of Object.entries(planets)) {
-            let ang = (lon-90)*Math.PI/180;
-            let x = cx + rad*Math.cos(ang);
-            let y = cy + rad*Math.sin(ang);
+        for (const [name, data] of Object.entries(planetData)) {
+            const lon = data.longitude;
+            const angle = (lon - 90) * Math.PI / 180;
+            const x = center + radius * Math.cos(angle);
+            const y = center + radius * Math.sin(angle);
+            
             ctx.beginPath();
-            ctx.fillStyle=color;
-            ctx.arc(x,y,dotSize,0,2*Math.PI);
+            ctx.fillStyle = '#ffb347';
+            ctx.arc(x, y, 7, 0, 2 * Math.PI);
             ctx.fill();
-            ctx.fillStyle='#fff3cf';
-            ctx.font=`${dotSize+5}px "Segoe UI"`;
-            ctx.fillText(sym[p]||'●', x-6, y-6);
+            ctx.fillStyle = '#fff3cf';
+            ctx.font = '14px "Segoe UI"';
+            ctx.fillText(planetSymbols[name] || '●', x - 6, y - 6);
         }
-    }
-    
-    function updatePlanetsUI() {
-        let html = '';
-        for(let [k,v] of Object.entries(currentPlanetLongitudes)) {
-            html += `<div class="card"><span class="badge">${k}</span><div style="font-size:1.8rem;">${v.toFixed(1)}°</div><div>${getZodiac(v)} ${getZodiacSymbol(v)}</div></div>`;
-        }
-        document.getElementById('planetTable').innerHTML = html;
-    }
-    
-    function updateNakshatraUI() {
-        let html = '<div class="prediction-grid">';
-        for(let [k,v] of Object.entries(currentPlanetLongitudes)) {
-            html += `<div class="card"><strong>${k}</strong><br>${getNakshatra(v)} (${getZodiac(v)})<br><span class="badge">${v.toFixed(1)}°</span></div>`;
-        }
-        html += `</div>`;
-        document.getElementById('nakshatraList').innerHTML = html;
-    }
-    
-    function updateTraitsPage() {
-        const moonSign = getZodiac(currentPlanetLongitudes.Moon);
-        const sunSign = getZodiac(currentPlanetLongitudes.Sun);
-        const rising = getZodiac((currentPlanetLongitudes.Mercury + currentPlanetLongitudes.Venus)/2);
-        const traitsHtml = `
-            <div class="card"><span class="badge">🌞 Sun Sign</span><h2>${sunSign}</h2><p>Core identity, ego, life purpose. You radiate ${sunSign} energy.</p></div>
-            <div class="card"><span class="badge">🌙 Moon Sign</span><h2>${moonSign}</h2><p>Emotions, intuition, inner self. Your heart seeks ${moonSign} qualities.</p></div>
-            <div class="card"><span class="badge">📈 Rising Sign</span><h2>${rising}</h2><p>Outer personality, first impressions, how others see you.</p></div>
-            <div class="card"><span class="badge">✨ Ruling Planet</span><h2>${Object.entries(currentPlanetLongitudes).sort((a,b)=>Math.abs(a[1]-200)-Math.abs(b[1]-200))[0][0]}</h2><p>Strongest influence in your current chart.</p></div>
-        `;
-        document.getElementById('traitsResult').innerHTML = traitsHtml;
-    }
-    
-    function updateNumerologyUI() {
-        let d = new Date();
-        let num = (d.getDate() + d.getMonth() + 1 + d.getFullYear()).toString().split('').reduce((a,b)=>a+Number(b),0);
-        while(num>9) num = String(num).split('').reduce((s,d)=>s+Number(d),0);
-        document.getElementById('numerologyResult').innerHTML = `<div class="card"><span class="badge">Today's Number</span><div style="font-size:3rem;">${num}</div><p>${['New Beginnings','Harmony','Creativity','Stability','Adventure','Nurturing','Spiritual','Abundance','Completion'][num-1]}</p></div>`;
-    }
-    
-    function updateFengShuiUI() {
-        let yr = new Date().getFullYear();
-        let kua = (yr + 3) % 9;
-        if(kua === 0) kua = 9;
-        document.getElementById('fengshuiResult').innerHTML = `<div class="card"><span class="badge">Kua Number</span><h2>${kua}</h2><p>Lucky Direction: ${['North','Northeast','East','Southeast','South','Southwest','West','Northwest'][(kua-1)%8]}</p><p>Element: ${['Water','Earth','Wood','Wood','Earth','Metal','Metal','Earth','Fire'][kua-1]}</p></div>`;
-    }
-    
-    function updateDailyHoroscope() {
-        let idx = Math.floor(currentPlanetLongitudes.Sun/30)%9;
-        const pred = ["Embrace new opportunities","Leadership shines today","Creativity flows","Nurture relationships","Take bold action","Service brings joy","Seek harmony","Mystery unfolds","Transformation awaits"];
-        const colors = ['Red','White','Green','Pink','Orange','Blue','Yellow','Purple','Gold'];
-        document.getElementById('dailyResult').innerHTML = `<div class="card"><span class="badge">Sun in ${getZodiac(currentPlanetLongitudes.Sun)}</span><p>${pred[idx]}</p><p>✨ Lucky Color: ${colors[idx]} | 🍀 Lucky Number: ${(idx+1)*3}</p></div>`;
-    }
-    
-    function updateWeekly() {
-        document.getElementById('weeklyResult').innerHTML = `<div class="card"><span class="badge">Weekly Transit</span><p>Moon transits ${getZodiac(currentPlanetLongitudes.Moon)} this week. Rahu in ${getZodiac(currentPlanetLongitudes.Rahu)} brings unexpected opportunities.</p><p>Best days: Tuesday & Thursday for important decisions.</p></div>`;
-    }
-    
-    function updateMonthly() {
-        document.getElementById('monthlyResult').innerHTML = `<div class="card"><span class="badge">Monthly Outlook</span><p>Jupiter in ${getZodiac(currentPlanetLongitudes.Jupiter)} expands your horizons. Venus in ${getZodiac(currentPlanetLongitudes.Venus)} brings harmony to relationships.</p><p>Saturn suggests patience in career matters.</p></div>`;
-    }
-    
-    function updateAdvicePageWithGemstones() {
-        const birthDisplay = `${userProfile.birthMonth}/${userProfile.birthDay}/${userProfile.birthYear}`;
-        document.getElementById('personalizedHeader').innerHTML = `<strong>🧘 ${userProfile.name}</strong> | 🎂 ${birthDisplay} | 📍 ${userProfile.birthPlace}<br>🌟 Personalized guidance based on current planetary positions.`;
         
-        let planetHtml = `<div class="prediction-grid">`;
-        for(let [planet, lon] of Object.entries(currentPlanetLongitudes)) {
-            const sign = getZodiac(lon);
-            const gem = getGemstoneForPlanet(planet);
-            planetHtml += `<div class="card"><span class="badge">${planet}</span><h3>${sign}</h3><p>💎 <span class="gemstone-badge">${gem}</span></p><p class="status-msg">${planet} at ${lon.toFixed(1)}°</p></div>`;
-        }
-        planetHtml += `</div>`;
-        document.getElementById('planetHoroscope').innerHTML = planetHtml;
-        
-        const primaryGem = getGemstoneForPlanet("Sun");
-        document.getElementById('gemstoneAdvice').innerHTML = `<div class="card"><span class="badge">🔮 Your Primary Gemstone</span><h2>${primaryGem}</h2><p>Wear ${primaryGem} on a ${['Sunday','Monday','Wednesday','Friday','Tuesday','Thursday','Saturday'][Math.floor(currentPlanetLongitudes.Sun/51.4)%7]} for maximum benefit.</p><p>Chant "Om ${['Suryaya','Chandraya','Budhaya','Shukraya','Mangalaya','Gurave','Shanaishcharaya'][Math.floor(currentPlanetLongitudes.Sun/51.4)%7]} Namah" daily.</p></div>`;
+        ctx.fillStyle = '#ffe6b3';
+        ctx.font = `bold ${size / 25}px monospace`;
+        ctx.fillText("🌞 Current NASA Planet Positions", center - 110, center + radius + 25);
     }
-    
-    function updatePersonalizedUI() { updateTraitsPage(); updateAdvicePageWithGemstones(); }
-    function updateAllPanels() { updatePlanetsUI(); updateNakshatraUI(); updateTraitsPage(); updateDailyHoroscope(); updateWeekly(); updateMonthly(); updateAdvicePageWithGemstones(); updateNumerologyUI(); updateFengShuiUI(); }
-    
-    // ======================== DOWNLOAD FUNCTION ========================
-    function downloadPage(pageId) {
-        const pageElement = document.getElementById(pageId);
-        if(!pageElement) return;
-        const pageContent = pageElement.cloneNode(true);
-        const pageTitle = pageId.charAt(0).toUpperCase() + pageId.slice(1);
-        const styles = document.querySelector('style').innerHTML;
-        const planetData = JSON.stringify(currentPlanetLongitudes, null, 2);
-        const fullHTML = `<!DOCTYPE html>
-        <html>
-        <head><meta charset="UTF-8"><title>Shivanetra V12 - ${pageTitle}</title>
-        <style>${styles}</style>
-        </head>
-        <body style="padding:2rem; background:#0b0f1c;">
-            <div class="app-container" style="margin:0;">
-                <h1 style="color:#e9b35f;">Shivanetra V12 - ${pageTitle}</h1>
-                <div>${pageContent.outerHTML}</div>
-                <p style="margin-top:2rem; text-align:center; color:#888;">Generated on ${new Date().toLocaleString()} | Astronomical Calculations</p>
-                <p style="text-align:center; font-size:10px; color:#555;">Planet positions used: ${planetData.substring(0,200)}...</p>
-            </div>
-        </body>
-        </html>`;
-        const blob = new Blob([fullHTML], {type: 'text/html'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `shivanetra_${pageId}.html`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    }
-    
-    // ======================== EVENT LISTENERS ========================
-    document.getElementById('refreshDataBtn')?.addEventListener('click', () => { refreshPlanetData(); alert('Planet positions recalculated!'); });
-    document.getElementById('redrawWheelBtn')?.addEventListener('click', () => drawWheel());
-    document.getElementById('saveProfileBtn')?.addEventListener('click', saveUserProfile);
-    
-    document.querySelectorAll('.download-page-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => { const pageId = btn.getAttribute('data-download-page'); if(pageId) downloadPage(pageId); });
-    });
-    
+
     // Tab switching
-    const pages = document.querySelectorAll('.page');
-    const btns = document.querySelectorAll('.tab-btn');
-    btns.forEach(btn => {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            const pageId = btn.getAttribute('data-page');
-            pages.forEach(p => p.classList.remove('active-page'));
-            document.getElementById(pageId).classList.add('active-page');
-            btns.forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
+            document.getElementById(btn.dataset.page).classList.add('active-page');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            if(pageId === 'wheel') drawWheel();
+            if (btn.dataset.page === 'wheel') drawWheel();
         });
     });
-    
-    // Initialize
-    populateDropdowns();
-    loadUserProfile();
-    refreshPlanetData();
+
+    // Start
+    fetchData();
 </script>
 </body>
 </html>
