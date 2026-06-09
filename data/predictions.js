@@ -4,9 +4,7 @@
 // ============================================================
 
 const SHIVANETRA_PREDICTIONS = {
-    // ============================================================
-    // SECTION A: 12 HOUSES (BHAVAS) - Core Meanings
-    // ============================================================
+    // 12 HOUSES - Core Meanings
     houses: {
         1: { name: "Tanu Bhava", meaning: "Body", prediction: "Physical appearance, health, ego, life force, true personality" },
         2: { name: "Dhana Bhava", meaning: "Wealth", prediction: "Fixed assets, liquid money, family wealth, speech, values" },
@@ -22,9 +20,7 @@ const SHIVANETRA_PREDICTIONS = {
         12: { name: "Vyaya Bhava", meaning: "Loss", prediction: "Expenses, isolation, foreign settlement, subconscious, liberation" }
     },
 
-    // ============================================================
-    // SECTION B: PLANET + HOUSE PREDICTIONS
-    // ============================================================
+    // PLANET IN HOUSE PREDICTIONS
     sunInHouse: {
         1: "High ego, strong leadership, robust health, pride/stubbornness",
         2: "Earns through government/authority, harsh speech, family friction",
@@ -85,9 +81,7 @@ const SHIVANETRA_PREDICTIONS = {
         12: "Excellent controller of waste, solitary focus, structured meditation"
     },
 
-    // ============================================================
-    // SECTION C: FENG SHUI NUMBER PREDICTIONS (1-9)
-    // ============================================================
+    // FENG SHUI NUMBER PREDICTIONS (1-9)
     fengShuiNumbers: {
         1: { name: "White Water Star", love: "New partner or reclaiming voice", success: "Entrepreneurs, pioneers, overcoming obstacles", health: "Kidneys, ears, manage hydration", luck: "Very Auspicious" },
         2: { name: "Black Earth Star", love: "Slow companionship, stale routines", success: "Land, farming, property wealth", health: "Stomach, digestion, low energy", luck: "Inauspicious" },
@@ -100,58 +94,15 @@ const SHIVANETRA_PREDICTIONS = {
         9: { name: "Purple Fire Star", love: "Engagements, weddings, pure joy", success: "Rapid fame, massive expansion, thriving", health: "Eyes, heart, guard against burnout", luck: "Most Auspicious" }
     },
 
-    // ============================================================
-    // SECTION D: PLANETARY PSYCHOLOGY
-    // ============================================================
-    planetaryPsychology: {
-        moon: {
-            strong: "Deep empathy, emotional stability, nurturing nature",
-            weak: "Mood swings, depression, severe anxiety, restless mind"
-        },
-        mercury: {
-            strong: "Sharp logic, analytical skill, clear communication, wit",
-            weak: "Poor decision making, confusion, scattered thoughts"
-        },
-        sun: {
-            strong: "High self-confidence, natural authority, leadership",
-            weak: "Low willpower, weak identity, lack of direction"
-        }
-    },
-
-    // ============================================================
-    // SECTION E: HOUSE GROUPINGS
-    // ============================================================
+    // HOUSE GROUPINGS
     houseGroups: {
         dharma: { houses: [1, 5, 9], meaning: "Duty - Life purpose, righteousness" },
         artha: { houses: [2, 6, 10], meaning: "Wealth - Material prosperity" },
         kama: { houses: [3, 7, 11], meaning: "Desire - Fulfillment of wants" },
-        moksha: { houses: [4, 8, 12], meaning: "Liberation - Spiritual freedom" },
-        kendra: { houses: [1, 4, 7, 10], meaning: "Pillars - Core life pillars" },
-        trikona: { houses: [1, 5, 9], meaning: "Luck - Fortune and purpose" },
-        dusthana: { houses: [6, 8, 12], meaning: "Struggle - Challenges and loss" }
+        moksha: { houses: [4, 8, 12], meaning: "Liberation - Spiritual freedom" }
     },
 
-    // ============================================================
-    // SECTION F: SPECIAL 12TH HOUSE PREDICTIONS
-    // ============================================================
-    twelfthHouse: {
-        moon: "Retreats inward, prone to insomnia/vivid dreams, finds peace only in quiet or foreign lands",
-        jupiter: "Cosmic shield, spends on charity, deep intuition, can achieve Moksha"
-    },
-
-    // ============================================================
-    // SECTION G: DAILY PREDICTION TEMPLATES (To be filled by algorithm)
-    // ============================================================
-    dailyTemplates: [
-        "Today the Moon transits your {house} house. {prediction}",
-        "Your {planet} in {house} brings {effect} today.",
-        "Feng Shui number {number} influences your day: {fengShuiPrediction}",
-        "The {planet} energy supports {activity} today."
-    ],
-
-    // ============================================================
-    // SECTION H: LUCKY ITEMS (Based on Numbers)
-    // ============================================================
+    // LUCKY ITEMS
     luckyItems: {
         1: { color: "White", direction: "North", element: "Water" },
         2: { color: "Black", direction: "Southwest", element: "Earth" },
@@ -165,10 +116,7 @@ const SHIVANETRA_PREDICTIONS = {
     }
 };
 
-// ============================================================
-// HELPER FUNCTIONS TO USE THESE PREDICTIONS
-// ============================================================
-
+// Helper Functions
 function getHousePrediction(houseNumber) {
     return SHIVANETRA_PREDICTIONS.houses[houseNumber] || null;
 }
@@ -179,24 +127,13 @@ function getPlanetInHousePrediction(planet, houseNumber) {
     if (planetKey === 'moon') return SHIVANETRA_PREDICTIONS.moonInHouse[houseNumber];
     if (planetKey === 'jupiter') return SHIVANETRA_PREDICTIONS.jupiterInHouse[houseNumber];
     if (planetKey === 'saturn') return SHIVANETRA_PREDICTIONS.saturnInHouse[houseNumber];
-    return "No prediction available for this planet";
+    return "No prediction available";
 }
 
 function getFengShuiPrediction(number) {
     return SHIVANETRA_PREDICTIONS.fengShuiNumbers[number] || null;
 }
 
-function getHouseGroup(groupName) {
-    return SHIVANETRA_PREDICTIONS.houseGroups[groupName] || null;
-}
-
 function getLuckyItem(number) {
     return SHIVANETRA_PREDICTIONS.luckyItems[number] || null;
-}
-
-// ============================================================
-// EXPORT FOR USE IN SHIVANETRA
-// ============================================================
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = SHIVANETRA_PREDICTIONS;
 }
